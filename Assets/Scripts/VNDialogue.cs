@@ -31,8 +31,33 @@ public class VNDialogue : MonoBehaviour
 
     private List<DialogueLine> currentLines = new();
 
+    // =========================================================
+    //  GUARDADO (PlayerPrefs) - simple y suficiente
+    // =========================================================
+    private const string SAVE_SCENE = "VN_SAVE_SCENE";
+    private const string SAVE_LINE  = "VN_SAVE_LINE";
+
+    // Para el menú "Continue"
+    private const string KEY_HAS_SAVE = "VN_HAS_SAVE";
+    private const string KEY_CONTINUE = "VN_CONTINUE";
+
+    // =========================================================
+    //  ARRANQUE (nuevo juego vs continue)
+    // =========================================================
     private void Start()
     {
+        // Si venimos del menú pulsando Continue, cargamos guardado
+        if (PlayerPrefs.GetInt(KEY_CONTINUE, 0) == 1)
+        {
+            // Consumimos la bandera para que no se repita
+            PlayerPrefs.SetInt(KEY_CONTINUE, 0);
+            PlayerPrefs.Save();
+
+            LoadGame();
+            return;
+        }
+
+        // Inicio normal (nuevo juego)
         LoadScene(sceneIndex);
         ShowLine();
     }
@@ -62,8 +87,6 @@ public class VNDialogue : MonoBehaviour
 
     private void LoadScene(int index)
     {
-        lineIndex = 0;
-
         string fileName = sceneFiles[index];
         currentLines = VNSceneLoader.LoadFromResources(fileName);
 
@@ -99,5 +122,54 @@ public class VNDialogue : MonoBehaviour
         // Foco
         if (characterSlots != null)
             characterSlots.ApplyFocus(speakerUpper);
+    }
+
+    // =========================================================
+    //  SAVE / LOAD (llamable desde UI)
+    // =========================================================
+
+    public void SaveGame()
+    {
+        PlayerPrefs.SetInt(SAVE_SCENE, sceneIndex);
+        PlayerPrefs.SetInt(SAVE_LINE, lineIndex);
+
+        // Marcamos que existe un guardado (para activar Continue en el menú)
+        PlayerPrefs.SetInt(KEY_HAS_SAVE, 1);
+
+        PlayerPrefs.Save();
+        Debug.Log($"[VN] Guardado: sceneIndex={sceneIndex}, lineIndex={lineIndex}");
+    }
+
+    public void LoadGame()
+    {
+        // Si no hay guardado, no hacemos nada
+        if (PlayerPrefs.GetInt(KEY_HAS_SAVE, 0) != 1)
+        {
+            Debug.LogWarning("[VN] No hay guardado todavía.");
+            return;
+        }
+
+        sceneIndex = PlayerPrefs.GetInt(SAVE_SCENE, 0);
+        lineIndex  = PlayerPrefs.GetInt(SAVE_LINE, 0);
+
+        // Seguridad por si cambia la lista de escenas
+        if (sceneIndex < 0 || sceneIndex >= sceneFiles.Count)
+            sceneIndex = 0;
+
+        LoadScene(sceneIndex);
+
+        // Seguridad por si el CSV ahora tiene menos líneas
+        if (lineIndex < 0) lineIndex = 0;
+        if (lineIndex >= currentLines.Count) lineIndex = Mathf.Max(0, currentLines.Count - 1);
+
+        ShowLine();
+
+        Debug.Log($"[VN] Cargado: sceneIndex={sceneIndex}, lineIndex={lineIndex}");
+    }
+
+    public bool HasSave()
+    {
+        // Si quieres, puedes dejarlo, pero ahora la “fuente de verdad” es VN_HAS_SAVE.
+        return PlayerPrefs.GetInt(KEY_HAS_SAVE, 0) == 1;
     }
 }
