@@ -1,0 +1,11 @@
+speaker,text,cmd
+NARRADOR,"La ciudad nunca duerme.",L=HIDE;R=HIDE
+NARRADOR,"Luces de neón. Lluvia constante. Pantallas que nunca se apagan.",
+LOGAN,"Esto empieza a parecer una visual novel.",L=LOGAN:serio
+DAMIAO,"Y espérate a lo que viene después.",R=DAMIAO:sonrisa
+LOGAN,"No sé si me tranquiliza o me preocupa.",L=LOGAN:sonrisa
+NARRADOR,"Durante unos segundos, nadie dice nada.",
+DAMIAO,"Vamos, Logan. Relájate un poco.",R=DAMIAO:sonrisa
+LOGAN,"Eso dices tú.",L=LOGAN:serio
+NARRADOR,"La lluvia golpea el cristal con más fuerza.", 
+NARRADOR,"Continuará..."
