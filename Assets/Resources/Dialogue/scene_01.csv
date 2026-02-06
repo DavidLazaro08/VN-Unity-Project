@@ -1,4 +1,40 @@
-speaker,text
-NARRADOR,"Escena 1."
-LÁZARO,"¿Has visto que ya cargamos otro CSV?"
-NARRADOR,"Esto nos va a ahorrar vida."
+speaker,text,cmd
+DAMIAO,"Cuando pones esa cara es porque ya has visto cómo acaba esto.",R=DAMIAO:ironico
+LOGAN,"¿Qué cara?",L=LOGAN:serio
+DAMIAO,"La de cuando estás a punto de decir algo inteligente… o firmar otra cicatriz.",R=DAMIAO:sonrisa
+LOGAN,"A veces es lo mismo.",L=LOGAN:ironico
+
+DAMIAO,"Claro que sí... Por eso sigo trabajando contigo.",R=DAMIAO:sonrisa
+DAMIAO,"Nunca sé si vamos a salir mejor… o más jodidos.",R=DAMIAO:ironico
+LOGAN,"Salir peor siempre es una opción realista.",L=LOGAN:serio2
+DAMIAO,"Ahí está el tío.",R=DAMIAO:sonrisa
+DAMIAO,"Deberías vender tu forma de ver el mundo como sistema de alarma.",R=DAMIAO:ironico
+DAMIAO,"Si me pegan un tiro… voy a culpar a tu realismo.",R=DAMIAO:ironico2
+
+
+LOGAN,"Alguien tiene que fijarse dónde pisa.",L=LOGAN:serio
+LOGAN,"Si no, acabas comiendo bordillo.",L=LOGAN:serio
+
+DAMIAO,"Y alguien tiene que recordarte que todavía estamos de pie.",R=DAMIAO:pensativo
+DAMIAO,"Bajo techo.",R=DAMIAO:pensativo
+DAMIAO,"Respirando.",R=DAMIAO:preocupado
+DAMIAO,"Hoy, con eso basta.",R=DAMIAO:sonrisa
+
+LOGAN,"De momento...",L=LOGAN:cansado
+LOGAN,"El día aún no ha terminado.",L=LOGAN:serio2
+
+DAMIAO,"Nunca lo hace para tí.",R=DAMIAO:ironico
+DAMIAO,"Pero eh…",R=DAMIAO:sonrisa
+DAMIAO,"No nos persiguen drones.",R=DAMIAO:pensativo
+DAMIAO,"Ni ningún imbécil con implantes nuevos queriendo estrenarlos.",R=DAMIAO:sonrisa
+DAMIAO,"Hoy vamos ganando.",R=DAMIAO:ironico
+
+CHOICE,"¿Qué responde Logan?",
+"Respuesta cínica","Supongo que hoy me toca fingir que tienes razón.","L=LOGAN:ironico;AFF_DAMIAO=-1"
+"Respuesta neutra","Solo digo que el silencio nunca es gratis.","L=LOGAN:serio2;AFF_DAMIAO=0"
+"Respuesta cómplice","Vale… cinco minutos. Luego volvemos a preocuparnos.","L=LOGAN:sonrisa;AFF_DAMIAO=+1"
+
+DAMIAO,"Cinco minutos en esta ciudad es casi una jubilación anticipada.",R=DAMIAO:sonrisa
+DAMIAO,"Me los guardo.",R=DAMIAO:ironico2
+
+
