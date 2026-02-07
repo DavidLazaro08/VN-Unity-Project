@@ -155,8 +155,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -320, y: -190}
-  m_SizeDelta: {x: 350, y: 60}
+  m_AnchoredPosition: {x: -400, y: -210}
+  m_SizeDelta: {x: 375, y: 65}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &26444543
 MonoBehaviour:
@@ -377,6 +377,8 @@ MonoBehaviour:
   musicSource: {fileID: 1558495072}
   fadeTime: 1
   targetSceneName: Scene_Game
+  fadeInOnStart: 1
+  startFadeDelay: 0.5
 --- !u!4 &72539051
 Transform:
   m_ObjectHideFlags: 0
@@ -684,8 +686,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -320, y: -260}
-  m_SizeDelta: {x: 350, y: 60}
+  m_AnchoredPosition: {x: -400, y: -300}
+  m_SizeDelta: {x: 374, y: 65}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!114 &560513661
 MonoBehaviour:
@@ -1002,7 +1004,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -320, y: -500}
+  m_AnchoredPosition: {x: -400, y: -500}
   m_SizeDelta: {x: 1000, y: 50}
   m_Pivot: {x: 1, y: 1}
 --- !u!114 &856404227
@@ -1060,8 +1062,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 75
-  m_fontSizeBase: 75
+  m_fontSize: 85
+  m_fontSizeBase: 85
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

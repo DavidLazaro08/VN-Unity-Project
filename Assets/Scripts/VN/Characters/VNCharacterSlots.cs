@@ -41,8 +41,8 @@ public class VNCharacterSlots : MonoBehaviour
     // =========================================================
 
     [Header("Posiciones (X)")]
-    public float leftShownX = 130f;
-    public float rightShownX = -130f;
+    public float leftShownX = 180f;
+    public float rightShownX = -180f;
     public float leftHiddenX = -1400f;
     public float rightHiddenX = 1400f;
 
@@ -97,6 +97,10 @@ public class VNCharacterSlots : MonoBehaviour
     {
         if (leftImage != null) leftRT = leftImage.GetComponent<RectTransform>();
         if (rightImage != null) rightRT = rightImage.GetComponent<RectTransform>();
+
+        // AUTO-FIX: Si en el Inspector se quedaron los valores viejos (130), forzamos los nuevos (180)
+        if (Mathf.Abs(leftShownX - 130f) < 1f) leftShownX = 180f;
+        if (Mathf.Abs(rightShownX + 130f) < 1f) rightShownX = -180f;
 
         leftTargetX = leftShownX;
         rightTargetX = rightShownX;
