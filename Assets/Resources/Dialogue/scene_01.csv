@@ -30,11 +30,24 @@ DAMIAO,"Ni ningún imbécil con implantes nuevos queriendo estrenarlos.",R=DAMIA
 DAMIAO,"Hoy vamos ganando.",R=DAMIAO:ironico
 
 CHOICE,"¿Qué responde Logan?",
-"Respuesta cínica","Supongo que hoy me toca fingir que tienes razón.","L=LOGAN:ironico;AFF_DAMIAO=-1"
-"Respuesta neutra","Solo digo que el silencio nunca es gratis.","L=LOGAN:serio2;AFF_DAMIAO=0"
-"Respuesta cómplice","Vale… cinco minutos. Luego volvemos a preocuparnos.","L=LOGAN:sonrisa;AFF_DAMIAO=+1"
+"Respuesta cínica","Supongo que hoy me toca fingir que tienes razón.","L=LOGAN:ironico;CHOICE_ID=LOGAN_REPLY;CHOICE_OPT=CINICA;AFF_DAMIAO=-1"
+"Respuesta neutra","Solo digo que el silencio nunca es gratis.","L=LOGAN:serio2;CHOICE_ID=LOGAN_REPLY;CHOICE_OPT=NEUTRA;AFF_DAMIAO=0"
+"Respuesta cómplice","Vale… cinco minutos. Luego volvemos a preocuparnos.","L=LOGAN:sonrisa;CHOICE_ID=LOGAN_REPLY;CHOICE_OPT=COMPLICE;AFF_DAMIAO=+1"
 
+BRANCH,"","CHOICE_ID=LOGAN_REPLY;CHOICE_OPT=CINICA"
+DAMIAO,"Cinco minutos... contigo suenan a amenaza.",R=DAMIAO:ironico
+DAMIAO,"Pero venga. Te lo compro.",R=DAMIAO:pensativo
+
+BRANCH,"","CHOICE_ID=LOGAN_REPLY;CHOICE_OPT=NEUTRA"
+DAMIAO,"Eso sí que es verdad: aquí hasta callarse tiene factura.",R=DAMIAO:preocupado
+DAMIAO,"Mejor que la pague otro.",R=DAMIAO:sonrisa
+
+BRANCH,"","CHOICE_ID=LOGAN_REPLY;CHOICE_OPT=COMPLICE"
 DAMIAO,"Cinco minutos en esta ciudad es casi una jubilación anticipada.",R=DAMIAO:sonrisa
 DAMIAO,"Me los guardo.",R=DAMIAO:ironico2
+
+BRANCH_END,"",""
+
+NARRADOR,"Continuará..."
 
 

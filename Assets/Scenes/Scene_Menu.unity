@@ -609,7 +609,7 @@ CanvasGroup:
   m_Alpha: 0
   m_Interactable: 0
   m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
+  m_IgnoreParentGroups: 1
 --- !u!114 &390439369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -832,7 +832,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 790642424}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 3583b65c0503b9c4895a14665ca88ef3, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: 0c5fa41cb9887f7408272915ed361563, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -1430,7 +1430,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39de9574d3b3159459445d00d1316394, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VNMenuContinue
-  continueButton: {fileID: 0}
+  continueButton: {fileID: 560513661}
   gameSceneName: Scene_Game
 --- !u!1 &1486377241
 GameObject:
@@ -1730,6 +1730,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6573156625441308595, guid: b4694aea8117f1649bd40fa86373e339, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8357090986069433246, guid: b4694aea8117f1649bd40fa86373e339, type: 3}
+      propertyPath: autoRandomSeed
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8357090986069433246, guid: b4694aea8117f1649bd40fa86373e339, type: 3}
+      propertyPath: UVModule.enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8357090986069433246, guid: b4694aea8117f1649bd40fa86373e339, type: 3}
+      propertyPath: LightsModule.enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8357090986069433246, guid: b4694aea8117f1649bd40fa86373e339, type: 3}
