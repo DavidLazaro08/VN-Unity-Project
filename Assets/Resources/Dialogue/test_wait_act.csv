@@ -1,0 +1,12 @@
+speaker,text,cmd
+NARRADOR,"La habitación está en silencio.",""
+LOGAN,"Tengo que pensar bien mi próximo movimiento.","L=LOGAN:pensativo"
+WAIT,"...","WAIT=BEAT"
+LOGAN,"Ya sé qué hacer.","L=LOGAN:decidido"
+ACT,"[Haz clic para tomar el arma de la mesa]","ACT=TAKE_GUN"
+NARRADOR,"Logan siente el peso del metal en su mano.",""
+DAMIAO,"¿Estás seguro de esto?","R=DAMIAO:serio"
+LOGAN,"No tengo otra opción.","L=LOGAN:determinado"
+WAIT,"...","WAIT=SILENCE"
+ACT,"[Haz clic para apuntar]","ACT=AIM_GUN"
+NARRADOR,"El momento de la verdad ha llegado.",""

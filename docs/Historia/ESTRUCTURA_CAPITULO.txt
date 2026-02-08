@@ -1,0 +1,170 @@
+?? CAPÍTULO ÚNICO — DIVISIÓN FINAL EN ESCENAS
+Regla base:
+* Diálogo = CSV
+* Vídeo = narrador Lazarus + ambiente
+* Decisiones pocas, claras y con sentido
+* Afinidades invisibles, pero reales
+
+?? ESCENA 0 — INTRO (VÍDEO)
+Tipo: ?? Vídeo + narrador (Lazarus)
+Personajes: ninguno en escena
+Decisión: ?
+Afinidad: ?
+Objetivo narrativo:
+* Presentar el mundo
+* División naturales vs mejorados
+* Implantes como obligación
+* Logan como anomalía
+* Deuda heredada
+* Sensación de sistema opresivo
+?? Lazarus habla como quien conoce a Logan, no como cuentacuentos.
+?? No se revela quién es.
+
+?? ESCENA 1 — LOGAN + DAMIAO (CALMA)
+Tipo: ?? Diálogo
+Personajes: Logan, Damiao
+Decisión: ? ligera
+Afinidad: + / ? Damiao
+Objetivo narrativo:
+* Presentar a Damiao
+* Crear vínculo
+* Contrastar personalidades
+* Humanizar a Logan
+Ejemplo de decisión:
+* bromear / callar / cinismo
+(no cambia eventos, solo tono y afinidad)
+
+?? ESCENA 2 — PRESIÓN DEL SISTEMA (VÍDEO)
+Tipo: ?? Vídeo + narrador
+Personajes: sombras del sistema
+Decisión: ?
+Afinidad: ?
+Objetivo narrativo:
+* Mostrar trabajos sucios
+* Introducir AVGames
+* Rumor del artefacto neural
+* El Viejo como presencia indirecta
+?? No aparece El Viejo aún.
+?? Lazarus observa y juzga.
+
+?? ESCENA 3 — LOGAN + DAMIAO (TENSIÓN)
+Tipo: ?? Diálogo
+Personajes: Logan, Damiao
+Decisión: ?
+Afinidad: + / ? Damiao
+Objetivo narrativo:
+* Preparar el golpe
+* Mostrar dudas
+* Introducir miedo real
+* Presagiar tragedia
+Decisión ejemplo:
+* prudencia / ambición
+
+?? ESCENA 4 — EL ROBO (DECISIÓN CLAVE)
+Tipo: ?? Diálogo + evento narrativo
+Personajes: Logan, Damiao, Robots AVGames
+Decisión: ? CLAVE
+Afinidad: afecta Damiao
+Decisión central:
+* Intentar salvar a Damiao
+* Priorizar el chip
+Resultado fijo:
+* Damiao muere SIEMPRE
+Lo que cambia:
+* culpa
+* diálogo interno
+* tono posterior
+?? Aquí el jugador pierde el control real por primera vez.
+
+?? ESCENA 5 — COLAPSO (VÍDEO)
+Tipo: ?? Vídeo + narrador
+Personajes: Logan
+Decisión: ?
+Afinidad: ?
+Objetivo narrativo:
+* Mostrar la muerte de Damiao
+* Soledad
+* Ruptura emocional
+* Neones, lluvia, vacío
+?? No diálogo.
+?? Solo sentimiento.
+
+?? ESCENA 6 — TRUE-FELLA
+Tipo: ?? Diálogo
+Personajes: Logan, True-Fella
+Decisión: ?
+Afinidad: + / ? True-Fella
+Objetivo narrativo:
+* Introducir conflicto ideológico
+* Naturales vs mejorados
+* Ayuda puntual
+* Respeto ganado o no
+?? True-Fella no se queda.
+?? Aparece, ayuda, desaparece.
+
+?? ESCENA 7 — ENTRADA DE LIRA
+Tipo: ?? Diálogo
+Personajes: Logan, Lira
+Decisión: ? ligera
+Afinidad: + / ? Lira
+Objetivo narrativo:
+* Bajar defensas
+* Calidez
+* Confianza
+* Nada de sospechas evidentes
+?? Muy importante que aquí el jugador confíe.
+
+?? ESCENA 8 — MISIÓN + TRAICIÓN
+Tipo: ?? Vídeo + breve diálogo
+Personajes: Logan, Lira
+Decisión: ?
+Afinidad: fija rumbo Lira
+Objetivo narrativo:
+* Logan herido
+* Lira cuida
+* Vulnerabilidad
+* Traición (inyector, robo del chip)
+?? Aquí el sistema gana.
+?? El jugador no decide.
+
+?? ESCENA 9 — LIRA MUERTA
+Tipo: ?? Vídeo + narrador
+Personajes: Lira (cadáver), Logan
+Decisión: ?
+Afinidad: ?
+Objetivo narrativo:
+* Shock
+* Castigo del sistema
+* Confirmar que nadie gana
+?? Breve. Brutal.
+
+?? ESCENA 10 — EL VIEJO (CIERRE)
+Tipo: ?? Diálogo
+Personajes: Logan, El Viejo
+Decisión: ?
+Afinidad: ?
+Objetivo narrativo:
+* Revelar manipulación
+* Cerrar arco
+* Frase final
+* Poder absoluto
+
+?? ESCENA 11 — FINAL (3 VARIANTES)
+Tipo: ?? Diálogo + narrador
+Personajes: Logan, Lazarus (voz)
+Decisión: ?
+Afinidad: evaluación final
+?? Final A — Logan roto
+* baja afinidad Damiao
+* confianza ciega en Lira
+?? Final B — Logan consciente
+* buena afinidad Damiao
+* traición sentida
+?? Final C — Logan despierto
+* afinidad alta Damiao
+* respeto True-Fella
+* dudas Lira
+?? Mismo escenario.
+Distinto texto.
+Distinta sensación.
+

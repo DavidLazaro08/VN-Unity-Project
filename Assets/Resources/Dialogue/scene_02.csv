@@ -1,3 +1,63 @@
-speaker,text
-NARRADOR,"Escena 2."
-JUAN,"Más adelante aquí meteremos personajes y fondos."
+speaker,text,cmd
+DAMIAO,"No me gusta cómo suena esto.",R=DAMIAO:pensativo
+LOGAN,"No suena a nada.",L=LOGAN:serio2
+DAMIAO,"Exacto.",R=DAMIAO:preocupado
+DAMIAO,"Cuando algo aquí deja de sonar…",R=DAMIAO:pensativo
+DAMIAO,"…es porque alguien está calculando.",R=DAMIAO:pensativo
+
+ACT,"[Logan enciende un cigarro sellado; la brasa azul no se apaga bajo la lluvia]","ACT=LIGHT_CIG"
+
+DAMIAO,"Odio cuando haces eso.",R=DAMIAO:preocupado
+DAMIAO,"Es que entonces ya vas en serio.",R=DAMIAO:pensativo
+
+LOGAN,"No todos los cálculos salen mal.",L=LOGAN:cansado
+DAMIAO,"Los que hace el Viejo sí.",R=DAMIAO:serio
+DAMIAO,"Siempre.",R=DAMIAO:pensativo
+LOGAN,"Esta vez no es cosa suya.",L=LOGAN:serio2
+
+WAIT,"La lluvia golpea el metal.","WAIT=CLICK"
+
+DAMIAO,"Eso que acabas de decir…",R=DAMIAO:preocupado
+DAMIAO,"No lo dices nunca.",R=DAMIAO:pensativo
+LOGAN,"Porque nunca ha sido verdad.",L=LOGAN:pensativo
+
+DAMIAO,"He oído cosas.",R=DAMIAO:pensativo
+DAMIAO,"Rumores.",R=DAMIAO:pensativo
+DAMIAO,"Nada bueno empieza así.",R=DAMIAO:preocupado
+LOGAN,"Nada bueno empieza de ninguna otra forma aquí.",L=LOGAN:serio2
+
+WAIT,"El agua corre entre las luces del suelo.","WAIT=SILENCE"
+
+DAMIAO,"¿De verdad crees que esto es una salida?",R=DAMIAO:preocupado
+
+WAIT,"(respiras)","WAIT=BEAT"
+
+LOGAN,"Creo que es algo distinto.",L=LOGAN:cansado
+LOGAN,"Y eso ya es más de lo que hemos tenido nunca.",L=LOGAN:serio2
+
+CHOICE,"¿Qué hace Logan?",
+"Responder con cautela","No estoy diciendo que sea seguro.","L=LOGAN:pensativo;CHOICE_ID=LOGAN_TENSION;CHOICE_OPT=CAUTELA;AFF_DAMIAO=+1"
+"Responder con ambición","Si no lo intentamos, ya estamos muertos.","L=LOGAN:serio;CHOICE_ID=LOGAN_TENSION;CHOICE_OPT=AMBICION;AFF_DAMIAO=-1"
+"Responder con cansancio","Estoy cansado de sobrevivir.","L=LOGAN:cansado;CHOICE_ID=LOGAN_TENSION;CHOICE_OPT=CANSANCIO;AFF_DAMIAO=0"
+
+BRANCH,"","CHOICE_ID=LOGAN_TENSION;CHOICE_OPT=CAUTELA"
+DAMIAO,"Eso es lo más sensato que te he oído decir en semanas.",R=DAMIAO:sonrisa_triste
+DAMIAO,"Y aun así me da miedo.",R=DAMIAO:preocupado
+BRANCH_END,"",""
+
+BRANCH,"","CHOICE_ID=LOGAN_TENSION;CHOICE_OPT=AMBICION"
+DAMIAO,"Eso suena a alguien que ya ha tomado una decisión.",R=DAMIAO:preocupado
+DAMIAO,"Y no me gusta cómo acaba esa frase.",R=DAMIAO:pensativo
+BRANCH_END,"",""
+
+BRANCH,"","CHOICE_ID=LOGAN_TENSION;CHOICE_OPT=CANSANCIO"
+DAMIAO,"Yo también.",R=DAMIAO:pensativo
+DAMIAO,"Pero sigo aquí.",R=DAMIAO:serio
+BRANCH_END,"",""
+
+DAMIAO,"Pase lo que pase…",R=DAMIAO:pensativo
+DAMIAO,"No te adelantes.",R=DAMIAO:preocupado
+
+WAIT,"...","WAIT=FINAL_BEAT"
+
+LOGAN,"Nunca lo hago.",L=LOGAN:serio2
