@@ -3631,6 +3631,7 @@ MonoBehaviour:
   characterSlots: {fileID: 46336839}
   choiceManager: {fileID: 1825017965}
   sceneFiles:
+  - scene_01_5
   - scene_02
 --- !u!4 &2143107642
 Transform:

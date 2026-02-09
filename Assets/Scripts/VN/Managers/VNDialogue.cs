@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class VNDialogue : MonoBehaviour
 {
@@ -66,6 +67,17 @@ public class VNDialogue : MonoBehaviour
     public event Action<string> OnActTriggered;
 
     // =========================================================
+    //  JUMP - Salto automático entre escenas
+    // =========================================================
+    private bool _isJumping = false;           // JUMP activo
+    private string _jumpTargetScene = "";      // Escena CSV destino
+    private string _jumpTargetLine = "";       // Línea destino (END o número)
+    private string _jumpUnityScene = "";       // Escena Unity destino (opcional)
+    
+    // Tiempo de espera antes del salto (configurable)
+    private const float JUMP_WAIT_TIME = 1.5f;
+
+    // =========================================================
     //  GUARDADO (PlayerPrefs)
     // =========================================================
     private const string SAVE_SCENE = "VN_SAVE_SCENE";
@@ -79,6 +91,55 @@ public class VNDialogue : MonoBehaviour
     // =========================================================
     private void Start()
     {
+        // Detectar si venimos de un JUMP de otra escena Unity
+        if (PlayerPrefs.GetInt("JUMP_ACTIVE", 0) == 1)
+        {
+            PlayerPrefs.SetInt("JUMP_ACTIVE", 0);
+            
+            sceneIndex = PlayerPrefs.GetInt("JUMP_SCENE_INDEX", 0);
+            string jumpTargetLine = PlayerPrefs.GetString("JUMP_TARGET_LINE", "0");
+            bool needsFadeIn = PlayerPrefs.GetInt("JUMP_FADE_IN", 0) == 1;
+            
+            if (needsFadeIn)
+            {
+                PlayerPrefs.SetInt("JUMP_FADE_IN", 0);
+            }
+            
+            PlayerPrefs.Save();
+            
+            Debug.Log($"[VNDialogue] Start: JUMP detectado. Cargando CSV índice {sceneIndex}, línea '{jumpTargetLine}', FadeIn={needsFadeIn}");
+            
+            LoadScene(sceneIndex);
+            
+            // Posicionar en la línea destino
+            if (jumpTargetLine == "END")
+            {
+                lineIndex = Mathf.Max(0, currentLines.Count - 1);
+            }
+            else if (int.TryParse(jumpTargetLine, out int targetLine))
+            {
+                lineIndex = Mathf.Clamp(targetLine, 0, currentLines.Count - 1);
+            }
+            else
+            {
+                lineIndex = 0;
+            }
+            
+            Debug.Log($"[VNDialogue] JUMP aplicado. Posicionado en línea {lineIndex}");
+            
+            // Si necesita fade in, buscamos el canvas de fade y hacemos fade in
+            if (needsFadeIn)
+            {
+                StartCoroutine(JumpFadeInRoutine());
+            }
+            else
+            {
+                ShowLine();
+            }
+            
+            return;
+        }
+        
         if (PlayerPrefs.GetInt(KEY_CONTINUE, 0) == 1)
         {
             PlayerPrefs.SetInt(KEY_CONTINUE, 0);
@@ -101,6 +162,7 @@ public class VNDialogue : MonoBehaviour
     {
         if (waitingForChoice) return;
         if (_autoAdvancingChoice) return;
+        if (_isJumping) return;  // Bloquear input durante salto automático
         if (currentLines.Count == 0) return;
 
         // WAIT: salir del estado de espera con el siguiente input
@@ -251,6 +313,44 @@ public class VNDialogue : MonoBehaviour
             {
                 ApplyCmdToSlots(cmd);
             }
+
+            return;
+        }
+
+        // =====================================================
+        //  JUMP (Salto automático a otra escena)
+        // =====================================================
+        if (speakerUpper == "JUMP")
+        {
+            Debug.Log($"[VNDialogue] JUMP detectado! Target: {ParseValue((line.cmd ?? "").Trim().Trim('\"'), "JUMP_SCENE")}");
+            
+            _isJumping = true;
+
+            string cmd = (line.cmd ?? "").Trim().Trim('"');
+            _jumpTargetScene = ParseValue(cmd, "JUMP_SCENE");
+            _jumpTargetLine = ParseValue(cmd, "JUMP_LINE");
+            _jumpUnityScene = ParseValue(cmd, "JUMP_UNITY_SCENE");  // Opcional: cambiar escena Unity
+            
+            // Detectar si se debe mantener la música (sin fade out)
+            string skipMusicFade = ParseValue(cmd, "SKIP_MUSIC_FADE");
+            if (skipMusicFade == "1" || skipMusicFade.ToUpper() == "TRUE")
+            {
+                VNTransitionFlags.SkipMusicFadeOnce = true;
+                Debug.Log("[VNDialogue] SKIP_MUSIC_FADE activado. La música continuará sin fade.");
+            }
+
+            Debug.Log($"[VNDialogue] JUMP configurado: CSV={_jumpTargetScene}, Line={_jumpTargetLine}, UnityScene={_jumpUnityScene}");
+
+            // Mostrar texto opcional durante la espera
+            if (nameText != null) nameText.text = "";
+            if (dialogueText != null)
+            {
+                dialogueText.text = line.text ?? "...";
+                dialogueText.color = Color.white;
+            }
+
+            // Iniciar salto automático con delay
+            StartCoroutine(JumpAfterDelay());
 
             return;
         }
@@ -501,6 +601,143 @@ public class VNDialogue : MonoBehaviour
     }
 
     // =========================================================
+    //  JUMP - Coroutine para salto automático
+    // =========================================================
+    
+    private IEnumerator JumpAfterDelay()
+    {
+        Debug.Log($"[VNDialogue] JumpAfterDelay iniciado. Esperando {JUMP_WAIT_TIME} segundos...");
+        
+        // Esperar tiempo configurado antes del salto
+        yield return new WaitForSeconds(JUMP_WAIT_TIME);
+
+        Debug.Log($"[VNDialogue] Espera completada. Buscando escena CSV '{_jumpTargetScene}'...");
+
+        // Buscar índice de la escena CSV destino
+        int targetSceneIndex = sceneFiles.IndexOf(_jumpTargetScene);
+        
+        if (targetSceneIndex < 0)
+        {
+            Debug.LogError($"[VNDialogue] JUMP: Escena CSV '{_jumpTargetScene}' no encontrada en sceneFiles!");
+            _isJumping = false;
+            AdvanceLineAndShow();
+            yield break;
+        }
+
+        Debug.Log($"[VNDialogue] Escena CSV encontrada en índice {targetSceneIndex}.");
+
+        // Si se especifica JUMP_UNITY_SCENE, cargar esa escena de Unity con fade
+        if (!string.IsNullOrEmpty(_jumpUnityScene))
+        {
+            Debug.Log($"[VNDialogue] Preparando fade y carga de escena Unity: {_jumpUnityScene}");
+            
+            // Si el flag de música está activo, persistir AudioSources
+            if (VNTransitionFlags.SkipMusicFadeOnce)
+            {
+                Debug.Log("[VNDialogue] Buscando AudioSources de música para persistir...");
+                
+                // Buscar todos los AudioSources activos en la escena
+                AudioSource[] audioSources = FindObjectsOfType<AudioSource>();
+                foreach (AudioSource audioSource in audioSources)
+                {
+                    if (audioSource.isPlaying)
+                    {
+                        DontDestroyOnLoad(audioSource.gameObject);
+                        Debug.Log($"[VNDialogue] AudioSource '{audioSource.gameObject.name}' marcado como persistente.");
+                    }
+                }
+                
+                // Consumir el flag (ya se usó)
+                VNTransitionFlags.SkipMusicFadeOnce = false;
+            }
+            
+            // Crear canvas de fade temporal
+            GameObject fadeCanvasGO = new GameObject("JumpFadeCanvas");
+            Canvas canvas = fadeCanvasGO.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = 32767;
+            
+            fadeCanvasGO.AddComponent<UnityEngine.UI.CanvasScaler>();
+            fadeCanvasGO.AddComponent<UnityEngine.UI.GraphicRaycaster>();
+            
+            // Panel negro con CanvasGroup
+            GameObject panelGO = new GameObject("FadePanel");
+            panelGO.transform.SetParent(fadeCanvasGO.transform, false);
+            
+            UnityEngine.UI.Image img = panelGO.AddComponent<UnityEngine.UI.Image>();
+            img.color = Color.black;
+            img.raycastTarget = true;
+            
+            RectTransform rt = panelGO.GetComponent<RectTransform>();
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.sizeDelta = Vector2.zero;
+            rt.anchoredPosition = Vector2.zero;
+            
+            CanvasGroup fadeGroup = panelGO.AddComponent<CanvasGroup>();
+            fadeGroup.alpha = 0f;
+            fadeGroup.blocksRaycasts = true;
+            
+            DontDestroyOnLoad(fadeCanvasGO);
+            
+            // FADE OUT a negro (0.8 segundos)
+            float fadeTime = 0.8f;
+            float t = 0f;
+            while (t < fadeTime)
+            {
+                t += Time.deltaTime;
+                float k = Mathf.Clamp01(t / fadeTime);
+                fadeGroup.alpha = k;
+                yield return null;
+            }
+            fadeGroup.alpha = 1f;
+            
+            Debug.Log($"[VNDialogue] Fade completado. Cargando escena...");
+            
+            // Guardar datos para que la nueva escena los cargue
+            PlayerPrefs.SetInt("JUMP_SCENE_INDEX", targetSceneIndex);
+            PlayerPrefs.SetString("JUMP_TARGET_LINE", _jumpTargetLine);
+            PlayerPrefs.SetInt("JUMP_ACTIVE", 1);
+            PlayerPrefs.SetInt("JUMP_FADE_IN", 1);  // Señal para hacer fade in
+            PlayerPrefs.Save();
+            
+            // Cargar escena Unity
+            SceneManager.LoadScene(_jumpUnityScene);
+            
+            yield break;
+        }
+
+        // Si NO hay JUMP_UNITY_SCENE, solo cambiar CSV en la misma escena Unity
+        Debug.Log($"[VNDialogue] Sin cambio de escena Unity. Cargando CSV...");
+        
+        sceneIndex = targetSceneIndex;
+        LoadScene(sceneIndex);
+
+        Debug.Log($"[VNDialogue] CSV cargado. Total líneas: {currentLines.Count}. Posicionando en '{_jumpTargetLine}'...");
+
+        // Posicionar en la línea destino
+        if (_jumpTargetLine == "END")
+        {
+            lineIndex = Mathf.Max(0, currentLines.Count - 1);
+            Debug.Log($"[VNDialogue] Posicionado en END (línea {lineIndex})");
+        }
+        else if (int.TryParse(_jumpTargetLine, out int targetLine))
+        {
+            lineIndex = Mathf.Clamp(targetLine, 0, currentLines.Count - 1);
+            Debug.Log($"[VNDialogue] Posicionado en línea específica {lineIndex}");
+        }
+        else
+        {
+            lineIndex = 0;
+            Debug.Log($"[VNDialogue] JUMP_LINE inválido, posicionado en inicio");
+        }
+
+        _isJumping = false;
+        Debug.Log($"[VNDialogue] JUMP completado. Mostrando línea...");
+        ShowLine();
+    }
+
+    // =========================================================
     //  HELPERS PARA COMPATIBILIDAD CON AMBOS TIPOS DE SLOTS
     // =========================================================
 
@@ -520,5 +757,65 @@ public class VNDialogue : MonoBehaviour
     {
         if (characterSlots == null) return;
         characterSlots.SendMessage("NarratorMoment", SendMessageOptions.DontRequireReceiver);
+    }
+
+    /// <summary>
+    /// Fade In desde negro después de un JUMP con transición de escena Unity.
+    /// Busca el canvas de fade creado por JumpAfterDelay y lo desvanece.
+    /// </summary>
+    private IEnumerator JumpFadeInRoutine()
+    {
+        Debug.Log("[VNDialogue] JumpFadeInRoutine iniciado. Buscando canvas de fade...");
+        
+        // Buscar el canvas de fade que dejó la escena anterior
+        GameObject fadeCanvasGO = GameObject.Find("JumpFadeCanvas");
+        
+        if (fadeCanvasGO == null)
+        {
+            Debug.LogWarning("[VNDialogue] No se encontró JumpFadeCanvas. Mostrando sin fade.");
+            ShowLine();
+            yield break;
+        }
+        
+        CanvasGroup fadeGroup = fadeCanvasGO.GetComponentInChildren<CanvasGroup>();
+        
+        if (fadeGroup == null)
+        {
+            Debug.LogWarning("[VNDialogue] No se encontró CanvasGroup en JumpFadeCanvas.");
+            Destroy(fadeCanvasGO);
+            ShowLine();
+            yield break;
+        }
+        
+        Debug.Log("[VNDialogue] Canvas de fade encontrado. Iniciando fade in...");
+        
+        // Asegurar que empieza en negro
+        fadeGroup.alpha = 1f;
+        fadeGroup.blocksRaycasts = true;
+        
+        // Pequeño delay antes de empezar el fade
+        yield return new WaitForSeconds(0.3f);
+        
+        // Mostrar el diálogo mientras está en negro
+        ShowLine();
+        
+        // FADE IN desde negro (1 segundo)
+        float fadeTime = 1f;
+        float t = 0f;
+        while (t < fadeTime)
+        {
+            t += Time.deltaTime;
+            float k = Mathf.Clamp01(t / fadeTime);
+            fadeGroup.alpha = 1f - k;  // De 1 a 0
+            yield return null;
+        }
+        
+        fadeGroup.alpha = 0f;
+        fadeGroup.blocksRaycasts = false;
+        
+        Debug.Log("[VNDialogue] Fade in completado. Destruyendo canvas.");
+        
+        // Destruir el canvas de fade
+        Destroy(fadeCanvasGO);
     }
 }

@@ -17,3 +17,8 @@ LOGAN,"Las nuevas…","C=LOGAN:pensativo"
 LOGAN,"Te sonríen primero.","C=LOGAN:agotado"
 
 WAIT,"Un ruido metálico rompe el silencio.","WAIT=BEAT"
+
+WAIT,"Pasos. Alguien sube sin prisa.","WAIT=SILENCE"
+LOGAN,"…Ya era hora.","C=LOGAN:serio2"
+
+JUMP,"...","JUMP_SCENE=scene_02;JUMP_LINE=0;JUMP_UNITY_SCENE=Scene_Game2;SKIP_MUSIC_FADE=1"

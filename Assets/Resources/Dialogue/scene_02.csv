@@ -1,4 +1,6 @@
 speaker,text,cmd
+WAIT,"Una sombra se recorta en la entrada de la azotea.","WAIT=BEAT"
+
 DAMIAO,"No me gusta cómo suena esto.",R=DAMIAO:pensativo
 LOGAN,"No suena a nada.",L=LOGAN:serio2
 DAMIAO,"Exacto.",R=DAMIAO:preocupado
