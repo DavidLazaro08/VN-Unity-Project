@@ -1,0 +1,19 @@
+speaker,text,cmd
+LOGAN,"Desde aquí arriba todo parece más sencillo.","C=LOGAN:serio"
+LOGAN,"Las luces ordenadas.","C=LOGAN:pensativo"
+LOGAN,"Los problemas… lejos.","C=LOGAN:serio2"
+
+WAIT,"La ciudad respira debajo.","WAIT=SILENCE"
+
+LOGAN,"Luego bajas.","C=LOGAN:pensativo"
+LOGAN,"Y recuerdas que esta ciudad no perdona a nadie.","C=LOGAN:cansado"
+LOGAN,"Solo decide cuánto tarda.","C=LOGAN:serio"
+
+WAIT,"El viento arrastra un olor metálico.","WAIT=BEAT"
+
+LOGAN,"No me gustan las ideas nuevas.","C=LOGAN:serio2"
+LOGAN,"Las viejas al menos sabes cómo te matan.","C=LOGAN:ironico"
+LOGAN,"Las nuevas…","C=LOGAN:pensativo"
+LOGAN,"Te sonríen primero.","C=LOGAN:agotado"
+
+WAIT,"Un ruido metálico rompe el silencio.","WAIT=BEAT"

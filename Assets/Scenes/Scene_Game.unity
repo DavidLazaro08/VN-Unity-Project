@@ -245,34 +245,34 @@ MonoBehaviour:
   catalog:
   - id: LOGAN
     pose: SERIO
-    sprite: {fileID: 21300000, guid: 37cdebae09add5842bde114738f52b37, type: 3}
+    sprite: {fileID: -2517024161436231376, guid: 4a7d9e4f11a92b34ea8243c6950c1a4d, type: 3}
   - id: LOGAN
     pose: SONRISA
-    sprite: {fileID: 21300000, guid: 5dfe4f9fa6c21a946a890bc63dab7f06, type: 3}
+    sprite: {fileID: -5545429873295565574, guid: a1eafef16c246454a9f3ca471b6235f6, type: 3}
   - id: LOGAN
     pose: CANSADO
-    sprite: {fileID: 3032742322690080645, guid: 51bce91e12b1c4d40a826c9e0b2237f8, type: 3}
+    sprite: {fileID: 3032742322690080645, guid: 90568d63221b7c4439bca867a33c809d, type: 3}
   - id: LOGAN
     pose: IRONICO
-    sprite: {fileID: 7596085647229666351, guid: 7113879ab0e10f64989b9ac00fc6b7ec, type: 3}
+    sprite: {fileID: 7596085647229666351, guid: 582a107d0d2857d4fb14826205f99027, type: 3}
   - id: DAMIAO
     pose: SONRISA
-    sprite: {fileID: 21300000, guid: 2b9e29f865bcf3c428749cdd24324c30, type: 3}
+    sprite: {fileID: 6009288091341004142, guid: 5c2729bf614fc4042b66373950e165ec, type: 3}
   - id: DAMIAO
     pose: PREOCUPADO
-    sprite: {fileID: 4811332482673554767, guid: 1933cdf9470ef4b45bbf792f6305d024, type: 3}
+    sprite: {fileID: 4811332482673554767, guid: bed14ebe33227a04796992029c6c6637, type: 3}
   - id: DAMIAO
     pose: PENSATIVO
-    sprite: {fileID: 9128521444718295342, guid: 2a3e80bf8ee704e4da433b5ddcc37b8d, type: 3}
+    sprite: {fileID: 9128521444718295342, guid: aab5a186e98bd8746a4fb5dd66544cdf, type: 3}
   - id: DAMIAO
     pose: IRONICO
-    sprite: {fileID: 3829481564637647759, guid: 89509deb96a24204f96ff428b3508df9, type: 3}
+    sprite: {fileID: 3829481564637647759, guid: 0264cb5938378c841a6d86de5b2b9d20, type: 3}
   - id: DAMIAO
     pose: IRONICO2
-    sprite: {fileID: -5399180441167162824, guid: bedd255f4114923499ef07b84b6b366c, type: 3}
+    sprite: {fileID: -5399180441167162824, guid: ad880153737aea54690923db80fb0317, type: 3}
   - id: LOGAN
     pose: SERIO2
-    sprite: {fileID: -6488254069904849875, guid: 4cac0120dcf98dc4e8ecc1c06982ac29, type: 3}
+    sprite: {fileID: -6488254069904849875, guid: 4352af14cc39e64449c51a7b5339c4d8, type: 3}
 --- !u!4 &46336840
 Transform:
   m_ObjectHideFlags: 0
@@ -737,7 +737,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 37cdebae09add5842bde114738f52b37, type: 3}
+  m_Sprite: {fileID: -2517024161436231376, guid: 4a7d9e4f11a92b34ea8243c6950c1a4d, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2782,7 +2782,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2b9e29f865bcf3c428749cdd24324c30, type: 3}
+  m_Sprite: {fileID: 6009288091341004142, guid: 5c2729bf614fc4042b66373950e165ec, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1

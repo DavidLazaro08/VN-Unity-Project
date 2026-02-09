@@ -244,35 +244,50 @@ MonoBehaviour:
   idleScaleAmplitude: 0.008
   catalog:
   - id: LOGAN
-    pose: SERIO
-    sprite: {fileID: 21300000, guid: 37cdebae09add5842bde114738f52b37, type: 3}
+    pose: SERIO2
+    sprite: {fileID: -3154763564771969441, guid: eef830b87803fa2458f324af0ffeabe1, type: 3}
   - id: LOGAN
-    pose: SONRISA
-    sprite: {fileID: 21300000, guid: 5dfe4f9fa6c21a946a890bc63dab7f06, type: 3}
+    pose: PENSATIVO
+    sprite: {fileID: -8959602948077826453, guid: ebf6f9ddc82d31744823f39ca37a325b, type: 3}
   - id: LOGAN
     pose: CANSADO
-    sprite: {fileID: 3032742322690080645, guid: 51bce91e12b1c4d40a826c9e0b2237f8, type: 3}
+    sprite: {fileID: 5403725380293789798, guid: c371a40338d917149882c002f46de666, type: 3}
   - id: LOGAN
-    pose: IRONICO
-    sprite: {fileID: 7596085647229666351, guid: 7113879ab0e10f64989b9ac00fc6b7ec, type: 3}
-  - id: DAMIAO
-    pose: SONRISA
-    sprite: {fileID: 21300000, guid: 2b9e29f865bcf3c428749cdd24324c30, type: 3}
-  - id: DAMIAO
-    pose: PREOCUPADO
-    sprite: {fileID: 4811332482673554767, guid: 1933cdf9470ef4b45bbf792f6305d024, type: 3}
+    pose: AGOTADO
+    sprite: {fileID: -1551252822785041378, guid: e907ba548673461479a2f05b5125f4b7, type: 3}
+  - id: LOGAN
+    pose: CIGARRO1
+    sprite: {fileID: 895223285738409317, guid: 476d9e43fd3ef8048bcab02e13404e98, type: 3}
+  - id: LOGAN
+    pose: CIGARRO2
+    sprite: {fileID: 8277030490402016405, guid: bedc1d08bc6eb5146beac077a4c67c25, type: 3}
   - id: DAMIAO
     pose: PENSATIVO
-    sprite: {fileID: 9128521444718295342, guid: 2a3e80bf8ee704e4da433b5ddcc37b8d, type: 3}
+    sprite: {fileID: 715813722909572246, guid: 998752b45dae6af43b5353d4c17c39e6, type: 3}
+  - id: DAMIAO
+    pose: PREOCUPADO
+    sprite: {fileID: 1178367718907262768, guid: 1e5497256d4d96e41a8ae9cd81d55302, type: 3}
   - id: DAMIAO
     pose: IRONICO
-    sprite: {fileID: 3829481564637647759, guid: 89509deb96a24204f96ff428b3508df9, type: 3}
+    sprite: {fileID: -4626615462025475705, guid: f4f542b78f6580442a5053383e5595ac, type: 3}
   - id: DAMIAO
-    pose: IRONICO2
-    sprite: {fileID: -5399180441167162824, guid: bedd255f4114923499ef07b84b6b366c, type: 3}
+    pose: SERIO
+    sprite: {fileID: 2011671207909898786, guid: b01e6bbf1bf65be4ca507d3cd14760b9, type: 3}
+  - id: DAMIAO
+    pose: sonrisa_triste
+    sprite: {fileID: 1708773870570226208, guid: cf0253933422e074ea5e86251fff112a, type: 3}
   - id: LOGAN
-    pose: SERIO2
-    sprite: {fileID: -6488254069904849875, guid: 4cac0120dcf98dc4e8ecc1c06982ac29, type: 3}
+    pose: serio2_con_cigarro
+    sprite: {fileID: -7166154517499151589, guid: eeab9b4f1383035419bd30d93316734b, type: 3}
+  - id: LOGAN
+    pose: cansado_con_cigarro
+    sprite: {fileID: 3065913436545312431, guid: aa3cc0786da751d4d9e16818c215df30, type: 3}
+  - id: LOGAN
+    pose: pensativo_tira_cigarro
+    sprite: {fileID: -1930080858753687298, guid: df0d38cdab86c57458c57efcd1353d83, type: 3}
+  - id: LOGAN
+    pose: AMBICIOSO
+    sprite: {fileID: -2893271123567528281, guid: 9dfa2ffb59c993f49b5ca4e04799aa98, type: 3}
 --- !u!4 &46336840
 Transform:
   m_ObjectHideFlags: 0
@@ -829,7 +844,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 37cdebae09add5842bde114738f52b37, type: 3}
+  m_Sprite: {fileID: -2893271123567528281, guid: 9dfa2ffb59c993f49b5ca4e04799aa98, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -3079,7 +3094,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2b9e29f865bcf3c428749cdd24324c30, type: 3}
+  m_Sprite: {fileID: -4626615462025475705, guid: f4f542b78f6580442a5053383e5595ac, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -3616,7 +3631,7 @@ MonoBehaviour:
   characterSlots: {fileID: 46336839}
   choiceManager: {fileID: 1825017965}
   sceneFiles:
-  - scene_01
+  - scene_02
 --- !u!4 &2143107642
 Transform:
   m_ObjectHideFlags: 0

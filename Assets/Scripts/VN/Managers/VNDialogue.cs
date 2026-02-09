@@ -27,7 +27,7 @@ public class VNDialogue : MonoBehaviour
     //  VISUAL DE PERSONAJES
     // =========================================================
     [Header("Personajes (visual)")]
-    public VNCharacterSlots characterSlots;
+    public Component characterSlots;
 
     // =========================================================
     //  CHOICES
@@ -60,6 +60,7 @@ public class VNDialogue : MonoBehaviour
     private bool _isWaiting = false;      // WAIT activo
     private bool _actActive = false;      // ACT activo
     private string _pendingActId = "";    // ID de la acción pendiente
+    private string _waitType = "";        // Tipo de WAIT (CLICK, SILENCE, BEAT, FINAL_BEAT)
 
     // Evento para ACT: se dispara cuando el jugador confirma la acción
     public event Action<string> OnActTriggered;
@@ -197,8 +198,34 @@ public class VNDialogue : MonoBehaviour
             if (nameText != null) nameText.text = "";
             if (dialogueText != null) dialogueText.text = line.text ?? "...";
 
-            // Importante: NO tocamos characterSlots aquí.
-            // El objetivo es que el silencio sea dramático con los personajes en pantalla.
+            // Procesar comandos (poses, etc.) antes de pausar
+            string cmd = (line.cmd ?? "").Trim().Trim('"');
+            
+            // Parsear tipo de WAIT (CLICK, SILENCE, BEAT, FINAL_BEAT)
+            _waitType = ParseValue(cmd, "WAIT");
+            
+            // Aplicar comandos de personajes (L=LOGAN:pose, R=DAMIAO:pose, etc.)
+            if (characterSlots != null && !string.IsNullOrEmpty(cmd))
+            {
+                ApplyCmdToSlots(cmd);
+                
+                // Aplicar foco si hay comando de personaje
+                string cmdUpper = cmd.ToUpper();
+                if (cmdUpper.Contains("L=LOGAN") || cmdUpper.Contains("C=LOGAN"))
+                    ApplyFocusToSlots("LOGAN");
+                else if (cmdUpper.Contains("R=DAMIAO") || cmdUpper.Contains("C=DAMIAO"))
+                    ApplyFocusToSlots("DAMIAO");
+                else if (cmdUpper.Contains("L=LAZARUS") || cmdUpper.Contains("R=LAZARUS") || cmdUpper.Contains("C=LAZARUS"))
+                    ApplyFocusToSlots("LAZARUS");
+            }
+            
+            // Opcionalmente ocultar personajes si se especifica WAIT_HIDE=1
+            if (characterSlots != null && ParseValue(cmd, "WAIT_HIDE") == "1")
+            {
+                NarratorMomentToSlots();
+            }
+            // De lo contrario, los personajes permanecen visibles para dramatismo
+
             return;
         }
 
@@ -217,6 +244,12 @@ public class VNDialogue : MonoBehaviour
             {
                 dialogueText.text = line.text ?? "[Acción]";
                 dialogueText.color = new Color(1f, 0.9f, 0.5f);
+            }
+            
+            // Aplicar comandos de personajes (L=LOGAN:pose, R=DAMIAO:pose, C=LOGAN:pose, etc.)
+            if (characterSlots != null && !string.IsNullOrEmpty(cmd))
+            {
+                ApplyCmdToSlots(cmd);
             }
 
             return;
@@ -289,19 +322,19 @@ public class VNDialogue : MonoBehaviour
         }
 
         if (characterSlots != null)
-            characterSlots.ApplyCmd(line.cmd);
+            ApplyCmdToSlots(line.cmd);
 
         // Narrador
         if (speakerUpper == "NARRADOR" || string.IsNullOrEmpty(speakerUpper))
         {
             if (characterSlots != null)
-                characterSlots.NarratorMoment();
+                NarratorMomentToSlots();
             return;
         }
 
         // Foco
         if (characterSlots != null)
-            characterSlots.ApplyFocus(speakerUpper);
+            ApplyFocusToSlots(speakerUpper);
     }
 
     // Avanza línea a línea hasta encontrar otro BRANCH, un BRANCH_END, o salir de la zona
@@ -392,10 +425,10 @@ public class VNDialogue : MonoBehaviour
         }
 
         if (characterSlots != null)
-            characterSlots.ApplyCmd(cleanCmd);
+            ApplyCmdToSlots(cleanCmd);
 
         if (characterSlots != null && !string.IsNullOrEmpty(speakerToShow))
-            characterSlots.ApplyFocus(speakerToShow.Trim().ToUpper());
+            ApplyFocusToSlots(speakerToShow.Trim().ToUpper());
 
         if (choiceNextLineIndex >= 0)
             lineIndex = choiceNextLineIndex - 1;
@@ -465,5 +498,27 @@ public class VNDialogue : MonoBehaviour
     public bool HasSave()
     {
         return PlayerPrefs.GetInt(KEY_HAS_SAVE, 0) == 1;
+    }
+
+    // =========================================================
+    //  HELPERS PARA COMPATIBILIDAD CON AMBOS TIPOS DE SLOTS
+    // =========================================================
+
+    private void ApplyCmdToSlots(string cmd)
+    {
+        if (characterSlots == null) return;
+        characterSlots.SendMessage("ApplyCmd", cmd, SendMessageOptions.DontRequireReceiver);
+    }
+
+    private void ApplyFocusToSlots(string speaker)
+    {
+        if (characterSlots == null) return;
+        characterSlots.SendMessage("ApplyFocus", speaker, SendMessageOptions.DontRequireReceiver);
+    }
+
+    private void NarratorMomentToSlots()
+    {
+        if (characterSlots == null) return;
+        characterSlots.SendMessage("NarratorMoment", SendMessageOptions.DontRequireReceiver);
     }
 }

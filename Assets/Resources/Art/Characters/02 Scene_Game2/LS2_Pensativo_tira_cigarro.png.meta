@@ -1,0 +1,663 @@
+fileFormatVersion: 2
+guid: df0d38cdab86c57458c57efcd1353d83
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1930080858753687298
+    second: LS2_Pensativo_tira_cigarro_0
+  - first:
+      213: 8463997996703371428
+    second: LS2_Pensativo_tira_cigarro_1
+  - first:
+      213: 8077147811586107855
+    second: LS2_Pensativo_tira_cigarro_2
+  - first:
+      213: -3150280686972273065
+    second: LS2_Pensativo_tira_cigarro_3
+  - first:
+      213: 867696048496526758
+    second: LS2_Pensativo_tira_cigarro_4
+  - first:
+      213: -3157982484151345008
+    second: LS2_Pensativo_tira_cigarro_5
+  - first:
+      213: 8696404773456237154
+    second: LS2_Pensativo_tira_cigarro_6
+  - first:
+      213: 1039245365766635268
+    second: LS2_Pensativo_tira_cigarro_7
+  - first:
+      213: -8199437377397622289
+    second: LS2_Pensativo_tira_cigarro_8
+  - first:
+      213: 6942927162629527603
+    second: LS2_Pensativo_tira_cigarro_9
+  - first:
+      213: -8394646503748828278
+    second: LS2_Pensativo_tira_cigarro_10
+  - first:
+      213: 776574225725840729
+    second: LS2_Pensativo_tira_cigarro_11
+  - first:
+      213: 1657244783626625907
+    second: LS2_Pensativo_tira_cigarro_12
+  - first:
+      213: -8256170973886915859
+    second: LS2_Pensativo_tira_cigarro_13
+  - first:
+      213: -6933323676894947738
+    second: LS2_Pensativo_tira_cigarro_14
+  - first:
+      213: -8089075049204807190
+    second: LS2_Pensativo_tira_cigarro_15
+  - first:
+      213: 8559482526535960240
+    second: LS2_Pensativo_tira_cigarro_16
+  - first:
+      213: -2056288685531931222
+    second: LS2_Pensativo_tira_cigarro_17
+  - first:
+      213: 7411207348462295341
+    second: LS2_Pensativo_tira_cigarro_18
+  - first:
+      213: -1972709653803834663
+    second: LS2_Pensativo_tira_cigarro_19
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_0
+      rect:
+        serializedVersion: 2
+        x: 113
+        y: 0
+        width: 1636
+        height: 2924
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef0a43a5fa9f635e0800000000000000
+      internalID: -1930080858753687298
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_1
+      rect:
+        serializedVersion: 2
+        x: 1743
+        y: 1071
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a05f157559267570800000000000000
+      internalID: 8463997996703371428
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_2
+      rect:
+        serializedVersion: 2
+        x: 1742
+        y: 1019
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc9e9ebd32bc71070800000000000000
+      internalID: 8077147811586107855
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_3
+      rect:
+        serializedVersion: 2
+        x: 1741
+        y: 999
+        width: 8
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75e7e36f764f744d0800000000000000
+      internalID: -3150280686972273065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_4
+      rect:
+        serializedVersion: 2
+        x: 1742
+        y: 991
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6a545a775fcaa0c00800000000000000
+      internalID: 867696048496526758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_5
+      rect:
+        serializedVersion: 2
+        x: 1742
+        y: 944
+        width: 7
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 090e04199a79c24d0800000000000000
+      internalID: -3157982484151345008
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_6
+      rect:
+        serializedVersion: 2
+        x: 1741
+        y: 872
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 262ded0e016dfa870800000000000000
+      internalID: 8696404773456237154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_7
+      rect:
+        serializedVersion: 2
+        x: 1742
+        y: 845
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40fbdfc67242c6e00800000000000000
+      internalID: 1039245365766635268
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_8
+      rect:
+        serializedVersion: 2
+        x: 1741
+        y: 783
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fe97722d52fb53e80800000000000000
+      internalID: -8199437377397622289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_9
+      rect:
+        serializedVersion: 2
+        x: 1743
+        y: 778
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33891fd187b3a5060800000000000000
+      internalID: 6942927162629527603
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_10
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 0
+        width: 354
+        height: 722
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a8383194b79308b80800000000000000
+      internalID: -8394646503748828278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_11
+      rect:
+        serializedVersion: 2
+        x: 1743
+        y: 682
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95ddc12d422f6ca00800000000000000
+      internalID: 776574225725840729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_12
+      rect:
+        serializedVersion: 2
+        x: 1743
+        y: 660
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3732fe9a957bff610800000000000000
+      internalID: 1657244783626625907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_13
+      rect:
+        serializedVersion: 2
+        x: 1741
+        y: 644
+        width: 8
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dea54980e303c6d80800000000000000
+      internalID: -8256170973886915859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_14
+      rect:
+        serializedVersion: 2
+        x: 1742
+        y: 619
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6661fd5a9d2e7cf90800000000000000
+      internalID: -6933323676894947738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_15
+      rect:
+        serializedVersion: 2
+        x: 1743
+        y: 612
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ae90caab915ddbf80800000000000000
+      internalID: -8089075049204807190
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_16
+      rect:
+        serializedVersion: 2
+        x: 1742
+        y: 370
+        width: 7
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b6c65ff10469c670800000000000000
+      internalID: 8559482526535960240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_17
+      rect:
+        serializedVersion: 2
+        x: 1741
+        y: 338
+        width: 8
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aadd63fc5589673e0800000000000000
+      internalID: -2056288685531931222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_18
+      rect:
+        serializedVersion: 2
+        x: 1742
+        y: 300
+        width: 7
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d291cd131d5e9d660800000000000000
+      internalID: 7411207348462295341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LS2_Pensativo_tira_cigarro_19
+      rect:
+        serializedVersion: 2
+        x: 1743
+        y: 22
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d2e90095078f94e0800000000000000
+      internalID: -1972709653803834663
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      LS2_Pensativo_tira_cigarro_0: -1930080858753687298
+      LS2_Pensativo_tira_cigarro_1: 8463997996703371428
+      LS2_Pensativo_tira_cigarro_10: -8394646503748828278
+      LS2_Pensativo_tira_cigarro_11: 776574225725840729
+      LS2_Pensativo_tira_cigarro_12: 1657244783626625907
+      LS2_Pensativo_tira_cigarro_13: -8256170973886915859
+      LS2_Pensativo_tira_cigarro_14: -6933323676894947738
+      LS2_Pensativo_tira_cigarro_15: -8089075049204807190
+      LS2_Pensativo_tira_cigarro_16: 8559482526535960240
+      LS2_Pensativo_tira_cigarro_17: -2056288685531931222
+      LS2_Pensativo_tira_cigarro_18: 7411207348462295341
+      LS2_Pensativo_tira_cigarro_19: -1972709653803834663
+      LS2_Pensativo_tira_cigarro_2: 8077147811586107855
+      LS2_Pensativo_tira_cigarro_3: -3150280686972273065
+      LS2_Pensativo_tira_cigarro_4: 867696048496526758
+      LS2_Pensativo_tira_cigarro_5: -3157982484151345008
+      LS2_Pensativo_tira_cigarro_6: 8696404773456237154
+      LS2_Pensativo_tira_cigarro_7: 1039245365766635268
+      LS2_Pensativo_tira_cigarro_8: -8199437377397622289
+      LS2_Pensativo_tira_cigarro_9: 6942927162629527603
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

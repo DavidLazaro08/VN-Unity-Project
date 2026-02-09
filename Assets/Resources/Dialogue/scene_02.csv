@@ -3,28 +3,74 @@ DAMIAO,"No me gusta cómo suena esto.",R=DAMIAO:pensativo
 LOGAN,"No suena a nada.",L=LOGAN:serio2
 DAMIAO,"Exacto.",R=DAMIAO:preocupado
 DAMIAO,"Cuando algo aquí deja de sonar…",R=DAMIAO:pensativo
-DAMIAO,"…es porque alguien está calculando.",R=DAMIAO:pensativo
+DAMIAO,"…es porque alguien está haciendo números.",R=DAMIAO:pensativo
 
-ACT,"[Logan enciende un cigarro sellado; la brasa azul no se apaga bajo la lluvia]","ACT=LIGHT_CIG"
+CHOICE,"Logan saca un cigarro…",
+"Encender el cigarro","(la brasa azul no se apaga bajo la lluvia)","CHOICE_ID=CIG;CHOICE_OPT=SI;L=LOGAN:cigarro1;AFF_DAMIAO=-1"
+"No encenderlo","(lo guarda)","CHOICE_ID=CIG;CHOICE_OPT=NO;L=LOGAN:serio2;AFF_DAMIAO=+1"
+"Solo el amago","(mechero en la mano… nada más)","CHOICE_ID=CIG;CHOICE_OPT=AMAGO;L=LOGAN:cansado;AFF_DAMIAO=0"
 
+BRANCH,"","CHOICE_ID=CIG;CHOICE_OPT=SI"
+WAIT,"...","WAIT=BEAT;L=LOGAN:cigarro1"
 DAMIAO,"Odio cuando haces eso.",R=DAMIAO:preocupado
-DAMIAO,"Es que entonces ya vas en serio.",R=DAMIAO:pensativo
+DAMIAO,"Porque cuando haces eso… te da igual todo.",R=DAMIAO:pensativo
+LOGAN,"No todos los cálculos salen mal.",L=LOGAN:cansado_con_cigarro
+BRANCH_END,"",""
 
+BRANCH,"","CHOICE_ID=CIG;CHOICE_OPT=NO"
+DAMIAO,"No sé qué me inquieta más…",R=DAMIAO:pensativo
+DAMIAO,"…que no lo enciendas, o que ya no te importe.",R=DAMIAO:preocupado
 LOGAN,"No todos los cálculos salen mal.",L=LOGAN:cansado
+BRANCH_END,"",""
+
+BRANCH,"","CHOICE_ID=CIG;CHOICE_OPT=AMAGO"
+DAMIAO,"Ese gesto…",R=DAMIAO:pensativo
+DAMIAO,"Lo haces justo antes de que algo se rompa.",R=DAMIAO:preocupado
+LOGAN,"No todos los cálculos salen mal.",L=LOGAN:cansado
+BRANCH_END,"",""
+
 DAMIAO,"Los que hace el Viejo sí.",R=DAMIAO:serio
 DAMIAO,"Siempre.",R=DAMIAO:pensativo
+
+BRANCH,"","CHOICE_ID=CIG;CHOICE_OPT=SI"
+LOGAN,"Esta vez no es cosa suya.",L=LOGAN:serio2_con_cigarro
+BRANCH_END,"",""
+
+BRANCH,"","CHOICE_ID=CIG;CHOICE_OPT=NO"
 LOGAN,"Esta vez no es cosa suya.",L=LOGAN:serio2
+BRANCH_END,"",""
+
+BRANCH,"","CHOICE_ID=CIG;CHOICE_OPT=AMAGO"
+LOGAN,"Esta vez no es cosa suya.",L=LOGAN:serio2
+BRANCH_END,"",""
 
 WAIT,"La lluvia golpea el metal.","WAIT=CLICK"
 
 DAMIAO,"Eso que acabas de decir…",R=DAMIAO:preocupado
-DAMIAO,"No lo dices nunca.",R=DAMIAO:pensativo
-LOGAN,"Porque nunca ha sido verdad.",L=LOGAN:pensativo
+DAMIAO,"No te lo he oído nunca.",R=DAMIAO:pensativo
+
+BRANCH,"","CHOICE_ID=CIG;CHOICE_OPT=SI"
+WAIT,"...","WAIT=BEAT;L=LOGAN:cigarro2"
+LOGAN,"Porque nunca había sido verdad.",L=LOGAN:pensativo_tira_cigarro
+BRANCH_END,"",""
+
+BRANCH,"","CHOICE_ID=CIG;CHOICE_OPT=NO"
+WAIT,"...","WAIT=BEAT;L=LOGAN:serio2"
+LOGAN,"Porque nunca había sido verdad.",L=LOGAN:pensativo
+BRANCH_END,"",""
+
+BRANCH,"","CHOICE_ID=CIG;CHOICE_OPT=AMAGO"
+WAIT,"...","WAIT=BEAT;L=LOGAN:serio2"
+LOGAN,"Porque nunca había sido verdad.",L=LOGAN:pensativo
+BRANCH_END,"",""
 
 DAMIAO,"He oído cosas.",R=DAMIAO:pensativo
 DAMIAO,"Rumores.",R=DAMIAO:pensativo
-DAMIAO,"Nada bueno empieza así.",R=DAMIAO:preocupado
-LOGAN,"Nada bueno empieza de ninguna otra forma aquí.",L=LOGAN:serio2
+DAMIAO,"Y nada bueno empieza así...",R=DAMIAO:preocupado
+LOGAN,"BaH! Nada bueno empieza de ninguna otra forma aquí.",L=LOGAN:serio2
+
+DAMIAO,"Qué bonito.",R=DAMIAO:ironico
+DAMIAO,"Lo dices como si alguien fuese a imprimirlo en una valla.",R=DAMIAO:ironico
 
 WAIT,"El agua corre entre las luces del suelo.","WAIT=SILENCE"
 
@@ -33,12 +79,12 @@ DAMIAO,"¿De verdad crees que esto es una salida?",R=DAMIAO:preocupado
 WAIT,"(respiras)","WAIT=BEAT"
 
 LOGAN,"Creo que es algo distinto.",L=LOGAN:cansado
-LOGAN,"Y eso ya es más de lo que hemos tenido nunca.",L=LOGAN:serio2
+LOGAN,"Y eso ya es más de lo que hemos tenido nunca.",L=LOGAN:agotado
 
-CHOICE,"¿Qué hace Logan?",
+CHOICE,"¿Qué responde Logan?",
 "Responder con cautela","No estoy diciendo que sea seguro.","L=LOGAN:pensativo;CHOICE_ID=LOGAN_TENSION;CHOICE_OPT=CAUTELA;AFF_DAMIAO=+1"
-"Responder con ambición","Si no lo intentamos, ya estamos muertos.","L=LOGAN:serio;CHOICE_ID=LOGAN_TENSION;CHOICE_OPT=AMBICION;AFF_DAMIAO=-1"
-"Responder con cansancio","Estoy cansado de sobrevivir.","L=LOGAN:cansado;CHOICE_ID=LOGAN_TENSION;CHOICE_OPT=CANSANCIO;AFF_DAMIAO=0"
+"Responder con ambición","Si no lo intentamos, ya estamos muertos.","L=LOGAN:ambicioso;CHOICE_ID=LOGAN_TENSION;CHOICE_OPT=AMBICION;AFF_DAMIAO=-1"
+"Responder con cansancio","Estoy cansado de sobrevivir.","L=LOGAN:agotado;CHOICE_ID=LOGAN_TENSION;CHOICE_OPT=CANSANCIO;AFF_DAMIAO=0"
 
 BRANCH,"","CHOICE_ID=LOGAN_TENSION;CHOICE_OPT=CAUTELA"
 DAMIAO,"Eso es lo más sensato que te he oído decir en semanas.",R=DAMIAO:sonrisa_triste
@@ -47,7 +93,7 @@ BRANCH_END,"",""
 
 BRANCH,"","CHOICE_ID=LOGAN_TENSION;CHOICE_OPT=AMBICION"
 DAMIAO,"Eso suena a alguien que ya ha tomado una decisión.",R=DAMIAO:preocupado
-DAMIAO,"Y no me gusta cómo acaba esa frase.",R=DAMIAO:pensativo
+DAMIAO,"Y aquí eso nunca acaba limpio.",R=DAMIAO:pensativo
 BRANCH_END,"",""
 
 BRANCH,"","CHOICE_ID=LOGAN_TENSION;CHOICE_OPT=CANSANCIO"
