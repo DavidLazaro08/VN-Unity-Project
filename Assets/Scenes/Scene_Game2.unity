@@ -284,7 +284,7 @@ MonoBehaviour:
     sprite: {fileID: 3065913436545312431, guid: aa3cc0786da751d4d9e16818c215df30, type: 3}
   - id: LOGAN
     pose: pensativo_tira_cigarro
-    sprite: {fileID: -1930080858753687298, guid: df0d38cdab86c57458c57efcd1353d83, type: 3}
+    sprite: {fileID: -4041142388938169046, guid: 48e1942081b75ef49a04002858b6a8d4, type: 3}
   - id: LOGAN
     pose: AMBICIOSO
     sprite: {fileID: -2893271123567528281, guid: 9dfa2ffb59c993f49b5ca4e04799aa98, type: 3}
@@ -3628,6 +3628,10 @@ MonoBehaviour:
   affinityPopup: {fileID: 2020301907}
   autoAdvanceAfterChoice: 1
   choiceAutoAdvanceDelay: 5
+  enableTypewriter: 1
+  typewriterCharsPerSecond: 40
+  waitStyleColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
+  waitStyleSizeMultiplier: 0.9
   characterSlots: {fileID: 46336839}
   choiceManager: {fileID: 1825017965}
   sceneFiles:
