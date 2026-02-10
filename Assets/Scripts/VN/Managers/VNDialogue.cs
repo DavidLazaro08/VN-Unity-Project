@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class VNDialogue : MonoBehaviour
+public partial class VNDialogue : MonoBehaviour
 {
     // =========================================================
     //  UI BÁSICA (nombre + texto)
@@ -17,12 +17,7 @@ public class VNDialogue : MonoBehaviour
     [Header("Afinidad")]
     public AffinityPopupUI affinityPopup;
 
-    [Header("Choice Auto-Advance")]
-    public bool autoAdvanceAfterChoice = true;
-    public float choiceAutoAdvanceDelay = 5.0f;
 
-    private Coroutine _choiceAutoCo;
-    private bool _autoAdvancingChoice = false;
 
     // =========================================================
     //  TEXT PRESENTATION
@@ -114,14 +109,7 @@ public class VNDialogue : MonoBehaviour
     // Tiempo de espera antes del salto (configurable)
     private const float JUMP_WAIT_TIME = 1.5f;
 
-    // =========================================================
-    //  GUARDADO (PlayerPrefs)
-    // =========================================================
-    private const string SAVE_SCENE = "VN_SAVE_SCENE";
-    private const string SAVE_LINE = "VN_SAVE_LINE";
 
-    private const string KEY_HAS_SAVE = "VN_HAS_SAVE";
-    private const string KEY_CONTINUE = "VN_CONTINUE";
 
     // =========================================================
     //  ARRANQUE
@@ -543,168 +531,13 @@ public class VNDialogue : MonoBehaviour
             ApplyFocusToSlots(speakerUpper);
     }
 
-    // Avanza línea a línea hasta encontrar otro BRANCH, un BRANCH_END, o salir de la zona
-    private void SkipBranchBlock()
-    {
-        lineIndex++;
 
-        while (lineIndex < currentLines.Count)
-        {
-            string sp = (currentLines[lineIndex].speaker ?? "").Trim().ToUpper();
 
-            if (sp == "BRANCH")
-            {
-                ShowLine();
-                return;
-            }
 
-            if (sp == "BRANCH_END")
-            {
-                lineIndex++;
-                ShowLine();
-                return;
-            }
 
-            lineIndex++;
-        }
 
-        ShowLine();
-    }
 
-    // Extrae valores "CLAVE=VALOR" del string cmd (separado por ;)
-    private string ParseValue(string cmd, string key)
-    {
-        if (string.IsNullOrEmpty(cmd)) return "";
 
-        string[] parts = cmd.Split(';');
-        foreach (var p in parts)
-        {
-            string clean = p.Trim();
-            if (clean.StartsWith(key + "=", StringComparison.Ordinal))
-            {
-                return clean.Substring(key.Length + 1).Trim();
-            }
-        }
-        return "";
-    }
-
-    // =========================================================
-    //  LLAMADO DESDE ChoiceManager
-    // =========================================================
-    public void OnChoiceSelected(DialogueLine chosenLine)
-    {
-        waitingForChoice = false;
-
-        string cleanCmd = (chosenLine.cmd ?? "").Trim().Trim('"');
-
-        // Estado de elección (id/op)
-        string cId = ParseValue(cleanCmd, "CHOICE_ID");
-        string cOpt = ParseValue(cleanCmd, "CHOICE_OPT");
-
-        if (!string.IsNullOrEmpty(cId))
-        {
-            VNGameState.SetLastChoice(cId, cOpt);
-        }
-
-        // Afinidad (ya existente)
-        string affStr = ParseValue(cleanCmd, "AFF_DAMIAO");
-        if (!string.IsNullOrEmpty(affStr))
-        {
-            if (int.TryParse(affStr, out int delta))
-            {
-                VNGameState.AddAffinityDamiao(delta);
-
-                if (affinityPopup != null)
-                    affinityPopup.ShowDelta(delta);
-            }
-        }
-
-        // Mostrar frase elegida
-        string realSpeaker = GetSpeakerFromCmd(cleanCmd);
-        string speakerToShow = string.IsNullOrEmpty(realSpeaker) ? chosenLine.speaker : realSpeaker;
-
-        if (nameText != null) nameText.text = speakerToShow;
-        if (dialogueText != null)
-        {
-            dialogueText.text = chosenLine.text ?? "";
-            dialogueText.color = Color.white;
-        }
-
-        if (characterSlots != null)
-            ApplyCmdToSlots(cleanCmd);
-
-        if (characterSlots != null && !string.IsNullOrEmpty(speakerToShow))
-            ApplyFocusToSlots(speakerToShow.Trim().ToUpper());
-
-        if (choiceNextLineIndex >= 0)
-            lineIndex = choiceNextLineIndex - 1;
-
-        // Auto-advance tras choice
-        if (autoAdvanceAfterChoice)
-        {
-            if (_choiceAutoCo != null) StopCoroutine(_choiceAutoCo);
-            _autoAdvancingChoice = true;
-            _choiceAutoCo = StartCoroutine(AutoAdvanceChoice());
-        }
-    }
-
-    private IEnumerator AutoAdvanceChoice()
-    {
-        yield return new WaitForSeconds(choiceAutoAdvanceDelay);
-        _autoAdvancingChoice = false;
-        Next();
-    }
-
-    // Deducción simple del speaker desde cmd (para choices)
-    private string GetSpeakerFromCmd(string cmd)
-    {
-        if (string.IsNullOrEmpty(cmd)) return "";
-
-        string u = cmd.ToUpper();
-
-        if (u.Contains("L=LOGAN")) return "LOGAN";
-        if (u.Contains("R=DAMIAO")) return "DAMIAO";
-        if (u.Contains("L=LAZARUS")) return "LAZARUS";
-        if (u.Contains("R=LAZARUS")) return "LAZARUS";
-
-        return "";
-    }
-
-    // =========================================================
-    //  SAVE / LOAD
-    // =========================================================
-    public void SaveGame()
-    {
-        PlayerPrefs.SetInt(SAVE_SCENE, sceneIndex);
-        PlayerPrefs.SetInt(SAVE_LINE, lineIndex);
-        PlayerPrefs.SetInt(KEY_HAS_SAVE, 1);
-        PlayerPrefs.Save();
-    }
-
-    public void LoadGame()
-    {
-        if (PlayerPrefs.GetInt(KEY_HAS_SAVE, 0) != 1)
-            return;
-
-        sceneIndex = PlayerPrefs.GetInt(SAVE_SCENE, 0);
-        lineIndex = PlayerPrefs.GetInt(SAVE_LINE, 0);
-
-        if (sceneIndex < 0 || sceneIndex >= sceneFiles.Count)
-            sceneIndex = 0;
-
-        LoadScene(sceneIndex);
-
-        if (lineIndex < 0) lineIndex = 0;
-        if (lineIndex >= currentLines.Count)
-            lineIndex = Mathf.Max(0, currentLines.Count - 1);
-
-        ShowLine();
-    }
-
-    public bool HasSave()
-    {
-        return PlayerPrefs.GetInt(KEY_HAS_SAVE, 0) == 1;
-    }
 
     // =========================================================
     //  JUMP - Coroutine para salto automático
@@ -847,23 +680,7 @@ public class VNDialogue : MonoBehaviour
     //  HELPERS PARA COMPATIBILIDAD CON AMBOS TIPOS DE SLOTS
     // =========================================================
 
-    private void ApplyCmdToSlots(string cmd)
-    {
-        if (characterSlots == null) return;
-        characterSlots.SendMessage("ApplyCmd", cmd, SendMessageOptions.DontRequireReceiver);
-    }
 
-    private void ApplyFocusToSlots(string speaker)
-    {
-        if (characterSlots == null) return;
-        characterSlots.SendMessage("ApplyFocus", speaker, SendMessageOptions.DontRequireReceiver);
-    }
-
-    private void NarratorMomentToSlots()
-    {
-        if (characterSlots == null) return;
-        characterSlots.SendMessage("NarratorMoment", SendMessageOptions.DontRequireReceiver);
-    }
 
     /// <summary>
     /// Fade In desde negro después de un JUMP con transición de escena Unity.

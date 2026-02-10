@@ -2153,7 +2153,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 0c7baaccbc9c1b94b85ae92a8cbdb0eb, type: 3}
+  m_Resource: {fileID: 8300000, guid: 60721d143f1f6ed4ca60b4be4ab2c460, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.6
   m_Pitch: 1
@@ -3306,11 +3306,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8547734c9807d9489eb258f8b5792a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VNDialogue
+  autoAdvanceAfterChoice: 1
+  choiceAutoAdvanceDelay: 5
   nameText: {fileID: 882278016}
   dialogueText: {fileID: 365024543}
   affinityPopup: {fileID: 2020301907}
-  autoAdvanceAfterChoice: 1
-  choiceAutoAdvanceDelay: 5
+  enableTypewriter: 1
+  typewriterCharsPerSecond: 40
+  waitStyleColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
+  waitStyleSizeMultiplier: 0.9
+  loganNameColor: {r: 0.4, g: 0.7, b: 1, a: 1}
+  damiaoNameColor: {r: 0.85, g: 0.55, b: 0.95, a: 1}
+  lazarusNameColor: {r: 0.7, g: 0.5, b: 0.9, a: 1}
+  narratorNameColor: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+  enableNameFade: 1
+  nameFadeDuration: 0.12
   characterSlots: {fileID: 46336839}
   choiceManager: {fileID: 1825017965}
   sceneFiles:
