@@ -25,6 +25,29 @@ public class VNDialogue : MonoBehaviour
     private bool _autoAdvancingChoice = false;
 
     // =========================================================
+    //  TEXT PRESENTATION
+    // =========================================================
+    [Header("Text Presentation")]
+    public bool enableTypewriter = true;
+    [Range(10f, 100f)]
+    public float typewriterCharsPerSecond = 40f;
+    public Color waitStyleColor = new Color(0.85f, 0.85f, 0.85f, 1f);  // Gris claro OPACO
+    [Range(0.8f, 1.0f)]
+    public float waitStyleSizeMultiplier = 0.9f;
+
+    // Base style preservation
+    private Color _baseColor = Color.white;
+    private FontStyles _baseStyle = FontStyles.Normal;
+    private float _baseFontSize = 0f;
+
+    // Typewriter state
+    private Coroutine _typewriterCoroutine = null;
+    private bool _typewriterComplete = false;
+    private string _currentFullText = "";
+    private int _lastRenderedLineIndex = -1;
+    private string _lastRenderedFullText = "";
+
+    // =========================================================
     //  VISUAL DE PERSONAJES
     // =========================================================
     [Header("Personajes (visual)")]
@@ -91,6 +114,14 @@ public class VNDialogue : MonoBehaviour
     // =========================================================
     private void Start()
     {
+        // Capturar estilo base del dialogueText SIEMPRE (antes de cualquier return)
+        if (dialogueText != null)
+        {
+            _baseColor = dialogueText.color;
+            _baseStyle = dialogueText.fontStyle;
+            _baseFontSize = dialogueText.fontSize;
+        }
+        
         // Detectar si venimos de un JUMP de otra escena Unity
         if (PlayerPrefs.GetInt("JUMP_ACTIVE", 0) == 1)
         {
@@ -165,6 +196,13 @@ public class VNDialogue : MonoBehaviour
         if (_isJumping) return;  // Bloquear input durante salto automático
         if (currentLines.Count == 0) return;
 
+        // Si typewriter está corriendo, completarlo en lugar de avanzar
+        if (_typewriterCoroutine != null && !_typewriterComplete)
+        {
+            CompleteTypewriter();
+            return;
+        }
+
         // WAIT: salir del estado de espera con el siguiente input
         if (_isWaiting)
         {
@@ -228,9 +266,12 @@ public class VNDialogue : MonoBehaviour
         waitingForChoice = false;
         choiceNextLineIndex = -1;
 
+        // Detener typewriter si está corriendo
+        StopTypewriterIfRunning();
+
         // Por si venimos de un ACT anterior, aseguramos estado visual
         if (dialogueText != null)
-            dialogueText.color = Color.white;
+            dialogueText.color = _baseColor;
     }
 
     private void ShowLine()
@@ -255,10 +296,18 @@ public class VNDialogue : MonoBehaviour
         // =====================================================
         if (speakerUpper == "WAIT")
         {
+            StopTypewriterIfRunning();
+            
             _isWaiting = true;
 
             if (nameText != null) nameText.text = "";
-            if (dialogueText != null) dialogueText.text = line.text ?? "...";
+            if (dialogueText != null)
+            {
+                dialogueText.text = line.text ?? "...";
+                ApplyWaitStyle();
+            }
+            
+            _typewriterComplete = true;  // WAIT siempre muestra texto completo
 
             // Procesar comandos (poses, etc.) antes de pausar
             string cmd = (line.cmd ?? "").Trim().Trim('"');
@@ -296,6 +345,8 @@ public class VNDialogue : MonoBehaviour
         // =====================================================
         if (speakerUpper == "ACT")
         {
+            StopTypewriterIfRunning();
+            
             _actActive = true;
 
             string cmd = (line.cmd ?? "").Trim().Trim('"');
@@ -307,6 +358,8 @@ public class VNDialogue : MonoBehaviour
                 dialogueText.text = line.text ?? "[Acción]";
                 dialogueText.color = new Color(1f, 0.9f, 0.5f);
             }
+            
+            _typewriterComplete = true;  // ACT muestra texto completo
             
             // Aplicar comandos de personajes (L=LOGAN:pose, R=DAMIAO:pose, C=LOGAN:pose, etc.)
             if (characterSlots != null && !string.IsNullOrEmpty(cmd))
@@ -322,6 +375,8 @@ public class VNDialogue : MonoBehaviour
         // =====================================================
         if (speakerUpper == "JUMP")
         {
+            StopTypewriterIfRunning();
+            
             Debug.Log($"[VNDialogue] JUMP detectado! Target: {ParseValue((line.cmd ?? "").Trim().Trim('\"'), "JUMP_SCENE")}");
             
             _isJumping = true;
@@ -348,6 +403,8 @@ public class VNDialogue : MonoBehaviour
                 dialogueText.text = line.text ?? "...";
                 dialogueText.color = Color.white;
             }
+            
+            _typewriterComplete = true;  // JUMP muestra texto completo
 
             // Iniciar salto automático con delay
             StartCoroutine(JumpAfterDelay());
@@ -385,6 +442,8 @@ public class VNDialogue : MonoBehaviour
         // =====================================================
         if (speakerUpper == "CHOICE")
         {
+            StopTypewriterIfRunning();
+            
             waitingForChoice = true;
 
             List<DialogueLine> options = new List<DialogueLine>();
@@ -407,6 +466,8 @@ public class VNDialogue : MonoBehaviour
 
             if (choiceManager != null)
                 choiceManager.ShowChoices(line.text, options, this);
+            
+            _typewriterComplete = true;  // CHOICE muestra texto completo
 
             return;
         }
@@ -415,10 +476,33 @@ public class VNDialogue : MonoBehaviour
         //  DIÁLOGO NORMAL
         // =====================================================
         if (nameText != null) nameText.text = speakerRaw;
+        
         if (dialogueText != null)
         {
-            dialogueText.text = line.text ?? "";
-            dialogueText.color = Color.white;
+            _currentFullText = line.text ?? "";
+            
+            // Evitar reiniciar typewriter si es la misma línea
+            bool isSameLine = (lineIndex == _lastRenderedLineIndex && _currentFullText == _lastRenderedFullText);
+            
+            if (!isSameLine)
+            {
+                // Restaurar estilo normal
+                ApplyNormalStyle();
+                
+                if (enableTypewriter)
+                {
+                    _typewriterComplete = false;
+                    _typewriterCoroutine = StartCoroutine(TypewriterRoutine(_currentFullText));
+                }
+                else
+                {
+                    dialogueText.text = _currentFullText;
+                    _typewriterComplete = true;
+                }
+                
+                _lastRenderedLineIndex = lineIndex;
+                _lastRenderedFullText = _currentFullText;
+            }
         }
 
         if (characterSlots != null)
@@ -427,6 +511,10 @@ public class VNDialogue : MonoBehaviour
         // Narrador
         if (speakerUpper == "NARRADOR" || string.IsNullOrEmpty(speakerUpper))
         {
+            if (nameText != null) nameText.text = "";
+            if (dialogueText != null)
+                ApplyWaitStyle();  // NARRADOR usa el mismo estilo que WAIT
+            
             if (characterSlots != null)
                 NarratorMomentToSlots();
             return;
@@ -817,5 +905,89 @@ public class VNDialogue : MonoBehaviour
         
         // Destruir el canvas de fade
         Destroy(fadeCanvasGO);
+    }
+
+    // =========================================================
+    //  TYPEWRITER & TEXT STYLING HELPERS
+    // =========================================================
+
+    /// <summary>
+    /// Detiene el typewriter si está corriendo actualmente.
+    /// </summary>
+    private void StopTypewriterIfRunning()
+    {
+        if (_typewriterCoroutine != null)
+        {
+            StopCoroutine(_typewriterCoroutine);
+            _typewriterCoroutine = null;
+        }
+    }
+
+    /// <summary>
+    /// Completa instantáneamente el typewriter actual.
+    /// </summary>
+    private void CompleteTypewriter()
+    {
+        if (_typewriterCoroutine != null)
+        {
+            StopCoroutine(_typewriterCoroutine);
+            _typewriterCoroutine = null;
+        }
+
+        if (dialogueText != null)
+        {
+            dialogueText.text = _currentFullText;
+        }
+
+        _typewriterComplete = true;
+    }
+
+    /// <summary>
+    /// Corrutina que revela el texto carácter por carácter.
+    /// </summary>
+    private IEnumerator TypewriterRoutine(string fullText)
+    {
+        if (dialogueText == null) yield break;
+
+        float delay = 1f / typewriterCharsPerSecond;
+        dialogueText.text = "";
+
+        for (int i = 0; i < fullText.Length; i++)
+        {
+            dialogueText.text += fullText[i];
+            yield return new WaitForSeconds(delay);
+        }
+
+        _typewriterComplete = true;
+        _typewriterCoroutine = null;
+    }
+
+    /// <summary>
+    /// Restaura el estilo normal del texto (color, font style, tamaño).
+    /// </summary>
+    private void ApplyNormalStyle()
+    {
+        if (dialogueText == null) return;
+
+        dialogueText.color = _baseColor;
+        dialogueText.fontStyle = _baseStyle;
+        dialogueText.fontSize = _baseFontSize;
+    }
+
+    /// <summary>
+    /// Aplica el estilo WAIT/NARRADOR (cursiva, color atenuado, tamaño opcional).
+    /// </summary>
+    private void ApplyWaitStyle()
+    {
+        if (dialogueText == null) return;
+
+        dialogueText.fontStyle = FontStyles.Italic;
+        dialogueText.color = waitStyleColor;
+        
+        // Opcional: reducir tamaño (solo si tenemos un tamaño base válido)
+        if (waitStyleSizeMultiplier < 1.0f && _baseFontSize > 0f)
+        {
+            dialogueText.fontSize = _baseFontSize * waitStyleSizeMultiplier;
+        }
     }
 }
