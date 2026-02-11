@@ -496,22 +496,4 @@ public partial class VNDialogue : MonoBehaviour
             ApplyFocusToSlots(speakerUpper);
     }
 
-
-
-
-
-
-
-
-
-    // =========================================================
-    //  JUMP - Coroutine para salto automático
-    // =========================================================
-    
-
-
-
-
-
-
 }
