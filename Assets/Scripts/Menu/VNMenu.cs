@@ -5,7 +5,7 @@ public class VNMenu : MonoBehaviour
 {
     public void StartGame()
     {
-        SceneManager.LoadScene("Scene_Game");
+        SceneManager.LoadScene("Scene_Intro");
     }
 
     public void QuitGame()

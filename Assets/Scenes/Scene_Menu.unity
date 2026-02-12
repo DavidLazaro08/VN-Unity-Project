@@ -376,7 +376,7 @@ MonoBehaviour:
   fadeGroup: {fileID: 390439368}
   musicSource: {fileID: 1558495072}
   fadeTime: 1
-  targetSceneName: Scene_Game
+  targetSceneName: Scene_Intro
   fadeInOnStart: 1
   startFadeDelay: 0.5
 --- !u!4 &72539051
@@ -1433,7 +1433,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VNMenuContinue
   continueButton: {fileID: 560513661}
-  gameSceneName: Scene_Game
+  gameSceneName: Scene_Intro
 --- !u!1 &1486377241
 GameObject:
   m_ObjectHideFlags: 0
