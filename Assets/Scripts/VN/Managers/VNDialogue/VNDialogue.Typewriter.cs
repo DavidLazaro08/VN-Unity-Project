@@ -73,12 +73,23 @@ public partial class VNDialogue
     {
         if (dialogueText == null) yield break;
 
+        // Reiniciar contador de blips al empezar línea
+        if (blipController != null) blipController.ResetCounter();
+
         float delay = 1f / typewriterCharsPerSecond;
         dialogueText.text = "";
 
         for (int i = 0; i < fullText.Length; i++)
         {
-            dialogueText.text += fullText[i];
+            char currentChar = fullText[i];
+            dialogueText.text += currentChar;
+
+            // Disparar sonido (fail-safe)
+            if (blipController != null)
+            {
+                blipController.OnCharTyped(currentChar, false);
+            }
+
             yield return new WaitForSeconds(delay);
         }
 
