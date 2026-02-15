@@ -109,3 +109,12 @@ DAMIAO,"No te adelantes.",R=DAMIAO:preocupado
 WAIT,"...","WAIT=FINAL_BEAT"
 
 LOGAN,"Nunca lo hago.",L=LOGAN:serio2
+
+WAIT,"La lluvia no afloja.","WAIT=BEAT"
+
+DAMIAO,"Hay alguien que odia más a los robots que tú.",R=DAMIAO:pensativo 
+LOGAN,"Eso reduce bastante el mundo.",L=LOGAN:ironico
+DAMIAO,"Se hace llamar True-Fella.",R=DAMIAO:serio
+DAMIAO,"Si esto va en serio…",R=DAMIAO:preocupado 
+LOGAN,"¿Confías en él?",L=LOGAN:pensativo
+DAMIAO,"No. Pero confío menos en el resto.",R=DAMIAO:preocupado

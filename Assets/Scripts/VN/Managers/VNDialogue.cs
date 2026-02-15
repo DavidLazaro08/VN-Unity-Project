@@ -14,6 +14,9 @@ public partial class VNDialogue : MonoBehaviour
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI dialogueText;
 
+    [Header("Audio (Text Blips)")]
+    public TextBlipController blipController;
+
     [Header("Afinidad")]
     public AffinityPopupUI affinityPopup;
 
