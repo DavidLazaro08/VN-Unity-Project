@@ -17,6 +17,9 @@ public partial class VNDialogue : MonoBehaviour
     [Header("Audio (Text Blips)")]
     public TextBlipController blipController;
 
+    [Header("Video Background")]
+    public VideoBackgroundController backgroundController;
+
     [Header("Afinidad")]
     public AffinityPopupUI affinityPopup;
 
@@ -84,6 +87,17 @@ public partial class VNDialogue : MonoBehaviour
     // =========================================================
     private void Start()
     {
+        // Fail-safe: Auto-encontrar el controller si se nos olvidó asignarlo en esta escena
+        if (blipController == null)
+        {
+            blipController = FindObjectOfType<TextBlipController>();
+            if (blipController != null)
+            {
+                // Solo log si funciona, para no spamear errores si no se usa
+                // Debug.Log($"[VNDialogue] TextBlipController encontrado automáticamente: {blipController.name}");
+            }
+        }
+
         // Capturar estilo base del dialogueText SIEMPRE (antes de cualquier return)
         if (dialogueText != null)
         {
@@ -259,6 +273,95 @@ public partial class VNDialogue : MonoBehaviour
         {
             Next();
             return;
+        }
+
+        // =====================================================
+        //  BG (Cambio de fondo de vídeo)
+        // =====================================================
+        // Procesar ANTES de mostrar el texto para que el cambio sea inmediato
+        if (!string.IsNullOrEmpty(line.cmd))
+        {
+            // Sanitizar cmd: quitar espacios y comillas
+            string cmdRaw = line.cmd ?? "";
+            string cmd = cmdRaw.Trim().Trim('"');
+
+            string bgVideo = ParseValue(cmd, "BG");
+            
+            // Sanitizar el valor de BG
+            bgVideo = (bgVideo ?? "").Trim().Trim('"');
+
+#if UNITY_EDITOR
+            if (!string.IsNullOrEmpty(bgVideo))
+            {
+                Debug.Log($"[VNDialogue][BG] cmd='{cmd}' → bg='{bgVideo}' | controller={(backgroundController != null ? "OK" : "NULL")}");
+            }
+#endif
+
+            if (!string.IsNullOrEmpty(bgVideo))
+            {
+                // Parsear parámetros de fade
+                string fadeParam = ParseValue(cmd, "FADE");
+                string fadeInParam = ParseValue(cmd, "FADE_IN");
+                string fadeOutParam = ParseValue(cmd, "FADE_OUT");
+
+                // Si hay parámetros explícitos de fade, usarlos
+                bool hasFadeParams = !string.IsNullOrEmpty(fadeParam) || 
+                                     !string.IsNullOrEmpty(fadeInParam) || 
+                                     !string.IsNullOrEmpty(fadeOutParam);
+
+                if (backgroundController != null)
+                {
+                    if (hasFadeParams)
+                    {
+                        // Control manual desde CSV
+                        bool fadeOut = false;
+                        bool fadeIn = false;
+
+                        // FADE=1 activa ambos
+                        if (fadeParam == "1" || fadeParam.ToUpper() == "TRUE")
+                        {
+                            fadeOut = true;
+                            fadeIn = true;
+                        }
+
+                        // FADE_IN=1 solo entrada
+                        if (fadeInParam == "1" || fadeInParam.ToUpper() == "TRUE")
+                        {
+                            fadeIn = true;
+                        }
+
+                        // FADE_OUT=1 solo salida
+                        if (fadeOutParam == "1" || fadeOutParam.ToUpper() == "TRUE")
+                        {
+                            fadeOut = true;
+                        }
+
+                        backgroundController.SetBackground(bgVideo, fadeOut, fadeIn);
+                    }
+                    else
+                    {
+                        // Sin parámetros: usar autoFadeEnabled del controller
+                        backgroundController.SetBackground(bgVideo);
+                    }
+                }
+                else
+                {
+                    // Fail-safe: Intentar encontrar el controlador si no está asignado
+                    backgroundController = FindObjectOfType<VideoBackgroundController>();
+                    if (backgroundController != null)
+                    {
+#if UNITY_EDITOR
+                        Debug.Log("[VNDialogue][BG] Controller auto-encontrado.");
+#endif
+                        // Usar autoFadeEnabled por defecto
+                        backgroundController.SetBackground(bgVideo);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[VNDialogue][BG] No se encontró VideoBackgroundController para BG='{bgVideo}'");
+                    }
+                }
+            }
         }
 
         // =====================================================
@@ -463,6 +566,12 @@ public partial class VNDialogue : MonoBehaviour
                 // Restaurar estilo normal
                 ApplyNormalStyle();
                 
+                // Configurar pitch del blip según personaje (NEW)
+                if (blipController != null)
+                {
+                    blipController.ApplySpeaker(speakerUpper);
+                }
+
                 if (enableTypewriter)
                 {
                     _typewriterComplete = false;

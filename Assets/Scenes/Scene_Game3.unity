@@ -1032,11 +1032,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6573156625441308595, guid: b4694aea8117f1649bd40fa86373e339, type: 3}
       propertyPath: m_LocalScale.x
-      value: 102.4528
+      value: 62.4528
+      objectReference: {fileID: 0}
+    - target: {fileID: 6573156625441308595, guid: b4694aea8117f1649bd40fa86373e339, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 44.5387
+      objectReference: {fileID: 0}
+    - target: {fileID: 6573156625441308595, guid: b4694aea8117f1649bd40fa86373e339, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 3.1768
       objectReference: {fileID: 0}
     - target: {fileID: 6573156625441308595, guid: b4694aea8117f1649bd40fa86373e339, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -61.77665
+      value: -81.77665
       objectReference: {fileID: 0}
     - target: {fileID: 6573156625441308595, guid: b4694aea8117f1649bd40fa86373e339, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2126,7 +2134,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1356703453
 Transform:
   m_ObjectHideFlags: 0
@@ -2275,8 +2283,8 @@ GameObject:
   - component: {fileID: 1462687521}
   - component: {fileID: 1462687523}
   - component: {fileID: 1462687522}
-  - component: {fileID: 1462687524}
   - component: {fileID: 1462687525}
+  - component: {fileID: 1462687526}
   m_Layer: 5
   m_Name: VideoBackground
   m_TagString: Untagged
@@ -2338,24 +2346,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1462687520}
   m_CullTransparentMesh: 1
---- !u!114 &1462687524
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1462687520}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44aaea63b1133b04082c278cd52e3981, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BackgroundMotion
-  direction: {x: 1, y: 0}
-  panSpeed: 0.15
-  panAmplitude: 0.03
-  startScale: 1.45
-  endScale: 1
-  zoomDuration: 20
 --- !u!328 &1462687525
 VideoPlayer:
   m_ObjectHideFlags: 0
@@ -2364,7 +2354,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1462687520}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: d694f530a5b704c459c4eac857efb0e8, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: 50799aff9c6e98347af205b326d3f07e, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -2390,6 +2380,24 @@ VideoPlayer:
   m_WaitForFirstFrame: 1
   m_FrameReadyEventEnabled: 0
   m_VideoShaders: []
+--- !u!114 &1462687526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462687520}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40d29d30ccd85e942b35263b90e07621, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VideoBackgroundController
+  videoPlayer: {fileID: 1462687525}
+  transitionSystem: {fileID: 1567212770}
+  videoResourcePath: Art/Backgrounds/Video
+  fadeDuration: 0.988
+  autoFadeEnabled: 1
+  debugLogs: 1
 --- !u!1 &1495226146
 GameObject:
   m_ObjectHideFlags: 0
@@ -2687,7 +2695,7 @@ MonoBehaviour:
   fadeGroup: {fileID: 0}
   musicSource: {fileID: 0}
   fadeTime: 1
-  targetSceneName: Scene_Game
+  targetSceneName: Scene_Game03
   fadeInOnStart: 1
   startFadeDelay: 0.5
 --- !u!4 &1567212771
@@ -3604,6 +3612,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2143107642}
   - component: {fileID: 2143107641}
+  - component: {fileID: 2143107644}
+  - component: {fileID: 2143107643}
   m_Layer: 0
   m_Name: VNManager
   m_TagString: Untagged
@@ -3625,18 +3635,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VNDialogue
   nameText: {fileID: 882278016}
   dialogueText: {fileID: 365024543}
+  blipController: {fileID: 0}
+  backgroundController: {fileID: 1462687526}
   affinityPopup: {fileID: 2020301907}
+  characterSlots: {fileID: 46336839}
+  choiceManager: {fileID: 1825017965}
+  sceneFiles:
+  - scene_03
   autoAdvanceAfterChoice: 1
   choiceAutoAdvanceDelay: 5
+  loganNameColor: {r: 0.4, g: 0.7, b: 1, a: 1}
+  damiaoNameColor: {r: 0.85, g: 0.55, b: 0.95, a: 1}
+  lazarusNameColor: {r: 0.7, g: 0.5, b: 0.9, a: 1}
+  narratorNameColor: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+  enableNameFade: 1
+  nameFadeDuration: 0.12
   enableTypewriter: 1
   typewriterCharsPerSecond: 40
   waitStyleColor: {r: 0.85, g: 0.85, b: 0.85, a: 1}
   waitStyleSizeMultiplier: 0.9
-  characterSlots: {fileID: 46336839}
-  choiceManager: {fileID: 1825017965}
-  sceneFiles:
-  - scene_01_5
-  - scene_02
 --- !u!4 &2143107642
 Transform:
   m_ObjectHideFlags: 0
@@ -3652,6 +3669,139 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2143107643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143107640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ee823a8aa339fc48ad5abfe83ab5be8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TextBlipController
+  blipClip: {fileID: 8300000, guid: c3d7d37d6361592459ec97e633d1cd48, type: 3}
+  blipVolume: 0.2
+  charsPerBlip: 2
+  minIntervalSeconds: 0.05
+  ignoreWhitespace: 1
+  ignorePunctuation: 1
+  punctuationSet: ".,;:!?\xBF\xA1"
+  defaultPitch: 1
+  narratorPitch: 0.9
+  speakerPitches:
+  - speakerId: LOGAN
+    pitch: 0.82
+  - speakerId: DAMIAO
+    pitch: 0.98
+  - speakerId: LAZARUS
+    pitch: 0.72
+  - speakerId: LIRA
+    pitch: 1.06
+  - speakerId: TRUE-FELLA
+    pitch: 0.86
+  - speakerId: RONNALD
+    pitch: 0.78
+  - speakerId: EL VIEJO
+    pitch: 0.82
+--- !u!82 &2143107644
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2143107640}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
