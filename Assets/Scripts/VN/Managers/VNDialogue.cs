@@ -276,7 +276,7 @@ public partial class VNDialogue : MonoBehaviour
         }
 
         // =====================================================
-        //  BG (Cambio de fondo de vídeo)
+        //  COMANDOS DE FONDO (BG, RAIN, FADE)
         // =====================================================
         // Procesar ANTES de mostrar el texto para que el cambio sea inmediato
         if (!string.IsNullOrEmpty(line.cmd))
@@ -285,20 +285,32 @@ public partial class VNDialogue : MonoBehaviour
             string cmdRaw = line.cmd ?? "";
             string cmd = cmdRaw.Trim().Trim('"');
 
+            // 1. RAIN (Control de lluvia)
+            // Parsear primero para ver si hay que pasarlo al BackgroundController
+            string rainParam = ParseValue(cmd, "RAIN");
+            bool? rainState = null;
+            if (!string.IsNullOrEmpty(rainParam))
+            {
+                rainState = (rainParam == "1" || rainParam.ToUpper() == "ON" || rainParam.ToUpper() == "TRUE");
+            }
+
+            // 2. BG (Cambio de fondo de vídeo)
             string bgVideo = ParseValue(cmd, "BG");
-            
-            // Sanitizar el valor de BG
             bgVideo = (bgVideo ?? "").Trim().Trim('"');
+
+            bool bgChanged = false;
 
 #if UNITY_EDITOR
             if (!string.IsNullOrEmpty(bgVideo))
             {
-                Debug.Log($"[VNDialogue][BG] cmd='{cmd}' → bg='{bgVideo}' | controller={(backgroundController != null ? "OK" : "NULL")}");
+                Debug.Log($"[VNDialogue][CMD] cmd='{cmd}' → bg='{bgVideo}' | rain={rainParam}");
             }
 #endif
 
             if (!string.IsNullOrEmpty(bgVideo))
             {
+                bgChanged = true;
+
                 // Parsear parámetros de fade
                 string fadeParam = ParseValue(cmd, "FADE");
                 string fadeInParam = ParseValue(cmd, "FADE_IN");
@@ -334,14 +346,16 @@ public partial class VNDialogue : MonoBehaviour
                         if (fadeOutParam == "1" || fadeOutParam.ToUpper() == "TRUE")
                         {
                             fadeOut = true;
+                            fadeIn = false; // Asegurar
                         }
 
-                        backgroundController.SetBackground(bgVideo, fadeOut, fadeIn);
+                        // Pasamos rainState aquí para que se sincronice con el fade
+                        backgroundController.SetBackground(bgVideo, fadeOut, fadeIn, rainState);
                     }
                     else
                     {
                         // Sin parámetros: usar autoFadeEnabled del controller
-                        backgroundController.SetBackground(bgVideo);
+                        backgroundController.SetBackground(bgVideo, backgroundController.autoFadeEnabled, backgroundController.autoFadeEnabled, rainState);
                     }
                 }
                 else
@@ -350,19 +364,29 @@ public partial class VNDialogue : MonoBehaviour
                     backgroundController = FindObjectOfType<VideoBackgroundController>();
                     if (backgroundController != null)
                     {
-#if UNITY_EDITOR
-                        Debug.Log("[VNDialogue][BG] Controller auto-encontrado.");
-#endif
-                        // Usar autoFadeEnabled por defecto
-                        backgroundController.SetBackground(bgVideo);
+                        backgroundController.SetBackground(bgVideo, backgroundController.autoFadeEnabled, backgroundController.autoFadeEnabled, rainState);
                     }
-                    else
+                }
+            }
+
+            // 3. Fallback: Si NO hubo cambio de BG pero sí hay comando RAIN, aplicarlo directamente
+            if (!bgChanged && rainState.HasValue)
+            {
+                if (backgroundController != null)
+                {
+                    backgroundController.SetRain(rainState.Value);
+                }
+                else
+                {
+                    backgroundController = FindObjectOfType<VideoBackgroundController>();
+                    if (backgroundController != null)
                     {
-                        Debug.LogWarning($"[VNDialogue][BG] No se encontró VideoBackgroundController para BG='{bgVideo}'");
+                        backgroundController.SetRain(rainState.Value);
                     }
                 }
             }
         }
+
 
         // =====================================================
         //  WAIT (Pausa real con estado explícito)
