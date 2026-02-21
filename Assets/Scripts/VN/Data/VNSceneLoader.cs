@@ -43,11 +43,11 @@ public static class VNSceneLoader
             var parts = SplitCsvRow(row);
             if (parts.Count < 2) continue;
 
-            string speaker = parts[0].Trim();
-            string text = parts[1].Trim();
-            string cmd = parts.Count >= 3 ? parts[2].Trim() : "";
+            string speaker = Unquote(parts[0]);
+            string text = Unquote(parts[1]);
+            string cmd = parts.Count >= 3 ? Unquote(parts[2]) : "";
 
-            result.Add(new DialogueLine(speaker, Unquote(text), cmd));
+            result.Add(new DialogueLine(speaker, text, cmd));
         }
 
         if (result.Count == 0)

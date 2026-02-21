@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -61,6 +62,7 @@ public class VNSingleCharacterSlot : MonoBehaviour
 
     private bool centerVisible = false;
     private string currentCenterId = "";
+    private string currentCenterPose = "";
 
     private float centerBaseY;
     private Vector3 centerBaseScale = Vector3.one;
@@ -68,6 +70,9 @@ public class VNSingleCharacterSlot : MonoBehaviour
     private float centerPhase;
 
     private const float snapEpsilon = 0.5f;
+
+    // Coroutine de swap
+    private Coroutine centerSwapRoutine;
 
     private void Awake()
     {
@@ -193,13 +198,16 @@ public class VNSingleCharacterSlot : MonoBehaviour
 
     private void HandleSlotCommand(string value)
     {
-        if (value.Equals("HIDE", StringComparison.OrdinalIgnoreCase))
+        // ── HIDE / OFF ──────────────────────────────────────
+        if (value.Equals("HIDE", StringComparison.OrdinalIgnoreCase) ||
+            value.Equals("OFF",  StringComparison.OrdinalIgnoreCase))
         {
-            Debug.Log("[VNSingleCharacterSlot] Comando HIDE recibido, ocultando personaje central.");
+            CancelSwap();
             HideCenter();
             return;
         }
 
+        // ── Parsear ID:POSE ─────────────────────────────────
         string id;
         string pose;
 
@@ -215,50 +223,116 @@ public class VNSingleCharacterSlot : MonoBehaviour
             pose = "normal";
         }
 
-        Debug.Log($"[VNSingleCharacterSlot] Buscando sprite: ID='{id}', POSE='{pose}'");
-
-        Sprite spr = FindSprite(id, pose);
-        if (spr == null)
+        CharacterPoseEntry entry = FindEntry(id, pose);
+        if (entry == null)
         {
-            Debug.LogWarning($"[VNSingleCharacterSlot] NO SE ENCONTRÓ sprite para {id}:{pose} en el catálogo. Verifica que el catálogo tenga esta combinación.", this);
-            Debug.Log($"[VNSingleCharacterSlot] Catálogo actual tiene {catalog.Count} entradas.");
+            Debug.LogWarning($"[VNSingleCharacterSlot] No sprite para {id}:{pose}", this);
             return;
         }
 
-        Debug.Log($"[VNSingleCharacterSlot] Sprite encontrado: '{spr.name}'. Aplicando al CENTER.");
-        SetCenterSprite(id, spr);
+        // ── Decidir tipo de transición ──────────────────────
+        bool sameCharacter = !string.IsNullOrEmpty(currentCenterId) &&
+                             currentCenterId == id;
+
+        if (sameCharacter)
+        {
+            // ➊ Mismo personaje → solo cambiar pose
+            SetCenterSprite(id, entry);
+            currentCenterPose = pose;
+        }
+        else if (centerVisible)
+        {
+            // ➋ Personaje diferente y slot visible → SWAP animado
+            CancelSwap();
+            centerSwapRoutine = StartCoroutine(SwapCenterRoutine(id, pose, entry));
+        }
+        else
+        {
+            // ➌ Slot vacío → primera aparición con slide-in
+            SetCenterSprite(id, entry);
+            currentCenterPose = pose;
+            ShowCenter();
+        }
+    }
+
+    // =========================================================
+    //  SWAP ANIMADO (coroutine)
+    // =========================================================
+
+    private IEnumerator SwapCenterRoutine(string newId, string newPose, CharacterPoseEntry entry)
+    {
+        // Paso 1: Slide-out
+        centerTargetX = centerHiddenX;
+        centerVel = 0f;
+
+        // Esperar convergencia
+        const float threshold = 5f;
+        while (centerRT != null && Mathf.Abs(centerRT.anchoredPosition.x - centerHiddenX) >= threshold)
+            yield return null;
+
+        // Paso 2: Swap sprite (invisible)
+        if (centerImage) centerImage.enabled = false;
+        SetCenterSprite(newId, entry);
+        currentCenterPose = newPose;
+
+        // Paso 3: Slide-in
         ShowCenter();
+
+        centerSwapRoutine = null;
+    }
+
+    private void CancelSwap()
+    {
+        if (centerSwapRoutine != null)
+        {
+            StopCoroutine(centerSwapRoutine);
+            centerSwapRoutine = null;
+        }
     }
 
     // =========================================================
     //  SPRITES / SLOTS
     // =========================================================
 
-    private Sprite FindSprite(string idUpper, string poseLower)
+    private CharacterPoseEntry FindEntry(string idUpper, string poseLower)
     {
         if (catalog == null || catalog.Count == 0)
         {
-            Debug.LogWarning("[VNSingleCharacterSlot] FindSprite: catálogo vacío o null.");
+            Debug.LogWarning("[VNSingleCharacterSlot] FindEntry: catálogo vacío o null.");
             return null;
         }
 
-        foreach (var e in catalog)
-        {
-            if (e == null || e.sprite == null) continue;
+        bool debugDeep = (poseLower.Contains("amenaza"));
 
-            if (e.id.Trim().ToUpper() == idUpper &&
-                e.pose.Trim().ToLower() == poseLower)
+        for (int i = 0; i < catalog.Count; i++)
+        {
+            var e = catalog[i];
+            if (e == null || e.sprite == null) continue;
+            
+             // PROTECCIÓN CONTRA NULOS
+            if (string.IsNullOrEmpty(e.id) || string.IsNullOrEmpty(e.pose))
+                continue;
+
+            string catId = e.id.Trim().ToUpper();
+            string catPose = e.pose.Trim().ToLower();
+
+            if (debugDeep)
             {
-                Debug.Log($"[VNSingleCharacterSlot] FindSprite: MATCH encontrado -> {e.id}:{e.pose} = {e.sprite.name}");
-                return e.sprite;
+                Debug.Log($"[VNSingleCharacterSlot] Comparando [{i}]: Cat('{catId}':'{catPose}') vs Buscado('{idUpper}':'{poseLower}')");
+            }
+
+            if (catId == idUpper && catPose == poseLower)
+            {
+                if (debugDeep) Debug.Log(" -> MATCH!");
+                return e;
             }
         }
         
-        Debug.LogWarning($"[VNSingleCharacterSlot] FindSprite: NO se encontró match para {idUpper}:{poseLower}");
+        Debug.LogWarning($"[VNSingleCharacterSlot] FindEntry: NO se encontró match para {idUpper}:{poseLower}");
         return null;
     }
 
-    private void SetCenterSprite(string idUpper, Sprite spr)
+    private void SetCenterSprite(string idUpper, CharacterPoseEntry entry)
     {
         if (centerImage == null)
         {
@@ -266,12 +340,16 @@ public class VNSingleCharacterSlot : MonoBehaviour
             return;
         }
 
-        Debug.Log($"[VNSingleCharacterSlot] SetCenterSprite: Aplicando sprite '{spr.name}' al Image '{centerImage.name}'");
+        Debug.Log($"[VNSingleCharacterSlot] SetCenterSprite: Aplicando sprite '{entry.sprite.name}' al Image '{centerImage.name}'");
 
-        centerImage.sprite = spr;
+        centerImage.sprite = entry.sprite;
         centerImage.enabled = true;
         centerVisible = true;
         currentCenterId = idUpper;
+
+        // Aplicar escala personalizada
+        centerBaseScale = Vector3.one * entry.scale;
+        if (centerRT != null) centerRT.localScale = centerBaseScale;
 
         var c = centerImage.color;
         c.a = litAlpha;
@@ -291,6 +369,7 @@ public class VNSingleCharacterSlot : MonoBehaviour
         centerTargetX = centerHiddenX;
         centerVisible = false;
         currentCenterId = "";
+        currentCenterPose = "";
         centerVel = 0f;
     }
 

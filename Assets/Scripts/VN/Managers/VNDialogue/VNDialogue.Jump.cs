@@ -32,21 +32,34 @@ public partial class VNDialogue
         
         if (targetSceneIndex < 0)
         {
-            Debug.LogError($"[VNDialogue] JUMP: Escena CSV '{jumpTargetScene}' no encontrada en sceneFiles!");
-            _isJumping = false;
-            AdvanceLineAndShow();
-            yield break;
+            // Si hay JUMP_UNITY_SCENE, el CSV estará en la NUEVA escena, no en la actual.
+            // Usamos índice 0 como fallback — la nueva escena cargará su propio CSV.
+            if (!string.IsNullOrEmpty(jumpUnityScene))
+            {
+                Debug.Log($"[VNDialogue] JUMP: CSV '{jumpTargetScene}' no está en sceneFiles actual, pero hay JUMP_UNITY_SCENE='{jumpUnityScene}'. Usando índice 0.");
+                targetSceneIndex = 0;
+            }
+            else
+            {
+                Debug.LogError($"[VNDialogue] JUMP: Escena CSV '{jumpTargetScene}' no encontrada en sceneFiles!");
+                _isJumping = false;
+                AdvanceLineAndShow();
+                yield break;
+            }
         }
 
-        Debug.Log($"[VNDialogue] Escena CSV encontrada en índice {targetSceneIndex}.");
+        Debug.Log($"[VNDialogue] Escena CSV resuelta en índice {targetSceneIndex}.");
 
         // Si se especifica JUMP_UNITY_SCENE, cargar esa escena de Unity con fade
         if (!string.IsNullOrEmpty(jumpUnityScene))
         {
             Debug.Log($"[VNDialogue] Preparando fade y carga de escena Unity: {jumpUnityScene}");
             
+            // Guardar el estado del flag localmente para usarlo en toda la rutina de salto
+            bool persistentMusic = VNTransitionFlags.SkipMusicFadeOnce;
+
             // Si el flag de música está activo, persistir AudioSources
-            if (VNTransitionFlags.SkipMusicFadeOnce)
+            if (persistentMusic)
             {
                 Debug.Log("[VNDialogue] Buscando AudioSources de música para persistir...");
                 
@@ -61,7 +74,7 @@ public partial class VNDialogue
                     }
                 }
                 
-                // Consumir el flag (ya se usó)
+                // Consumir el flag (ya se registró el deseo de persistencia)
                 VNTransitionFlags.SkipMusicFadeOnce = false;
             }
             
@@ -92,19 +105,50 @@ public partial class VNDialogue
             fadeGroup.alpha = 0f;
             fadeGroup.blocksRaycasts = true;
             
-            DontDestroyOnLoad(fadeCanvasGO);
+            // No usamos DontDestroyOnLoad — queremos que este panel muera 
+            // al cargar la siguiente escena (transición normal).
             
-            // FADE OUT a negro (0.8 segundos)
+            // Capurar AudioSources para el fade (solo si no saltamos el fade)
+            List<AudioSource> musicToFade = new List<AudioSource>();
+            List<float> initialVolumes = new List<float>();
+            
+            if (!persistentMusic)
+            {
+                AudioSource[] sources = FindObjectsOfType<AudioSource>();
+                foreach (var s in sources)
+                {
+                    if (s.isPlaying && s.volume > 0)
+                    {
+                        musicToFade.Add(s);
+                        initialVolumes.Add(s.volume);
+                    }
+                }
+            }
+
+            // FADE OUT a negro y FADE de música (0.8 segundos)
             float fadeTime = 0.8f;
             float t = 0f;
             while (t < fadeTime)
             {
                 t += Time.deltaTime;
                 float k = Mathf.Clamp01(t / fadeTime);
+                
+                // Visual
                 fadeGroup.alpha = k;
+                
+                // Audio
+                for (int i = 0; i < musicToFade.Count; i++)
+                {
+                    if (musicToFade[i] != null)
+                        musicToFade[i].volume = initialVolumes[i] * (1f - k);
+                }
+                
                 yield return null;
             }
             fadeGroup.alpha = 1f;
+
+            // Asegurar volumen 0 al final
+            foreach (var s in musicToFade) if (s != null) s.volume = 0;
             
             Debug.Log($"[VNDialogue] Fade completado. Cargando escena...");
             

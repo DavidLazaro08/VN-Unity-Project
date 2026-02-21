@@ -37,6 +37,12 @@ public partial class VNDialogue
         if (!string.IsNullOrEmpty(cId))
         {
             VNGameState.SetLastChoice(cId, cOpt);
+
+            // Decisión moral de interceptación (Insensible a mayúsculas)
+            if (cId.ToUpper() == "TRUTH")
+            {
+                HandleTruthChoice(cOpt.ToUpper());
+            }
         }
 
         // Afinidad (ya existente)

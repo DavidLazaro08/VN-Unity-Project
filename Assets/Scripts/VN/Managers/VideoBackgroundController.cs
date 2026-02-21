@@ -159,10 +159,20 @@ public class VideoBackgroundController : MonoBehaviour
             yield break;
         }
 
+        // NUEVO: Cancelar cualquier fade inicial de VNTransition para que NO compita con nosotros
+        transitionSystem.CancelInitialFade();
+
         // Fade OUT (a negro)
-        if (fadeOut)
+        // OPTIMIZACIÓN: Si ya estamos en negro (alpha ~1), no hace falta fade out
+        if (fadeOut && transitionSystem.fadeGroup.alpha < 0.95f)
         {
             yield return StartCoroutine(FadeToBlack());
+        }
+        else if (fadeOut)
+        {
+            // Aseguramos que bloquee raycasts aunque no hagamos la rutina
+            transitionSystem.fadeGroup.alpha = 1f;
+            transitionSystem.fadeGroup.blocksRaycasts = true;
         }
 
         // --- PANTALLA NEGRA ---
@@ -206,12 +216,14 @@ public class VideoBackgroundController : MonoBehaviour
 
         fadeGroup.blocksRaycasts = true;
 
+        float startAlpha = fadeGroup.alpha;
         float t = 0f;
         while (t < fadeDuration)
         {
             t += Time.deltaTime;
             float k = Mathf.Clamp01(t / fadeDuration);
-            fadeGroup.alpha = k;
+            // LERPEAR desde el alpha actual para evitar parpadeos
+            fadeGroup.alpha = Mathf.Lerp(startAlpha, 1f, k);
             yield return null;
         }
 
@@ -223,12 +235,14 @@ public class VideoBackgroundController : MonoBehaviour
         CanvasGroup fadeGroup = transitionSystem.fadeGroup;
         if (fadeGroup == null) yield break;
 
+        float startAlpha = fadeGroup.alpha;
         float t = 0f;
         while (t < fadeDuration)
         {
             t += Time.deltaTime;
             float k = Mathf.Clamp01(t / fadeDuration);
-            fadeGroup.alpha = 1f - k;
+            // LERPEAR desde el alpha actual hacia transparente
+            fadeGroup.alpha = Mathf.Lerp(startAlpha, 0f, k);
             yield return null;
         }
 

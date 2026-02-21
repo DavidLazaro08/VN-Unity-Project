@@ -47,6 +47,6 @@ DAMIAO,"Me los guardo.",R=DAMIAO:ironico2
 
 BRANCH_END,"",""
 
-NARRADOR,"Continuará..."
+WAIT,"...",WAIT=FINAL_BEAT
 
-
+JUMP,"...","JUMP_SCENE=scene_intercept;JUMP_LINE=0;JUMP_UNITY_SCENE=Scene_Game_Intercept"

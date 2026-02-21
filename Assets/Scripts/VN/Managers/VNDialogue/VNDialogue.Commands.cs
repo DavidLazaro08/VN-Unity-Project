@@ -22,7 +22,8 @@ public partial class VNDialogue
         foreach (var p in parts)
         {
             string clean = p.Trim();
-            if (clean.StartsWith(key + "=", StringComparison.Ordinal))
+            // Comparación de clave insensible a mayúsculas
+            if (clean.StartsWith(key + "=", StringComparison.OrdinalIgnoreCase))
             {
                 return clean.Substring(key.Length + 1).Trim();
             }
@@ -66,8 +67,27 @@ public partial class VNDialogue
 
     private void ApplyCmdToSlots(string cmd)
     {
-        if (characterSlots == null) return;
-        characterSlots.SendMessage("ApplyCmd", cmd, SendMessageOptions.DontRequireReceiver);
+        if (characterSlots == null)
+        {
+             Debug.LogError($"[VNDialogue] ❌ ERROR CRÍTICO: 'characterSlots' es NULL. No se pueden mostrar personajes. Comando ignorado: '{cmd}'\n" +
+                            "Asegúrate de asignar el objeto 'CharacterSlots' (o 'CharacterCenter') en el Inspector de VNDialogue.");
+             return;
+        }
+
+        // Debug info para el usuario
+        Debug.Log($"[VNDialogue] Intentando enviar comando '{cmd}' a '{characterSlots.name}' (Tipo: {characterSlots.GetType().Name}). Objeto Activo: {characterSlots.gameObject.activeInHierarchy}");
+
+        // Forzamos RequireReceiver para que Unity grite si no encuentra el script 'VNSingleCharacterSlot'
+        try 
+        {
+            characterSlots.SendMessage("ApplyCmd", cmd, SendMessageOptions.RequireReceiver);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"[VNDialogue] ❌ ERROR: El objeto '{characterSlots.name}' NO TIENE un script con el método 'ApplyCmd'.\n" +
+                           $"Asegúrate de que el objeto asignado en 'Character Slots' tiene el script 'VNSingleCharacterSlot' (o 'VNAICombinedSlot').\n" +
+                           $"Detalle: {e.Message}");
+        }
     }
 
     private void ApplyFocusToSlots(string speaker)

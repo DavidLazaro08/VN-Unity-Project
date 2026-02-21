@@ -15,6 +15,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Scene_Game.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
+    path: Assets/Scenes/Scene_Game_Intercept.unity
+    guid: a7bbe23eba5cd5f49bcc5b9cb30b67d2
+  - enabled: 1
+    path: Assets/Scenes/Scene_Terraza.unity
+    guid: 982a68f638295f44b8a89f0b9ab4aa5e
+  - enabled: 1
     path: Assets/Scenes/Scene_Game1_5.unity
     guid: 1ade2279ec3606c4f9012f45434ed40d
   - enabled: 1

@@ -244,50 +244,69 @@ MonoBehaviour:
   idleScaleAmplitude: 0.008
   catalog:
   - id: LOGAN
-    pose: SERIO2
-    sprite: {fileID: -3154763564771969441, guid: eef830b87803fa2458f324af0ffeabe1, type: 3}
+    pose: serio2
+    sprite: {fileID: -243473180340361398, guid: 7a6357c3362b04a4a94942ec561a4c9e, type: 3}
+    scale: 0.95
   - id: LOGAN
-    pose: PENSATIVO
-    sprite: {fileID: -8959602948077826453, guid: ebf6f9ddc82d31744823f39ca37a325b, type: 3}
+    pose: ironico
+    sprite: {fileID: -4692721091072476471, guid: 6112835164ba38e4b89263911694662a, type: 3}
+    scale: 0.95
   - id: LOGAN
-    pose: CANSADO
-    sprite: {fileID: 5403725380293789798, guid: c371a40338d917149882c002f46de666, type: 3}
+    pose: pensativo
+    sprite: {fileID: -7144668013120217961, guid: 88f35fd25212a1f45992ab9144b052e2, type: 3}
+    scale: 0.95
   - id: LOGAN
-    pose: AGOTADO
-    sprite: {fileID: -1551252822785041378, guid: e907ba548673461479a2f05b5125f4b7, type: 3}
-  - id: LOGAN
-    pose: CIGARRO1
-    sprite: {fileID: 895223285738409317, guid: 476d9e43fd3ef8048bcab02e13404e98, type: 3}
-  - id: LOGAN
-    pose: CIGARRO2
-    sprite: {fileID: 8277030490402016405, guid: bedc1d08bc6eb5146beac077a4c67c25, type: 3}
-  - id: DAMIAO
-    pose: PENSATIVO
-    sprite: {fileID: 715813722909572246, guid: 998752b45dae6af43b5353d4c17c39e6, type: 3}
-  - id: DAMIAO
-    pose: PREOCUPADO
-    sprite: {fileID: 1178367718907262768, guid: 1e5497256d4d96e41a8ae9cd81d55302, type: 3}
-  - id: DAMIAO
-    pose: IRONICO
-    sprite: {fileID: -4626615462025475705, guid: f4f542b78f6580442a5053383e5595ac, type: 3}
-  - id: DAMIAO
-    pose: SERIO
-    sprite: {fileID: 2011671207909898786, guid: b01e6bbf1bf65be4ca507d3cd14760b9, type: 3}
-  - id: DAMIAO
-    pose: sonrisa_triste
-    sprite: {fileID: 1708773870570226208, guid: cf0253933422e074ea5e86251fff112a, type: 3}
-  - id: LOGAN
-    pose: serio2_con_cigarro
-    sprite: {fileID: -7166154517499151589, guid: eeab9b4f1383035419bd30d93316734b, type: 3}
-  - id: LOGAN
-    pose: cansado_con_cigarro
-    sprite: {fileID: 3065913436545312431, guid: aa3cc0786da751d4d9e16818c215df30, type: 3}
-  - id: LOGAN
-    pose: pensativo_tira_cigarro
-    sprite: {fileID: -4041142388938169046, guid: 48e1942081b75ef49a04002858b6a8d4, type: 3}
-  - id: LOGAN
-    pose: AMBICIOSO
-    sprite: {fileID: -2893271123567528281, guid: 9dfa2ffb59c993f49b5ca4e04799aa98, type: 3}
+    pose: cansado
+    sprite: {fileID: 2598856683390257384, guid: a2390af18f7cba9488e1a65d8e8742c8, type: 3}
+    scale: 0.95
+  - id: ANTIROBOTS
+    pose: serio_mask
+    sprite: {fileID: 5209361705258191874, guid: b8519b173a5347e4da041ae4c0fcfe00, type: 3}
+    scale: 1.3
+  - id: ANTIROBOTS
+    pose: amenaza_sutil_mask
+    sprite: {fileID: -2413173038972343630, guid: 56f9ff1f27df42945b6ab9d3329ae080, type: 3}
+    scale: 1.3
+  - id: ANTIROBOTS
+    pose: observando_mask
+    sprite: {fileID: 8916063880860336400, guid: 695aba80721d9f249aa196c1240b2430, type: 3}
+    scale: 1.3
+  - id: TRUE-FELLA
+    pose: mask_on_neutral
+    sprite: {fileID: -263638804358296532, guid: 3912b94a1582d5b4a977470e1d4c215e, type: 3}
+    scale: 0.95
+  - id: TRUE-FELLA
+    pose: mask_on_serio
+    sprite: {fileID: 1698608794768858211, guid: 22ec51a947b414c4291e33a49582b6e0, type: 3}
+    scale: 0.95
+  - id: TRUE-FELLA
+    pose: mask_on_reflexivo
+    sprite: {fileID: 2597693745417265624, guid: 4a3604d1fa877244ab2e57c2888c12e4, type: 3}
+    scale: 0.95
+  - id: TRUE-FELLA
+    pose: mask_off_reflexivo
+    sprite: {fileID: -7709899196749938211, guid: beaff0b20b6fc204ba39aa904362786b, type: 3}
+    scale: 0.95
+  - id: TRUE-FELLA
+    pose: mask_off_serio
+    sprite: {fileID: 7041652452645580227, guid: c19b7c17f4d64344aa273f4ceee2fa18, type: 3}
+    scale: 0.95
+  - id: TRUE-FELLA
+    pose: mask_off_neutral
+    sprite: {fileID: -3120479343115868742, guid: 180b66ddc07fb0e4db69a8c01ec28ac1, type: 3}
+    scale: 0.95
+  - id: TRUE-FELLA
+    pose: mask_off_amenaza_sutil
+    sprite: {fileID: 802093084221388823, guid: c8085ca52bf25ca4e8fdcc2e91cb615b, type: 3}
+    scale: 0.95
+  - id: TRUE-FELLA
+    pose: mask_off_leve_sonrisa_amarga
+    sprite: {fileID: -52753626338659604, guid: e26ae3374a4c982478722910093e4b8d, type: 3}
+    scale: 0.95
+  - id: TRUE-FELLA
+    pose: mask_removing
+    sprite: {fileID: -5305819012477734318, guid: a16e587cfeb05c84b96427cdd71541d9, type: 3}
+    scale: 0.95
 --- !u!4 &46336840
 Transform:
   m_ObjectHideFlags: 0
@@ -2426,7 +2445,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 0c7baaccbc9c1b94b85ae92a8cbdb0eb, type: 3}
+  m_Resource: {fileID: 8300000, guid: 0a88b32846ff4d34eacd36f11db4a086, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.6
   m_Pitch: 1
@@ -3102,7 +3121,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -4626615462025475705, guid: f4f542b78f6580442a5053383e5595ac, type: 3}
+  m_Sprite: {fileID: -52753626338659604, guid: e26ae3374a4c982478722910093e4b8d, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -3644,6 +3663,7 @@ MonoBehaviour:
   - scene_03
   autoAdvanceAfterChoice: 1
   choiceAutoAdvanceDelay: 5
+  interceptController: {fileID: 0}
   loganNameColor: {r: 0.4, g: 0.7, b: 1, a: 1}
   damiaoNameColor: {r: 0.85, g: 0.55, b: 0.95, a: 1}
   lazarusNameColor: {r: 0.7, g: 0.5, b: 0.9, a: 1}

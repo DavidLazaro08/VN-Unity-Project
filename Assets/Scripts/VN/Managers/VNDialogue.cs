@@ -11,6 +11,7 @@ public partial class VNDialogue : MonoBehaviour
     //  UI BÁSICA (nombre + texto)
     // =========================================================
     [Header("UI")]
+    public GameObject dialoguePanel;
     public TextMeshProUGUI nameText;
     public TextMeshProUGUI dialogueText;
 
@@ -91,12 +92,15 @@ public partial class VNDialogue : MonoBehaviour
         if (blipController == null)
         {
             blipController = FindObjectOfType<TextBlipController>();
-            if (blipController != null)
-            {
-                // Solo log si funciona, para no spamear errores si no se usa
-                // Debug.Log($"[VNDialogue] TextBlipController encontrado automáticamente: {blipController.name}");
-            }
         }
+
+        if (dialoguePanel != null)
+        {
+            StartCoroutine(FadeInDialogue(0.5f));
+        }
+
+        // Inicializar sistema de interceptación (si existe en esta escena)
+        InitInterceptSystem();
 
         // Capturar estilo base del dialogueText SIEMPRE (antes de cualquier return)
         if (dialogueText != null)
@@ -178,6 +182,7 @@ public partial class VNDialogue : MonoBehaviour
         if (waitingForChoice) return;
         if (_autoAdvancingChoice) return;
         if (_isJumping) return;  // Bloquear input durante salto automático
+        if (_interceptWaitingResult) return;  // Bloquear input durante panel de fragmentos
         if (currentLines.Count == 0) return;
 
         // Si typewriter está corriendo, completarlo en lugar de avanzar
@@ -444,10 +449,39 @@ public partial class VNDialogue : MonoBehaviour
         {
             StopTypewriterIfRunning();
             
-            _actActive = true;
-
             string cmd = (line.cmd ?? "").Trim().Trim('"');
-            _pendingActId = ParseValue(cmd, "ACT");
+            string actId = ParseValue(cmd, "ACT").ToUpper();
+
+            // Interceptación: rutear a sistema de intercept
+            if (actId == "INTERCEPT_START")
+            {
+                _actActive = true;
+                _pendingActId = actId;
+
+                if (nameText != null) nameText.text = "";
+                if (dialogueText != null)
+                {
+                    dialogueText.text = line.text ?? "[Reconstruyendo...]";
+                    ApplyWaitStyle();
+                    _typewriterComplete = true; // No queremos typewriter en la instrucción de acción
+                }
+
+                HandleInterceptStart(); // <--- Llama al método de interceptación
+                return;
+            }
+
+            if (actId == "INTERCEPT_RESULT")
+            {
+                _actActive = true;
+                _pendingActId = actId;
+
+                HandleInterceptResult(); // <--- Inyecta los textos según resultado
+                return;
+            }
+
+            // ACT normal (existente)
+            _actActive = true;
+            _pendingActId = actId;
 
             if (nameText != null) nameText.text = "";
             if (dialogueText != null)
@@ -521,7 +555,8 @@ public partial class VNDialogue : MonoBehaviour
             string lastId = VNGameState.GetLastChoiceId();
             string lastOpt = VNGameState.GetLastChoiceOpt();
 
-            bool match = (reqId == lastId && reqOpt == lastOpt);
+            bool match = string.Equals(reqId, lastId, StringComparison.OrdinalIgnoreCase) && 
+                         string.Equals(reqOpt, lastOpt, StringComparison.OrdinalIgnoreCase);
 
             if (match)
             {
@@ -631,5 +666,4 @@ public partial class VNDialogue : MonoBehaviour
         if (characterSlots != null)
             ApplyFocusToSlots(speakerUpper);
     }
-
 }

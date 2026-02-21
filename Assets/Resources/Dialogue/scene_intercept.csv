@@ -1,0 +1,42 @@
+speaker,text,cmd
+wait,"transmisión entrante.","wait=beat"
+wait,"origen: desconocido.","wait=beat"
+wait,"fragmento incompleto.","wait=click"
+
+wait,"no es de damiao. ni de nadie que conozca.","wait=beat"
+wait,"una señal sucia. medio cifrada. alguien quiere que la lea.","wait=beat"
+wait,"o alguien quiere ver si soy capaz.","wait=click"
+
+act,"(reconstruir transmisión.)","act=intercept_start"
+act,"(resultado transmisión.)","act=intercept_result"
+
+branch,"","choice_id=INTERCEPT;choice_opt=SUCCESS"
+wait,"algo se revuelve dentro. no es miedo. es reconocimiento.","wait=beat"
+wait,"no confirma el plan. confirma el origen.","wait=beat"
+wait,"esto no es solo un encargo. es una herencia.","wait=click"
+branch_end,"",""
+
+branch,"","choice_id=INTERCEPT;choice_opt=FAIL"
+wait,"algo se revuelve dentro. no es certeza. es intuición.","wait=beat"
+wait,"no tengo la imagen completa.","wait=beat"
+wait,"pero tampoco parece un movimiento al azar.","wait=click"
+branch_end,"",""
+
+wait,"me quedo un segundo más mirando la señal.","wait=beat"
+wait,"decidir qué hacer con esto pesa más que la información en sí.","wait=click"
+
+choice,"¿que haces con lo que acabas de ver?",
+"lo compartes con Damiao","si vamos a caer, que sea juntos.","choice_id=truth;choice_opt=todo;aff_damiao=+1"
+"Te lo guardas para tí","hay cosas que pesan menos si solo las cargas tú.","choice_id=truth;choice_opt=parcial;aff_damiao=-1"
+
+branch,"","choice_id=truth;choice_opt=todo"
+wait,"confianza. la palabra más cara de esta ciudad.","wait=beat"
+wait,"esperas que damiao sepa qué hacer con ella.","wait=click"
+branch_end,"",""
+
+branch,"","choice_id=truth;choice_opt=parcial"
+wait,"control. la única moneda que no se devalúa.","wait=beat"
+wait,"lo que damiao no sepa no le hará daño. o eso te dices.","wait=click"
+branch_end,"",""
+
+jump,"...","jump_scene=scene_intercept;jump_line=0;jump_unity_scene=scene_terraza"

@@ -26,6 +26,7 @@ public class VNTransition : MonoBehaviour
 
     // Evita disparar transiciones simultáneas
     private bool _running = false;
+    private Coroutine _initialFadeRoutine;
 
     // ---------------------------------------------------------
     // OPCIONES DE ARRANQUE
@@ -98,7 +99,7 @@ public class VNTransition : MonoBehaviour
     {
         // Fade In al arrancar la escena (negro -> transparente)
         if (fadeInOnStart)
-            StartCoroutine(FadeInRoutine());
+            _initialFadeRoutine = StartCoroutine(FadeInRoutine());
     }
 
     // ---------------------------------------------------------
@@ -109,6 +110,20 @@ public class VNTransition : MonoBehaviour
     {
         if (_running) return;
         StartCoroutine(FadeAndLoad());
+    }
+
+    /// <summary>
+    /// Cancela el fade inicial si otro sistema (ej: VideoBackgroundController) 
+    /// va a tomar el control del fundido a negro.
+    /// </summary>
+    public void CancelInitialFade()
+    {
+        if (_initialFadeRoutine != null)
+        {
+            StopCoroutine(_initialFadeRoutine);
+            _initialFadeRoutine = null;
+            _running = false;
+        }
     }
 
     // ---------------------------------------------------------
@@ -142,6 +157,7 @@ public class VNTransition : MonoBehaviour
         fadeGroup.blocksRaycasts = false;
 
         _running = false;
+        _initialFadeRoutine = null;
     }
 
     /// <summary>

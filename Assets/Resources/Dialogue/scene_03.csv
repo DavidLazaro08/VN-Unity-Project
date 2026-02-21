@@ -1,5 +1,5 @@
 speaker,text,cmd
-WAIT,"Dos niveles bajo la ciudad.","WAIT=BEAT;BG=Scene_Game3_01"
+WAIT,"Dos niveles bajo la ciudad.","WAIT=BEAT;BG=Scene_Game3_01;L=LOGAN:serio2"
 WAIT,"Boca de metro clausurada. Neones muertos. Un cartel torcido: HUMAN ONLY.","WAIT=CLICK"
 
 ACT,"(Golpeas la chapa. Tres veces. Pausa. Una más.)","ACT=KNOCK;WAIT=BEAT"
@@ -19,8 +19,7 @@ ANTIROBOTS,"Sin implantes visibles…","R=ANTIROBOTS:observando_mask"
 ANTIROBOTS,"O eres valiente… o eres idiota.","R=ANTIROBOTS:serio_mask"
 LOGAN,"Hoy me pilla entre medias.","L=LOGAN:serio2"
 
-WAIT,"Al fondo, una silueta. No hace ruido al andar. Eso es lo que más molesta.","WAIT=BEAT"
-
+WAIT,"Al fondo, una silueta. No hace ruido al andar. Eso es lo que más molesta.","WAIT=BEAT;R=OFF"
 TRUE-FELLA,"¿Así que tú eres Logan.","R=TRUE-FELLA:mask_on_neutral"
 TRUE-FELLA,"El que cree que un artefacto le va a comprar una salida.","R=TRUE-FELLA:mask_on_serio"
 LOGAN,"No busco una salida.","L=LOGAN:serio2"
@@ -32,6 +31,8 @@ TRUE-FELLA,"Hay jaulas con puertas distintas.","R=TRUE-FELLA:mask_on_reflexivo"
 LOGAN,"Me han dicho que odias a los robots.","L=LOGAN:serio2"
 TRUE-FELLA,"No.","R=TRUE-FELLA:mask_on_serio"
 TRUE-FELLA,"Los robots solo obedecen.","R=TRUE-FELLA:mask_on_reflexivo"
+
+WAIT,"…","WAIT=BEAT;R=TRUE-FELLA:mask_removing"
 
 TRUE-FELLA,"A quien odio es al tipo que se arranca el alma…","R=TRUE-FELLA:mask_off_serio"
 TRUE-FELLA,"…y lo llama mejora.","R=TRUE-FELLA:mask_off_amenaza_sutil"

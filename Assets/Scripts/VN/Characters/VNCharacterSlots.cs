@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -81,6 +82,8 @@ public class VNCharacterSlots : MonoBehaviour
 
     private string currentLeftId = "";
     private string currentRightId = "";
+    private string currentLeftPose = "";
+    private string currentRightPose = "";
 
     private float leftBaseY;
     private float rightBaseY;
@@ -92,6 +95,10 @@ public class VNCharacterSlots : MonoBehaviour
     private float rightPhase;
 
     private const float snapEpsilon = 0.5f;
+
+    // Coroutines de swap (para cancelar si llega otro comando)
+    private Coroutine leftSwapRoutine;
+    private Coroutine rightSwapRoutine;
 
     private void Awake()
     {
@@ -178,6 +185,9 @@ public class VNCharacterSlots : MonoBehaviour
     {
         if (string.IsNullOrWhiteSpace(cmdRaw)) return;
 
+        // Limpiar comillas del CSV (vital si el parser las deja)
+        cmdRaw = cmdRaw.Trim().Trim('"');
+
         string[] tokens = cmdRaw.Split(';');
         foreach (var t in tokens)
         {
@@ -233,12 +243,17 @@ public class VNCharacterSlots : MonoBehaviour
 
     private void HandleSlotCommand(bool isLeft, string value)
     {
-        if (value.Equals("HIDE", StringComparison.OrdinalIgnoreCase))
+        // ── HIDE / OFF ──────────────────────────────────────
+        if (value.Equals("HIDE", StringComparison.OrdinalIgnoreCase) ||
+            value.Equals("OFF",  StringComparison.OrdinalIgnoreCase))
         {
+            // Cancelar swap en curso si lo hay
+            CancelSwap(isLeft);
             if (isLeft) HideLeft(); else HideRight();
             return;
         }
 
+        // ── Parsear ID:POSE ─────────────────────────────────
         string id;
         string pose;
 
@@ -254,22 +269,142 @@ public class VNCharacterSlots : MonoBehaviour
             pose = "normal";
         }
 
-        Sprite spr = FindSprite(id, pose);
-        if (spr == null)
+        CharacterPoseEntry entry = FindEntry(id, pose);
+        if (entry == null)
         {
             Debug.LogWarning($"No hay sprite para {id}:{pose} en el catálogo.");
             return;
         }
 
-        if (isLeft)
+        // ── Decidir tipo de transición ──────────────────────
+        string currentId   = isLeft ? currentLeftId   : currentRightId;
+        bool   slotVisible  = isLeft ? leftVisible     : rightVisible;
+
+        bool sameCharacter = !string.IsNullOrEmpty(currentId) &&
+                             currentId == id;
+
+        if (sameCharacter)
         {
-            SetLeftSprite(id, spr);
-            ShowLeft();
+            // ➊ Mismo personaje → solo cambiar pose (sin animación)
+            if (isLeft)  { SetLeftSprite(id, entry);  currentLeftPose  = pose; }
+            else         { SetRightSprite(id, entry); currentRightPose = pose; }
+        }
+        else if (slotVisible)
+        {
+            // ➋ Personaje diferente y slot visible → SWAP animado
+            CancelSwap(isLeft);
+            if (isLeft)
+                leftSwapRoutine  = StartCoroutine(SwapCharacterRoutine(true,  id, pose, entry));
+            else
+                rightSwapRoutine = StartCoroutine(SwapCharacterRoutine(false, id, pose, entry));
         }
         else
         {
-            SetRightSprite(id, spr);
+            // ➌ Slot vacío → primera aparición con slide-in
+            if (isLeft)
+            {
+                SetLeftSprite(id, entry);
+                currentLeftPose = pose;
+                ShowLeft();
+            }
+            else
+            {
+                SetRightSprite(id, entry);
+                currentRightPose = pose;
+                ShowRight();
+            }
+        }
+    }
+
+    // =========================================================
+    //  SWAP ANIMADO (coroutine)
+    // =========================================================
+
+    /// <summary>
+    /// 1. Slide-out del personaje actual
+    /// 2. Swap de sprite
+    /// 3. Slide-in del personaje nuevo
+    /// </summary>
+    private IEnumerator SwapCharacterRoutine(bool isLeft, string newId, string newPose, CharacterPoseEntry entry)
+    {
+        // ── Paso 1: Slide-out ────────────────────────────────
+        if (isLeft)
+        {
+            leftTargetX = leftHiddenX;
+            leftVel = 0f;
+        }
+        else
+        {
+            rightTargetX = rightHiddenX;
+            rightVel = 0f;
+        }
+
+        // Esperar a que la posición llegue al destino oculto
+        yield return StartCoroutine(WaitForSlotHidden(isLeft));
+
+        // ── Paso 2: Swap de sprite (invisible) ──────────────
+        if (isLeft)
+        {
+            if (leftImage) leftImage.enabled = false;
+            SetLeftSprite(newId, entry);
+            currentLeftPose = newPose;
+        }
+        else
+        {
+            if (rightImage) rightImage.enabled = false;
+            SetRightSprite(newId, entry);
+            currentRightPose = newPose;
+        }
+
+        // ── Paso 3: Slide-in ─────────────────────────────────
+        if (isLeft)
+            ShowLeft();
+        else
             ShowRight();
+
+        // Limpiar referencia a la coroutine
+        if (isLeft) leftSwapRoutine = null;
+        else        rightSwapRoutine = null;
+    }
+
+    /// <summary>Espera hasta que el slot alcance su posición oculta.</summary>
+    private IEnumerator WaitForSlotHidden(bool isLeft)
+    {
+        const float threshold = 5f; // margen aceptable para considerar "llegó"
+
+        while (true)
+        {
+            if (isLeft && leftRT != null)
+            {
+                if (Mathf.Abs(leftRT.anchoredPosition.x - leftHiddenX) < threshold)
+                    yield break;
+            }
+            else if (!isLeft && rightRT != null)
+            {
+                if (Mathf.Abs(rightRT.anchoredPosition.x - rightHiddenX) < threshold)
+                    yield break;
+            }
+            else
+            {
+                yield break; // sin RT, no hay nada que esperar
+            }
+
+            yield return null; // siguiente frame
+        }
+    }
+
+    /// <summary>Cancela un swap en curso si existe.</summary>
+    private void CancelSwap(bool isLeft)
+    {
+        if (isLeft && leftSwapRoutine != null)
+        {
+            StopCoroutine(leftSwapRoutine);
+            leftSwapRoutine = null;
+        }
+        else if (!isLeft && rightSwapRoutine != null)
+        {
+            StopCoroutine(rightSwapRoutine);
+            rightSwapRoutine = null;
         }
     }
 
@@ -277,41 +412,80 @@ public class VNCharacterSlots : MonoBehaviour
     //  SPRITES / SLOTS
     // =========================================================
 
-    private Sprite FindSprite(string idUpper, string poseLower)
+    private CharacterPoseEntry FindEntry(string idUpper, string poseLower)
     {
-        foreach (var e in catalog)
+        if (catalog == null || catalog.Count == 0)
         {
+            Debug.LogWarning("[VNCharacterSlots] FindEntry: catálogo vacío o null.");
+            return null;
+        }
+
+        // Debug específico para encontrar el fallo de 'amenaza'
+        bool debugDeep = (poseLower.Contains("amenaza"));
+
+        for (int i = 0; i < catalog.Count; i++)
+        {
+            var e = catalog[i];
             if (e == null || e.sprite == null) continue;
 
-            if (e.id.Trim().ToUpper() == idUpper &&
-                e.pose.Trim().ToLower() == poseLower)
-                return e.sprite;
+            // PROTECCIÓN CONTRA NULOS (Vital para evitar NRE si hay entradas vacías)
+            if (string.IsNullOrEmpty(e.id) || string.IsNullOrEmpty(e.pose))
+            {
+                Debug.LogWarning($"[VNCharacterSlots] Entrada de catálogo {i} tiene ID o Pose vacíos. Ignorando.");
+                continue;
+            }
+
+            string catId = e.id.Trim().ToUpper();
+            string catPose = e.pose.Trim().ToLower();
+
+            if (debugDeep)
+            {
+                Debug.Log($"[VNCharacterSlots] Comparando [{i}]: Cat('{catId}':'{catPose}') vs Buscado('{idUpper}':'{poseLower}')");
+            }
+
+            if (catId == idUpper && catPose == poseLower)
+            {
+                if (debugDeep) Debug.Log(" -> MATCH!");
+                return e;
+            }
         }
+        
+        Debug.LogWarning($"[VNCharacterSlots] FindEntry: NO se encontró match para {idUpper}:{poseLower}");
         return null;
     }
 
-    private void SetLeftSprite(string idUpper, Sprite spr)
+    private void SetLeftSprite(string idUpper, CharacterPoseEntry entry)
     {
         if (leftImage == null) return;
 
-        leftImage.sprite = spr;
+        leftImage.sprite = entry.sprite;
         leftImage.enabled = true;
         leftVisible = true;
         currentLeftId = idUpper;
+        
+        // Aplicar escala personalizada (baseScale * entry.scale)
+        leftBaseScale = Vector3.one * entry.scale; 
+        // Nota: Si quieres mantener escalado original del rect, usa leftRT.localScale = original * entry.scale
+        // Pero aquí asumimos que reseteamos a scale
+        if (leftRT != null) leftRT.localScale = leftBaseScale;
 
         var c = leftImage.color;
         c.a = litAlpha;
         leftImage.color = c;
     }
 
-    private void SetRightSprite(string idUpper, Sprite spr)
+    private void SetRightSprite(string idUpper, CharacterPoseEntry entry)
     {
         if (rightImage == null) return;
 
-        rightImage.sprite = spr;
+        rightImage.sprite = entry.sprite;
         rightImage.enabled = true;
         rightVisible = true;
         currentRightId = idUpper;
+
+        // Aplicar escala personalizada
+        rightBaseScale = Vector3.one * entry.scale;
+        if (rightRT != null) rightRT.localScale = rightBaseScale;
 
         var c = rightImage.color;
         c.a = litAlpha;
@@ -330,6 +504,7 @@ public class VNCharacterSlots : MonoBehaviour
         leftTargetX = leftHiddenX;
         leftVisible = false;
         currentLeftId = "";
+        currentLeftPose = "";
         leftVel = 0f;
     }
 
@@ -338,6 +513,7 @@ public class VNCharacterSlots : MonoBehaviour
         rightTargetX = rightHiddenX;
         rightVisible = false;
         currentRightId = "";
+        currentRightPose = "";
         rightVel = 0f;
     }
 

@@ -11,6 +11,10 @@ public static class VNGameState
     private const string KEY_LAST_CHOICE_ID  = "VN_LAST_CHOICE_ID";
     private const string KEY_LAST_CHOICE_OPT = "VN_LAST_CHOICE_OPT";
 
+    // Interceptación
+    private const string KEY_INTERCEPT_SUCCESS = "VN_INTERCEPT_SUCCESS";
+    private const string KEY_TOLD_FULL_TRUTH   = "VN_TOLD_FULL_TRUTH";
+
     // --------------------------------------------------------------------------------
     // AFINIDAD (DAMIAO)
     // --------------------------------------------------------------------------------
@@ -55,6 +59,34 @@ public static class VNGameState
     }
 
     // --------------------------------------------------------------------------------
+    // INTERCEPTACIÓN (Mini-juego)
+    // --------------------------------------------------------------------------------
+
+    public static bool GetInterceptSuccess()
+    {
+        return PlayerPrefs.GetInt(KEY_INTERCEPT_SUCCESS, 0) == 1;
+    }
+
+    public static void SetInterceptSuccess(bool success)
+    {
+        PlayerPrefs.SetInt(KEY_INTERCEPT_SUCCESS, success ? 1 : 0);
+        PlayerPrefs.Save();
+        Debug.Log($"[VNGameState] InterceptSuccess = {success}");
+    }
+
+    public static bool GetToldFullTruth()
+    {
+        return PlayerPrefs.GetInt(KEY_TOLD_FULL_TRUTH, 0) == 1;
+    }
+
+    public static void SetToldFullTruth(bool full)
+    {
+        PlayerPrefs.SetInt(KEY_TOLD_FULL_TRUTH, full ? 1 : 0);
+        PlayerPrefs.Save();
+        Debug.Log($"[VNGameState] ToldFullTruth = {full}");
+    }
+
+    // --------------------------------------------------------------------------------
     // UTILIDADES
     // --------------------------------------------------------------------------------
 
@@ -63,6 +95,8 @@ public static class VNGameState
         PlayerPrefs.DeleteKey(KEY_AFFINITY_DAMIAO);
         PlayerPrefs.DeleteKey(KEY_LAST_CHOICE_ID);
         PlayerPrefs.DeleteKey(KEY_LAST_CHOICE_OPT);
+        PlayerPrefs.DeleteKey(KEY_INTERCEPT_SUCCESS);
+        PlayerPrefs.DeleteKey(KEY_TOLD_FULL_TRUTH);
         PlayerPrefs.Save();
         Debug.Log("[VNGameState] Estado reiniciado.");
     }
