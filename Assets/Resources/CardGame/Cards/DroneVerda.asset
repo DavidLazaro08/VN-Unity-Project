@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: def369e69b302a84282ea4ac407d4d89, type: 3}
-  m_Name: New Card 4
+  m_Name: DroneVerda
   m_EditorClassIdentifier: Assembly-CSharp::CardGame.Core.CardData
-  cardName: Nueva Carta
+  cardName: DroneVerda
   description: 
   manaCost: 1
   baseHealth: 3
   baseDamage: 2
-  cardColor: 2
-  cardArt: {fileID: -438224164574734003, guid: 47a47d93c1b89d8ec846f7dbcf42c9a0, type: 3}
+  cardColor: 1
+  cardArt: {fileID: -4120874250270053196, guid: 440924c50997c36baa966ca116ef6a5f, type: 3}
   playSound: {fileID: 0}
   attackSound: {fileID: 0}

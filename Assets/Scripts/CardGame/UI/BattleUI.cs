@@ -188,29 +188,28 @@ namespace CardGame.UI
         /// </summary>
         private void OnTurnStarted(BattlePlayer turnPlayer)
         {
-            // Actualizar número de turno
+            if (turnPlayer == null || player == null || opponent == null)
+            {
+                Debug.LogError("BattleUI no inicializado (player/opponent/turnPlayer null). ¿Llamaste a battleUI.Initialize(player, opponent)?");
+                return;
+            }
+
             if (turnNumberText != null && CardBattleManager.Instance != null)
                 turnNumberText.text = $"Turno {CardBattleManager.Instance.TurnNumber}";
 
-            // Actualizar indicador de turno
-            bool isPlayerTurn = turnPlayer == player;
+            bool isPlayerTurn = (turnPlayer == player);
 
             if (turnPlayerText != null)
                 turnPlayerText.text = isPlayerTurn ? "Tu Turno" : $"Turno de {opponent.PlayerName}";
 
-            if (playerTurnIndicator != null)
-                playerTurnIndicator.SetActive(isPlayerTurn);
+            if (playerTurnIndicator != null) playerTurnIndicator.SetActive(isPlayerTurn);
+            if (opponentTurnIndicator != null) opponentTurnIndicator.SetActive(!isPlayerTurn);
 
-            if (opponentTurnIndicator != null)
-                opponentTurnIndicator.SetActive(!isPlayerTurn);
+            if (endTurnButton != null) endTurnButton.interactable = isPlayerTurn;
 
-            // Habilitar/deshabilitar botón de finalizar turno
-            if (endTurnButton != null)
-                endTurnButton.interactable = isPlayerTurn;
-
-            // Mostrar mensaje temporal
             ShowMessage(isPlayerTurn ? "¡Tu turno!" : $"Turno de {opponent.PlayerName}", 1.5f);
         }
+
 
         /// <summary>
         /// Callback cuando termina un turno

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: def369e69b302a84282ea4ac407d4d89, type: 3}
-  m_Name: New Card 6
+  m_Name: VirusRojo
   m_EditorClassIdentifier: Assembly-CSharp::CardGame.Core.CardData
-  cardName: Nueva Carta
+  cardName: Virus rojo
   description: 
   manaCost: 1
   baseHealth: 3

@@ -32,30 +32,24 @@ namespace CardGame.UI
         /// <summary>
         /// Añade una carta a la mano
         /// </summary>
-        public void AddCard(Card card)
+        public void AddCard(Card card, bool isEnemy = false)
         {
             if (card == null) return;
 
-            // Crear la visualización de la carta
             GameObject cardVisual = Instantiate(cardUIPrefab, handContainer);
-            
-            // Configurar la UI de la carta
+
             var cardUI = cardVisual.GetComponent<CardUI>();
             if (cardUI != null)
-            {
-                cardUI.SetCard(card, false);
-            }
+                cardUI.SetCard(card, isEnemy);
 
-            // Guardar referencia
             cardVisuals.Add(cardVisual);
             cardVisualsMap[card] = cardVisual;
 
-            // Reorganizar la mano
             UpdateHandLayout();
-
-            // Animación de entrada (opcional)
             StartCoroutine(CardDrawAnimation(cardVisual));
         }
+
+
 
         /// <summary>
         /// Remueve una carta de la mano
@@ -232,14 +226,11 @@ namespace CardGame.UI
         /// <summary>
         /// Actualiza todas las cartas en la mano
         /// </summary>
-        public void RefreshHand(List<Card> cards)
+        public void RefreshHand(List<Card> cards, bool isEnemy)
         {
             ClearHand();
-
-            foreach (Card card in cards)
-            {
-                AddCard(card);
-            }
+            foreach (Card card in cards) AddCard(card, isEnemy);
         }
+
     }
 }

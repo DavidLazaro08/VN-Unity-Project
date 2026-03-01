@@ -91,7 +91,6 @@ namespace CardGame.Battle
             Debug.Log($"{Player.PlayerName} vs {Opponent.PlayerName}");
 
             // Comenzar el primer turno
-            StartCoroutine(StartTurnCoroutine());
         }
 
         /// <summary>
@@ -336,6 +335,17 @@ namespace CardGame.Battle
                 Instance = null;
             }
         }
+        public void BeginBattle()
+        {
+            if (State == BattleState.Ended) return;
+            if (CurrentTurnPlayer == null)
+            {
+                Debug.LogError("BeginBattle: CurrentTurnPlayer es null. ¿Se llamó a StartBattle?");
+                return;
+            }
+            StartCoroutine(StartTurnCoroutine());
+        }
+
     }
 
     /// <summary>
@@ -348,4 +358,6 @@ namespace CardGame.Battle
         OpponentTurn,
         Ended
     }
+
+
 }

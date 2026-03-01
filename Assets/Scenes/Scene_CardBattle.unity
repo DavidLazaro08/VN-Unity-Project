@@ -796,7 +796,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -112.0001, y: -346.00003}
+  m_AnchoredPosition: {x: -108.00015, y: 16.00003}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &408363214
@@ -1105,6 +1105,59 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &600281904
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 600281905}
+  - component: {fileID: 600281906}
+  m_Layer: 5
+  m_Name: OpponentHand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &600281905
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 600281904}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 642626980}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -0.0019989014, y: 518.51}
+  m_SizeDelta: {x: 622.36, y: 223.0434}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &600281906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 600281904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08ee15fded0112a4491b1ef8d163f991, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardGame.UI.HandUI
+  cardUIPrefab: {fileID: 6071241224650391462, guid: 58331d01f0e768d4792b65298748791b, type: 3}
+  handContainer: {fileID: 600281905}
+  cardSpacing: 200
+  maxSpread: 0
+  useFanLayout: 0
 --- !u!1 &642626976
 GameObject:
   m_ObjectHideFlags: 0
@@ -1204,6 +1257,7 @@ RectTransform:
   - {fileID: 266180049}
   - {fileID: 513053318}
   - {fileID: 5220355120079773958}
+  - {fileID: 600281905}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1432,7 +1486,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -112.000015, y: -396.00003}
+  m_AnchoredPosition: {x: -108, y: -34}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &822721726
@@ -1781,8 +1835,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 644, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: 554.1, y: -0.0014038}
+  m_SizeDelta: {x: 398.4, y: 152.81}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1148633406
 GameObject:
@@ -1819,7 +1873,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000030518, y: -0.00053406}
+  m_AnchoredPosition: {x: -0.001964, y: 0.0000030046}
   m_SizeDelta: {x: 1920, y: 882.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1148633408
@@ -1837,7 +1891,7 @@ MonoBehaviour:
   battleManager: {fileID: 1148633410}
   battleUI: {fileID: 513053319}
   playerHandUI: {fileID: 1631025622}
-  opponentHandUI: {fileID: 0}
+  opponentHandUI: {fileID: 600281906}
   battleField: {fileID: 266180050}
   deckSize: 20
 --- !u!114 &1148633409
@@ -1906,7 +1960,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -671, y: 365}
+  m_AnchoredPosition: {x: -685, y: 0}
   m_SizeDelta: {x: 398.3924, y: 152.8128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1261233266
@@ -2156,7 +2210,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000039101, y: -311}
+  m_AnchoredPosition: {x: 3.9999108, y: 51.00006}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1286168054
@@ -2505,7 +2559,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0.000045402, y: 113.57}
+  m_AnchoredPosition: {x: 0.0019789, y: 113.57}
   m_SizeDelta: {x: 622.368, y: 227.1372}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1631025622
@@ -2522,9 +2576,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CardGame.UI.HandUI
   cardUIPrefab: {fileID: 6071241224650391462, guid: 58331d01f0e768d4792b65298748791b, type: 3}
   handContainer: {fileID: 1631025621}
-  cardSpacing: 150
-  maxSpread: -30
-  useFanLayout: 1
+  cardSpacing: 200
+  maxSpread: 0
+  useFanLayout: 0
 --- !u!1 &1635982534
 GameObject:
   m_ObjectHideFlags: 0
@@ -2559,7 +2613,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 100.00001, y: -396.00003}
+  m_AnchoredPosition: {x: 103.999954, y: -33.99997}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1635982536

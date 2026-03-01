@@ -6,17 +6,13 @@ using CardGame.Battle;
 
 namespace CardGame.Integration
 {
-    /// <summary>
-    /// Controlador de la escena de batalla.
-    /// Inicializa la batalla con la configuración recibida y gestiona el flujo completo.
-    /// </summary>
     public class BattleSceneController : MonoBehaviour
     {
         [Header("Referencias de la Escena")]
         [SerializeField] private CardBattleManager battleManager;
-        [SerializeField] private UI.BattleUI battleUI;
-        [SerializeField] private UI.HandUI playerHandUI;
-        [SerializeField] private UI.HandUI opponentHandUI;
+        [SerializeField] private CardGame.UI.BattleUI battleUI;
+        [SerializeField] private CardGame.UI.HandUI playerHandUI;
+        [SerializeField] private CardGame.UI.HandUI opponentHandUI;
         [SerializeField] private BattleField battleField;
 
         [Header("Configuración")]
@@ -24,170 +20,131 @@ namespace CardGame.Integration
 
         private void Start()
         {
-            // Buscar referencias si no están asignadas
-            if (battleManager == null)
-                battleManager = FindObjectOfType<CardBattleManager>();
+            if (battleManager == null) battleManager = FindObjectOfType<CardBattleManager>();
+            if (battleUI == null) battleUI = FindObjectOfType<CardGame.UI.BattleUI>();
+            if (battleField == null) battleField = FindObjectOfType<BattleField>();
 
-            if (battleUI == null)
-                battleUI = FindObjectOfType<UI.BattleUI>();
-
-            if (playerHandUI == null)
+            if (playerHandUI == null || opponentHandUI == null)
             {
-                var handUIs = FindObjectsOfType<UI.HandUI>();
-                if (handUIs.Length > 0) playerHandUI = handUIs[0];
+                var hands = FindObjectsOfType<CardGame.UI.HandUI>();
+                foreach (var h in hands)
+                {
+                    if (h != null && h.name.ToLower().Contains("player"))
+                        playerHandUI = h;
+                    else if (h != null && h.name.ToLower().Contains("opponent"))
+                        opponentHandUI = h;
+                }
+
+                if (playerHandUI == null && hands.Length > 0) playerHandUI = hands[0];
+                if (opponentHandUI == null && hands.Length > 1) opponentHandUI = hands[1];
             }
 
-            if (battleField == null)
-                battleField = FindObjectOfType<BattleField>();
-
-            // Iniciar la batalla
             StartCoroutine(InitializeBattle());
         }
 
-        /// <summary>
-        /// Inicializa la batalla con la configuración
-        /// </summary>
         private IEnumerator InitializeBattle()
         {
-            // Pequeña pausa para que cargue la escena
             yield return new WaitForSeconds(0.5f);
 
-            // Obtener la configuración de la batalla
-            BattleConfiguration config = CardBattleStarter.GetCurrentBattleConfig();
+            var config = CardBattleStarter.GetCurrentBattleConfig();
 
             List<Card> playerDeck;
             List<Card> opponentDeck;
 
-            // Crear mazos
             if (config != null && config.playerDeckCardNames != null && config.playerDeckCardNames.Count > 0)
-            {
                 playerDeck = CardDatabase.Instance.CreateCustomDeck(config.playerDeckCardNames);
-            }
             else
-            {
                 playerDeck = CardDatabase.Instance.CreateRandomDeck(deckSize);
-                Debug.Log("Usando mazo aleatorio para el jugador");
-            }
 
             if (config != null && config.opponentDeckCardNames != null && config.opponentDeckCardNames.Count > 0)
-            {
                 opponentDeck = CardDatabase.Instance.CreateCustomDeck(config.opponentDeckCardNames);
-            }
             else
-            {
                 opponentDeck = CardDatabase.Instance.CreateRandomDeck(deckSize);
-                Debug.Log("Usando mazo aleatorio para el oponente");
-            }
 
             string opponentName = config?.opponentName ?? "Oponente";
 
-            // Iniciar batalla
-            if (battleManager != null)
+            if (battleManager == null)
             {
-                battleManager.StartBattle(playerDeck, opponentDeck, opponentName);
+                Debug.LogError("No se encontró CardBattleManager en la escena.");
+                yield break;
+            }
 
-                // Suscribirse a eventos de batalla
-                battleManager.OnBattleEnded += OnBattleEnded;
+            battleManager.StartBattle(playerDeck, opponentDeck, opponentName);
 
-                // Inicializar UI
-                if (battleUI != null)
-                {
-                    battleUI.Initialize(battleManager.Player, battleManager.Opponent);
-                }
+            battleManager.OnBattleEnded += OnBattleEnded;
 
-                // Suscribirse a eventos de los jugadores para actualizar la mano
+            if (battleUI != null)
+            {
+                battleUI.Initialize(battleManager.Player, battleManager.Opponent);
+            }
+
+            battleManager.BeginBattle();
+
+            if (battleManager.Player != null)
+            {
                 battleManager.Player.OnCardDrawn += OnPlayerCardDrawn;
                 battleManager.Player.OnCardPlayed += OnPlayerCardPlayed;
-
-                battleManager.Opponent.OnCardDrawn += OnOpponentCardDrawn;
-
-                // Mostrar mano inicial
-                UpdatePlayerHand();
             }
-            else
+
+            if (battleManager.Opponent != null)
             {
-                Debug.LogError("No se encontró CardBattleManager en la escena");
+                battleManager.Opponent.OnCardDrawn += OnOpponentCardDrawn;
             }
+
+            UpdatePlayerHand();
+            UpdateOpponentHand();
+
         }
 
-        /// <summary>
-        /// Callback cuando el jugador roba una carta
-        /// </summary>
         private void OnPlayerCardDrawn(Card card)
         {
-            if (playerHandUI != null)
-            {
-                playerHandUI.AddCard(card);
-            }
+            if (playerHandUI != null) playerHandUI.AddCard(card, false);
         }
 
-        /// <summary>
-        /// Callback cuando el jugador juega una carta
-        /// </summary>
+
         private void OnPlayerCardPlayed(Card card)
         {
-            if (playerHandUI != null)
-            {
-                playerHandUI.RemoveCard(card);
-            }
+            if (playerHandUI != null) playerHandUI.RemoveCard(card);
         }
 
-        /// <summary>
-        /// Callback cuando el oponente roba una carta
-        /// </summary>
         private void OnOpponentCardDrawn(Card card)
         {
-            if (opponentHandUI != null)
-            {
-                opponentHandUI.AddCard(card);
-            }
+            if (opponentHandUI != null) opponentHandUI.AddCard(card, true);
         }
 
-        /// <summary>
-        /// Actualiza la mano del jugador
-        /// </summary>
+
+
+
         private void UpdatePlayerHand()
         {
             if (playerHandUI != null && battleManager != null && battleManager.Player != null)
-            {
-                playerHandUI.RefreshHand(battleManager.Player.Hand);
-            }
+                playerHandUI.RefreshHand(battleManager.Player.Hand, true);
         }
 
-        /// <summary>
-        /// Callback cuando termina la batalla
-        /// </summary>
         private void OnBattleEnded()
         {
             Debug.Log("Batalla terminada");
-
-            // Esperar un poco antes de volver a la escena anterior
             StartCoroutine(ReturnToVNAfterDelay(3f));
         }
 
-        /// <summary>
-        /// Retorna a la VN después de un delay
-        /// </summary>
         private IEnumerator ReturnToVNAfterDelay(float delay)
         {
             yield return new WaitForSeconds(delay);
 
-            bool playerWon = battleManager != null && !battleManager.Player.IsDefeated();
+            bool playerWon = battleManager != null
+                            && battleManager.Player != null
+                            && !battleManager.Player.IsDefeated();
             CardBattleStarter.ReturnFromBattle(playerWon);
         }
 
-        /// <summary>
-        /// Llamado desde un botón UI para volver inmediatamente
-        /// </summary>
         public void ReturnToVNImmediately()
         {
-            bool playerWon = battleManager != null && !battleManager.Player.IsDefeated();
+            bool playerWon = battleManager != null
+                            && battleManager.Player != null
+                            && !battleManager.Player.IsDefeated();
             CardBattleStarter.ReturnFromBattle(playerWon);
         }
 
-        /// <summary>
-        /// Llamado desde un botón UI para reiniciar la batalla
-        /// </summary>
         public void RestartBattle()
         {
             UnityEngine.SceneManagement.SceneManager.LoadScene(
@@ -197,22 +154,26 @@ namespace CardGame.Integration
 
         private void OnDestroy()
         {
-            // Limpiar suscripciones
-            if (battleManager != null)
+            if (battleManager != null) battleManager.OnBattleEnded -= OnBattleEnded;
+
+            if (battleManager != null && battleManager.Player != null)
             {
-                battleManager.OnBattleEnded -= OnBattleEnded;
+                battleManager.Player.OnCardDrawn -= OnPlayerCardDrawn;
+                battleManager.Player.OnCardPlayed -= OnPlayerCardPlayed;
+            }
 
-                if (battleManager.Player != null)
-                {
-                    battleManager.Player.OnCardDrawn -= OnPlayerCardDrawn;
-                    battleManager.Player.OnCardPlayed -= OnPlayerCardPlayed;
-                }
-
-                if (battleManager.Opponent != null)
-                {
-                    battleManager.Opponent.OnCardDrawn -= OnOpponentCardDrawn;
-                }
+            if (battleManager != null && battleManager.Opponent != null)
+            {
+                battleManager.Opponent.OnCardDrawn -= OnOpponentCardDrawn;
             }
         }
+        private void UpdateOpponentHand()
+        {
+            if (opponentHandUI != null && battleManager != null && battleManager.Opponent != null)
+                opponentHandUI.RefreshHand(battleManager.Opponent.Hand, true);
+
+
+        }
+
     }
 }

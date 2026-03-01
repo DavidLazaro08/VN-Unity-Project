@@ -246,10 +246,11 @@ namespace CardGame.UI
                 OnCardClicked();
             }
             // Si es una carta enemiga y está resaltada, es un objetivo válido
-            else if (isEnemyCard && isHighlighted)
+            else if (isEnemyCard && isHighlighted && CardData.Location == CardLocation.Field)
             {
                 OnTargetSelected();
             }
+
         }
 
         #endregion
@@ -306,20 +307,25 @@ namespace CardGame.UI
         /// </summary>
         private bool IsOverBattleField(PointerEventData eventData)
         {
-            // Raycast para detectar la zona del campo de batalla
             List<RaycastResult> results = new List<RaycastResult>();
             EventSystem.current.RaycastAll(eventData, results);
 
             foreach (RaycastResult result in results)
             {
-                if (result.gameObject.CompareTag("BattleField"))
+                if (result.gameObject == null) continue;
+
+                Transform t = result.gameObject.transform;
+                while (t != null)
                 {
-                    return true;
+                    if (t.CompareTag("BattleField")) return true;
+                    t = t.parent;
                 }
             }
 
             return false;
         }
+
+
 
         /// <summary>
         /// Vuelve a la posición original
