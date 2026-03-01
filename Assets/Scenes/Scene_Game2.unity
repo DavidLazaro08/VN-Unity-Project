@@ -246,48 +246,67 @@ MonoBehaviour:
   - id: LOGAN
     pose: SERIO2
     sprite: {fileID: -3154763564771969441, guid: eef830b87803fa2458f324af0ffeabe1, type: 3}
+    scale: 1
   - id: LOGAN
     pose: PENSATIVO
     sprite: {fileID: -8959602948077826453, guid: ebf6f9ddc82d31744823f39ca37a325b, type: 3}
+    scale: 1
   - id: LOGAN
     pose: CANSADO
     sprite: {fileID: 5403725380293789798, guid: c371a40338d917149882c002f46de666, type: 3}
+    scale: 1
   - id: LOGAN
     pose: AGOTADO
     sprite: {fileID: -1551252822785041378, guid: e907ba548673461479a2f05b5125f4b7, type: 3}
+    scale: 1
   - id: LOGAN
     pose: CIGARRO1
     sprite: {fileID: 895223285738409317, guid: 476d9e43fd3ef8048bcab02e13404e98, type: 3}
+    scale: 1
   - id: LOGAN
     pose: CIGARRO2
     sprite: {fileID: 8277030490402016405, guid: bedc1d08bc6eb5146beac077a4c67c25, type: 3}
+    scale: 1
   - id: DAMIAO
     pose: PENSATIVO
     sprite: {fileID: 715813722909572246, guid: 998752b45dae6af43b5353d4c17c39e6, type: 3}
+    scale: 1
   - id: DAMIAO
     pose: PREOCUPADO
     sprite: {fileID: 1178367718907262768, guid: 1e5497256d4d96e41a8ae9cd81d55302, type: 3}
+    scale: 1
   - id: DAMIAO
     pose: IRONICO
     sprite: {fileID: -4626615462025475705, guid: f4f542b78f6580442a5053383e5595ac, type: 3}
+    scale: 1
   - id: DAMIAO
     pose: SERIO
     sprite: {fileID: 2011671207909898786, guid: b01e6bbf1bf65be4ca507d3cd14760b9, type: 3}
+    scale: 1
   - id: DAMIAO
     pose: sonrisa_triste
     sprite: {fileID: 1708773870570226208, guid: cf0253933422e074ea5e86251fff112a, type: 3}
+    scale: 1
   - id: LOGAN
     pose: serio2_con_cigarro
     sprite: {fileID: -7166154517499151589, guid: eeab9b4f1383035419bd30d93316734b, type: 3}
+    scale: 1
   - id: LOGAN
     pose: cansado_con_cigarro
     sprite: {fileID: 3065913436545312431, guid: aa3cc0786da751d4d9e16818c215df30, type: 3}
+    scale: 1
   - id: LOGAN
     pose: pensativo_tira_cigarro
     sprite: {fileID: -4041142388938169046, guid: 48e1942081b75ef49a04002858b6a8d4, type: 3}
+    scale: 1
   - id: LOGAN
     pose: AMBICIOSO
     sprite: {fileID: -2893271123567528281, guid: 9dfa2ffb59c993f49b5ca4e04799aa98, type: 3}
+    scale: 1
+  - id: LOGAN
+    pose: IRONICO
+    sprite: {fileID: -575000446435931807, guid: 825e17ad1c72fe240b620845f785c355, type: 3}
+    scale: 1
 --- !u!4 &46336840
 Transform:
   m_ObjectHideFlags: 0
@@ -1886,7 +1905,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.7058824}
+  m_Color: {r: 0, g: 0, b: 0.14901961, a: 0.8235294}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2418,7 +2437,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 0c7baaccbc9c1b94b85ae92a8cbdb0eb, type: 3}
+  m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 0.6
   m_Pitch: 1
@@ -2689,7 +2708,7 @@ MonoBehaviour:
   fadeTime: 1
   targetSceneName: Scene_Game
   fadeInOnStart: 1
-  startFadeDelay: 0.5
+  startFadeDelay: 2.5
 --- !u!4 &1567212771
 Transform:
   m_ObjectHideFlags: 0
@@ -3625,10 +3644,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8547734c9807d9489eb258f8b5792a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VNDialogue
+  dialoguePanel: {fileID: 0}
   nameText: {fileID: 882278016}
   dialogueText: {fileID: 365024543}
   blipController: {fileID: 0}
+  backgroundController: {fileID: 0}
   affinityPopup: {fileID: 2020301907}
+  shadowOverlay: {fileID: 0}
   characterSlots: {fileID: 46336839}
   choiceManager: {fileID: 1825017965}
   sceneFiles:
@@ -3636,10 +3658,17 @@ MonoBehaviour:
   - scene_02
   autoAdvanceAfterChoice: 1
   choiceAutoAdvanceDelay: 5
+  interceptController: {fileID: 0}
   loganNameColor: {r: 0.4, g: 0.7, b: 1, a: 1}
   damiaoNameColor: {r: 0.85, g: 0.55, b: 0.95, a: 1}
   lazarusNameColor: {r: 0.7, g: 0.5, b: 0.9, a: 1}
   narratorNameColor: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+  antirobotsNameColor: {r: 1, g: 0.3, b: 0.25, a: 1}
+  truefellaNameColor: {r: 1, g: 0.75, b: 0.3, a: 1}
+  siluetaNameColor: {r: 0.5, g: 0.55, b: 0.7, a: 1}
+  liraNameColor: {r: 0.3, g: 0.85, b: 0.75, a: 1}
+  viejoNameColor: {r: 0.85, g: 0.7, b: 0.35, a: 1}
+  ronnNameColor: {r: 0.35, g: 0.7, b: 0.65, a: 1}
   enableNameFade: 1
   nameFadeDuration: 0.12
   enableTypewriter: 1

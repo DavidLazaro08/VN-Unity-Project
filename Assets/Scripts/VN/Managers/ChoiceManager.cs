@@ -30,7 +30,9 @@ public class ChoiceManager : MonoBehaviour
         }
 
         if (questionText != null)
+        {
             questionText.text = question;
+        }
 
         for (int i = 0; i < choiceButtons.Length; i++)
         {
@@ -44,7 +46,8 @@ public class ChoiceManager : MonoBehaviour
                 TMP_Text btnText = choiceButtons[i].GetComponentInChildren<TMP_Text>();
                 if (btnText != null)
                 {
-                    // Usar speaker como etiqueta si existe (primer campo), si no, usar text (segundo campo)
+                    // speaker = etiqueta del botón ("Respuesta cínica", "Contar a Damiao...")
+                    // text   = diálogo que aparece en pantalla tras elegir
                     string label = !string.IsNullOrEmpty(optionLine.speaker) ? optionLine.speaker : optionLine.text;
                     btnText.text = label.Trim();
                 }
@@ -104,3 +107,4 @@ public class ChoiceManager : MonoBehaviour
         panel.SetActive(false);
     }
 }
+

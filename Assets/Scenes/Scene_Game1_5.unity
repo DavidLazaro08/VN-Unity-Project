@@ -255,21 +255,31 @@ MonoBehaviour:
   - id: LOGAN
     pose: SERIO
     sprite: {fileID: -3154763564771969441, guid: eef830b87803fa2458f324af0ffeabe1, type: 3}
+    scale: 1
   - id: LOGAN
     pose: PENSATIVO
     sprite: {fileID: -8959602948077826453, guid: ebf6f9ddc82d31744823f39ca37a325b, type: 3}
+    scale: 1
   - id: LOGAN
     pose: agotado
     sprite: {fileID: -1551252822785041378, guid: e907ba548673461479a2f05b5125f4b7, type: 3}
+    scale: 1
   - id: LOGAN
     pose: cansado
     sprite: {fileID: 5403725380293789798, guid: c371a40338d917149882c002f46de666, type: 3}
+    scale: 1
   - id: LOGAN
     pose: ambicioso
     sprite: {fileID: -575000446435931807, guid: 825e17ad1c72fe240b620845f785c355, type: 3}
+    scale: 1
   - id: LOGAN
     pose: IRONICO
     sprite: {fileID: -575000446435931807, guid: 825e17ad1c72fe240b620845f785c355, type: 3}
+    scale: 1
+  - id: LOGAN
+    pose: SERIO
+    sprite: {fileID: -3154763564771969441, guid: eef830b87803fa2458f324af0ffeabe1, type: 3}
+    scale: 1
 --- !u!1 &114113070
 GameObject:
   m_ObjectHideFlags: 0
@@ -1853,7 +1863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.7058824}
+  m_Color: {r: 0, g: 0, b: 0.14901961, a: 0.8235294}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2385,7 +2395,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 0c7baaccbc9c1b94b85ae92a8cbdb0eb, type: 3}
+  m_Resource: {fileID: 8300000, guid: 60721d143f1f6ed4ca60b4be4ab2c460, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.6
   m_Pitch: 1
@@ -3623,10 +3633,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8547734c9807d9489eb258f8b5792a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VNDialogue
+  dialoguePanel: {fileID: 0}
   nameText: {fileID: 882278016}
   dialogueText: {fileID: 365024543}
   blipController: {fileID: 0}
+  backgroundController: {fileID: 0}
   affinityPopup: {fileID: 2020301907}
+  shadowOverlay: {fileID: 0}
   characterSlots: {fileID: 46336840}
   choiceManager: {fileID: 1825017965}
   sceneFiles:
@@ -3634,10 +3647,17 @@ MonoBehaviour:
   - scene_02
   autoAdvanceAfterChoice: 1
   choiceAutoAdvanceDelay: 5
+  interceptController: {fileID: 0}
   loganNameColor: {r: 0.4, g: 0.7, b: 1, a: 1}
   damiaoNameColor: {r: 0.85, g: 0.55, b: 0.95, a: 1}
   lazarusNameColor: {r: 0.7, g: 0.5, b: 0.9, a: 1}
   narratorNameColor: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+  antirobotsNameColor: {r: 1, g: 0.3, b: 0.25, a: 1}
+  truefellaNameColor: {r: 1, g: 0.75, b: 0.3, a: 1}
+  siluetaNameColor: {r: 0.5, g: 0.55, b: 0.7, a: 1}
+  liraNameColor: {r: 0.3, g: 0.85, b: 0.75, a: 1}
+  viejoNameColor: {r: 0.85, g: 0.7, b: 0.35, a: 1}
+  ronnNameColor: {r: 0.35, g: 0.7, b: 0.65, a: 1}
   enableNameFade: 1
   nameFadeDuration: 0.12
   enableTypewriter: 1

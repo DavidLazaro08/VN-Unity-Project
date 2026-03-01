@@ -246,33 +246,43 @@ MonoBehaviour:
   - id: LOGAN
     pose: SERIO
     sprite: {fileID: -2517024161436231376, guid: 4a7d9e4f11a92b34ea8243c6950c1a4d, type: 3}
+    scale: 1
   - id: LOGAN
     pose: SONRISA
     sprite: {fileID: -5545429873295565574, guid: a1eafef16c246454a9f3ca471b6235f6, type: 3}
+    scale: 1
   - id: LOGAN
     pose: CANSADO
     sprite: {fileID: 3032742322690080645, guid: 90568d63221b7c4439bca867a33c809d, type: 3}
+    scale: 1
   - id: LOGAN
     pose: IRONICO
     sprite: {fileID: 7596085647229666351, guid: 582a107d0d2857d4fb14826205f99027, type: 3}
+    scale: 1
   - id: DAMIAO
     pose: SONRISA
     sprite: {fileID: 6009288091341004142, guid: 5c2729bf614fc4042b66373950e165ec, type: 3}
+    scale: 1
   - id: DAMIAO
     pose: PREOCUPADO
     sprite: {fileID: 4811332482673554767, guid: bed14ebe33227a04796992029c6c6637, type: 3}
+    scale: 1
   - id: DAMIAO
     pose: PENSATIVO
     sprite: {fileID: 9128521444718295342, guid: aab5a186e98bd8746a4fb5dd66544cdf, type: 3}
+    scale: 1
   - id: DAMIAO
     pose: IRONICO
     sprite: {fileID: 3829481564637647759, guid: 0264cb5938378c841a6d86de5b2b9d20, type: 3}
+    scale: 1
   - id: DAMIAO
     pose: IRONICO2
     sprite: {fileID: -5399180441167162824, guid: ad880153737aea54690923db80fb0317, type: 3}
+    scale: 1
   - id: LOGAN
     pose: SERIO2
     sprite: {fileID: -6488254069904849875, guid: 4352af14cc39e64449c51a7b5339c4d8, type: 3}
+    scale: 1
 --- !u!4 &46336840
 Transform:
   m_ObjectHideFlags: 0
@@ -1653,7 +1663,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.7058824}
+  m_Color: {r: 0, g: 0, b: 0.14901961, a: 0.8235294}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2088,7 +2098,7 @@ MonoBehaviour:
   direction: {x: 1, y: 0}
   panSpeed: 0.15
   panAmplitude: 0.03
-  startScale: 1.45
+  startScale: 1.3
   endScale: 1
   zoomDuration: 20
 --- !u!328 &1462687525
@@ -2099,7 +2109,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1462687520}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: 612f002196dcacb418e014bb5e445cd2, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: e14989e7f42060d49aa7ccaef885dc78, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -2153,7 +2163,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 60721d143f1f6ed4ca60b4be4ab2c460, type: 3}
+  m_Resource: {fileID: 8300000, guid: 767c6babb77748242810d6d8315acc08, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.6
   m_Pitch: 1
@@ -3308,20 +3318,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8547734c9807d9489eb258f8b5792a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VNDialogue
+  dialoguePanel: {fileID: 0}
   nameText: {fileID: 882278016}
   dialogueText: {fileID: 365024543}
   blipController: {fileID: 2143107643}
+  backgroundController: {fileID: 0}
   affinityPopup: {fileID: 2020301907}
+  shadowOverlay: {fileID: 0}
   characterSlots: {fileID: 46336839}
   choiceManager: {fileID: 1825017965}
   sceneFiles:
   - scene_01
   autoAdvanceAfterChoice: 1
   choiceAutoAdvanceDelay: 5
+  interceptController: {fileID: 0}
   loganNameColor: {r: 0.4, g: 0.7, b: 1, a: 1}
   damiaoNameColor: {r: 0.85, g: 0.55, b: 0.95, a: 1}
   lazarusNameColor: {r: 0.7, g: 0.5, b: 0.9, a: 1}
   narratorNameColor: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+  antirobotsNameColor: {r: 1, g: 0.3, b: 0.25, a: 1}
+  truefellaNameColor: {r: 1, g: 0.75, b: 0.3, a: 1}
+  siluetaNameColor: {r: 0.5, g: 0.55, b: 0.7, a: 1}
+  liraNameColor: {r: 0.3, g: 0.85, b: 0.75, a: 1}
+  viejoNameColor: {r: 0.85, g: 0.7, b: 0.35, a: 1}
+  ronnNameColor: {r: 0.35, g: 0.7, b: 0.65, a: 1}
   enableNameFade: 1
   nameFadeDuration: 0.12
   enableTypewriter: 1

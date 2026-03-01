@@ -1,0 +1,35 @@
+speaker,text,cmd
+WAIT,"El interior sigue oliendo a electricidad vieja.","WAIT=BEAT;BG=Scene0_5_Night;R=LOGAN:LOGAN_atento"
+WAIT,"Las luces de los ventanales parpadean.","WAIT=CLICK"
+
+WAIT,"...","WAIT=BEAT;R=LOGAN:LOGAN_reflexivo"
+
+LOGAN,"...","R=LOGAN:LOGAN_reflexivo"
+WAIT,"Un zumbido atraviesa la sala.","WAIT=BEAT"
+WAIT,"No es lluvia.","WAIT=BEAT"
+WAIT,"...","WAIT=BEAT;L=SILUETA:SILUETA_estable;SHADOW=NIGHTFALL"
+WAIT,"Es una señal.","WAIT=CLICK;R=LOGAN:LOGAN_tension"
+
+LOGAN,"¿Quién eres?","R=LOGAN:LOGAN_tension"
+
+WAIT,"...","WAIT=BEAT;L=SILUETA:SILUETA_estable"
+
+LOGAN,"No tengo tiempo para juegos.","R=LOGAN:LOGAN_atento"
+
+WAIT,"...","WAIT=BEAT;L=SILUETA:SILUETA_inclinada"
+
+SILUETA,"No es un juego.","L=SILUETA:SILUETA_inclinada"
+
+WAIT,"El zumbido cambia. Se vuelve pulso.","WAIT=BEAT"
+
+SILUETA,"Frecuencia transferida.","L=SILUETA:silueta_estable"
+
+WAIT,"Un destello breve se ilumina en la tablet de Logan...","WAIT=BEAT;R=LOGAN:LOGAN_tablet"
+
+WAIT,"La silueta se fragmenta.","WAIT=BEAT;L=SILUETA:SILUETA_fragmentada"
+WAIT,"...Y desaparece.","WAIT=BEAT;L=FADE;ZOOM=RIGHT"
+
+CHOICE,"¿Qué me mandó...?",""
+"Analizar la frecuencia recibida","(Logan activa la tablet. La señal cifrada empieza a descomponerse.)","OPT=1"
+
+jump,"","JUMP_SCENE=scene_intercept;JUMP_LINE=0;JUMP_UNITY_SCENE=Scene_Game_Intercept;CROSSFADE=1;DELAY=0;SKIP_MUSIC_FADE=1"

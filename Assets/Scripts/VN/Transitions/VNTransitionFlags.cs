@@ -11,4 +11,11 @@ public static class VNTransitionFlags
     /// Se resetea automáticamente a false después de usarse.
     /// </summary>
     public static bool SkipMusicFadeOnce = false;
+
+    /// <summary>
+    /// Si > 0, la próxima transición hará fade de música durante este tiempo (segundos)
+    /// en lugar de los 0.8s por defecto. Se resetea a 0 después de usarse.
+    /// </summary>
+    public static float MusicFadeDuration = 0f;
+
 }

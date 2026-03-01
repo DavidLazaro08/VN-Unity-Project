@@ -1,7 +1,7 @@
 speaker,text,cmd
 LOGAN,"Desde aquí arriba todo parece más sencillo.","C=LOGAN:serio"
 LOGAN,"Las luces ordenadas.","C=LOGAN:pensativo"
-LOGAN,"Los problemas… lejos.","C=LOGAN:serio2"
+LOGAN,"Los problemas… lejos.","C=LOGAN:serio"
 
 WAIT,"La ciudad respira debajo.","WAIT=SILENCE"
 
@@ -11,7 +11,7 @@ LOGAN,"Solo decide cuánto tarda.","C=LOGAN:serio"
 
 WAIT,"El viento arrastra un olor metálico.","WAIT=BEAT"
 
-LOGAN,"No me gustan las ideas nuevas.","C=LOGAN:serio2"
+LOGAN,"No me gustan las ideas nuevas.","C=LOGAN:serio"
 LOGAN,"Las viejas al menos sabes cómo te matan.","C=LOGAN:ironico"
 LOGAN,"Las nuevas…","C=LOGAN:pensativo"
 LOGAN,"Te sonríen primero.","C=LOGAN:agotado"
@@ -19,6 +19,6 @@ LOGAN,"Te sonríen primero.","C=LOGAN:agotado"
 WAIT,"Un ruido metálico rompe el silencio.","WAIT=BEAT"
 
 WAIT,"Pasos. Alguien sube sin prisa.","WAIT=SILENCE"
-LOGAN,"…Ya era hora.","C=LOGAN:serio2"
+LOGAN,"…Ya era hora.","C=LOGAN:serio"
 
 JUMP,"...","JUMP_SCENE=scene_02;JUMP_LINE=0;JUMP_UNITY_SCENE=Scene_Game2;SKIP_MUSIC_FADE=1"

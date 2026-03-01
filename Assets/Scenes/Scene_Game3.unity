@@ -1527,6 +1527,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 548552165}
   m_CullTransparentMesh: 1
+--- !u!1 &653252757
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 653252759}
+  - component: {fileID: 653252758}
+  m_Layer: 0
+  m_Name: MusicTailFader
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &653252758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653252757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e910eaa34e9eb4db9a4ec6db31020a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MusicTailFader
+  fadeOutSeconds: 10
+  targetVolume: 0
+--- !u!4 &653252759
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 653252757}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 61.77665, y: -54.54226, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &882278013
 GameObject:
   m_ObjectHideFlags: 0
@@ -3652,11 +3698,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8547734c9807d9489eb258f8b5792a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VNDialogue
+  dialoguePanel: {fileID: 0}
   nameText: {fileID: 882278016}
   dialogueText: {fileID: 365024543}
   blipController: {fileID: 0}
   backgroundController: {fileID: 1462687526}
   affinityPopup: {fileID: 2020301907}
+  shadowOverlay: {fileID: 0}
   characterSlots: {fileID: 46336839}
   choiceManager: {fileID: 1825017965}
   sceneFiles:
@@ -3668,6 +3716,12 @@ MonoBehaviour:
   damiaoNameColor: {r: 0.85, g: 0.55, b: 0.95, a: 1}
   lazarusNameColor: {r: 0.7, g: 0.5, b: 0.9, a: 1}
   narratorNameColor: {r: 0.6, g: 0.6, b: 0.6, a: 1}
+  antirobotsNameColor: {r: 1, g: 0.3, b: 0.25, a: 1}
+  truefellaNameColor: {r: 1, g: 0.75, b: 0.3, a: 1}
+  siluetaNameColor: {r: 0.5, g: 0.55, b: 0.7, a: 1}
+  liraNameColor: {r: 0.3, g: 0.85, b: 0.75, a: 1}
+  viejoNameColor: {r: 0.85, g: 0.7, b: 0.35, a: 1}
+  ronnNameColor: {r: 0.35, g: 0.7, b: 0.65, a: 1}
   enableNameFade: 1
   nameFadeDuration: 0.12
   enableTypewriter: 1
@@ -3715,16 +3769,14 @@ MonoBehaviour:
     pitch: 0.82
   - speakerId: DAMIAO
     pitch: 0.98
+  - speakerId: TRUE-FELLA
+    pitch: 1.1
   - speakerId: LAZARUS
     pitch: 0.72
   - speakerId: LIRA
     pitch: 1.06
-  - speakerId: TRUE-FELLA
-    pitch: 0.86
-  - speakerId: RONNALD
-    pitch: 0.78
-  - speakerId: EL VIEJO
-    pitch: 0.82
+  - speakerId: ANTIROBOTS
+    pitch: 0.5
 --- !u!82 &2143107644
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3835,4 +3887,5 @@ SceneRoots:
   - {fileID: 1825017966}
   - {fileID: 1567212771}
   - {fileID: 1495226148}
+  - {fileID: 653252759}
   - {fileID: 1744981009}

@@ -215,10 +215,7 @@ public class IntroVideoController : MonoBehaviour
     private void StartTransition()
     {
         if (_isTransitioning) return;
-        
-        // Apagar lluvia inmediatamente
-        DisableFXCamera();
-
+        // La lluvia se apaga DENTRO de FadeOutAndLoad, una vez el canvas ya cubre todo
         StartCoroutine(FadeOutAndLoad());
     }
 
@@ -227,10 +224,12 @@ public class IntroVideoController : MonoBehaviour
     /// </summary>
     private void DisableFXCamera()
     {
-        GameObject fxCam = GameObject.Find("FXCamera");
+        // Nombre correcto: "FX_Camera" (con guion bajo), creado por RainEffectSetup
+        GameObject fxCam = GameObject.Find("FX_Camera");
         if (fxCam != null)
         {
             fxCam.SetActive(false);
+            Debug.Log("[IntroVideoController] FX_Camera desactivada.");
         }
     }
 
@@ -281,6 +280,9 @@ public class IntroVideoController : MonoBehaviour
         {
             _fadeGroup.alpha = 1f;
         }
+
+        // Ahora que el canvas cubre todo, apagar lluvia sin corte visible
+        DisableFXCamera();
 
         // Detener video
         if (videoPlayer != null && videoPlayer.isPlaying)

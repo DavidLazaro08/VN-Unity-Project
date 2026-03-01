@@ -49,4 +49,4 @@ BRANCH_END,"",""
 
 WAIT,"...",WAIT=FINAL_BEAT
 
-JUMP,"...","JUMP_SCENE=scene_intercept;JUMP_LINE=0;JUMP_UNITY_SCENE=Scene_Game_Intercept"
+JUMP,"...","JUMP_SCENE=scene_intercept;JUMP_LINE=0;JUMP_UNITY_SCENE=Scene_Transition_Night;SKIP_MUSIC_FADE=1"

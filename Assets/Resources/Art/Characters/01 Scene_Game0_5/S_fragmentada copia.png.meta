@@ -1,0 +1,533 @@
+fileFormatVersion: 2
+guid: 2bc936e9f3991214ea4bccdfdb7be116
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8385457614640240319
+    second: S_fragmentada copia_0
+  - first:
+      213: 4868800316989866348
+    second: S_fragmentada copia_1
+  - first:
+      213: 8109371459300408121
+    second: S_fragmentada copia_2
+  - first:
+      213: -8826286206751312439
+    second: S_fragmentada copia_3
+  - first:
+      213: -8130191132419336478
+    second: S_fragmentada copia_4
+  - first:
+      213: -5664269934492040588
+    second: S_fragmentada copia_5
+  - first:
+      213: -3631231065871819906
+    second: S_fragmentada copia_6
+  - first:
+      213: 615308866176170065
+    second: S_fragmentada copia_7
+  - first:
+      213: 8693869912150206894
+    second: S_fragmentada copia_8
+  - first:
+      213: 2138495255388496316
+    second: S_fragmentada copia_9
+  - first:
+      213: -8340534067248946720
+    second: S_fragmentada copia_10
+  - first:
+      213: -7001186213113634436
+    second: S_fragmentada copia_11
+  - first:
+      213: -221911976954813047
+    second: S_fragmentada copia_12
+  - first:
+      213: 7587475529998826765
+    second: S_fragmentada copia_13
+  - first:
+      213: 845791517413947250
+    second: S_fragmentada copia_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: S_fragmentada copia_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 1917
+        height: 2923
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb6d9bfb5412f5470800000000000000
+      internalID: 8385457614640240319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: S_fragmentada copia_1
+      rect:
+        serializedVersion: 2
+        x: 1405
+        y: 2916
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c618d70a714719340800000000000000
+      internalID: 4868800316989866348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: S_fragmentada copia_2
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 2131
+        width: 87
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93bba4f70664a8070800000000000000
+      internalID: 8109371459300408121
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: S_fragmentada copia_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1730
+        width: 19
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9c578a8657bb28580800000000000000
+      internalID: -8826286206751312439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: S_fragmentada copia_4
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 1667
+        width: 59
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e65d1c9d32cb2f80800000000000000
+      internalID: -8130191132419336478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: S_fragmentada copia_5
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 1569
+        width: 47
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4724da251887461b0800000000000000
+      internalID: -5664269934492040588
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: S_fragmentada copia_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1492
+        width: 36
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e7bd85da5964b9dc0800000000000000
+      internalID: -3631231065871819906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: S_fragmentada copia_7
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 1377
+        width: 32
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 158349b57240a8800800000000000000
+      internalID: 615308866176170065
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: S_fragmentada copia_8
+      rect:
+        serializedVersion: 2
+        x: 47
+        y: 1374
+        width: 34
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea96b2d7f94d6a870800000000000000
+      internalID: 8693869912150206894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: S_fragmentada copia_9
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1129
+        width: 80
+        height: 67
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb12a43ca167dad10800000000000000
+      internalID: 2138495255388496316
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: S_fragmentada copia_10
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 1081
+        width: 37
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e12594b478704c80800000000000000
+      internalID: -8340534067248946720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: S_fragmentada copia_11
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 876
+        width: 96
+        height: 83
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c71eff8ab3ac6de90800000000000000
+      internalID: -7001186213113634436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: S_fragmentada copia_12
+      rect:
+        serializedVersion: 2
+        x: 1901
+        y: 644
+        width: 11
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98524329b3c9becf0800000000000000
+      internalID: -221911976954813047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: S_fragmentada copia_13
+      rect:
+        serializedVersion: 2
+        x: 1912
+        y: 581
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d0d7c8b5bc02c4960800000000000000
+      internalID: 7587475529998826765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: S_fragmentada copia_14
+      rect:
+        serializedVersion: 2
+        x: 1919
+        y: 554
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2773f7567eadcbb00800000000000000
+      internalID: 845791517413947250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      S_fragmentada copia_0: 8385457614640240319
+      S_fragmentada copia_1: 4868800316989866348
+      S_fragmentada copia_10: -8340534067248946720
+      S_fragmentada copia_11: -7001186213113634436
+      S_fragmentada copia_12: -221911976954813047
+      S_fragmentada copia_13: 7587475529998826765
+      S_fragmentada copia_14: 845791517413947250
+      S_fragmentada copia_2: 8109371459300408121
+      S_fragmentada copia_3: -8826286206751312439
+      S_fragmentada copia_4: -8130191132419336478
+      S_fragmentada copia_5: -5664269934492040588
+      S_fragmentada copia_6: -3631231065871819906
+      S_fragmentada copia_7: 615308866176170065
+      S_fragmentada copia_8: 8693869912150206894
+      S_fragmentada copia_9: 2138495255388496316
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -6,7 +6,7 @@ ACT,"(Golpeas la chapa. Tres veces. Pausa. Una más.)","ACT=KNOCK;WAIT=BEAT"
 WAIT,"Un pestillo suena. No abren del todo. Una rendija. Un ojo. Te pesan.","WAIT=BEAT"
 
 ANTIROBOTS,"¿Nombre?","R=ANTIROBOTS:serio_mask"
-LOGAN,"Logan.","L=LOGAN:serio2"
+logan,"Logan.","L=LOGAN:serio2"
 ANTIROBOTS,"¿Vienes solo?","R=ANTIROBOTS:serio_mask"
 LOGAN,"Eso depende de cómo cuentes los fantasmas.","L=LOGAN:ironico"
 ANTIROBOTS,"Aquí abajo no queremos poesía.","R=ANTIROBOTS:amenaza_sutil_mask"
@@ -52,3 +52,5 @@ TRUE-FELLA,"Ver cómo eliges cuando no hay respuesta buena.","R=TRUE-FELLA:mask_
 TRUE-FELLA,"Las cartas sirven para eso.","R=TRUE-FELLA:mask_off_reflexivo"
 
 ACT,"(True-Fella despliega el tablero.)","ACT=CARDGAME_START;WAIT=FINAL_BEAT"
+
+JUMP,"","JUMP_SCENE=scene_end;JUMP_LINE=0;JUMP_UNITY_SCENE=Scene_Transition_End"

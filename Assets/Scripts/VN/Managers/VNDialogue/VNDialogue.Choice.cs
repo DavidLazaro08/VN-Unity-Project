@@ -60,7 +60,9 @@ public partial class VNDialogue
 
         // Mostrar frase elegida
         string realSpeaker = GetSpeakerFromCmd(cleanCmd);
-        string speakerToShow = string.IsNullOrEmpty(realSpeaker) ? chosenLine.speaker : realSpeaker;
+        // Si no hay un personaje real asociado, no mostrar nada en el nombre
+        // (evita que aparezca "OPTION" como speaker visiblemente)
+        string speakerToShow = string.IsNullOrEmpty(realSpeaker) ? "" : realSpeaker;
 
         if (nameText != null) nameText.text = speakerToShow;
         if (dialogueText != null)

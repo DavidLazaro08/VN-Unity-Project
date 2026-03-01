@@ -24,6 +24,9 @@ public partial class VNDialogue : MonoBehaviour
     [Header("Afinidad")]
     public AffinityPopupUI affinityPopup;
 
+    [Header("Shadow Overlay")]
+    public ShadowOverlayController shadowOverlay;
+
 
 
     // =========================================================
@@ -243,6 +246,16 @@ public partial class VNDialogue : MonoBehaviour
         ShowLine();
     }
 
+    private IEnumerator AutoAdvanceAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        // Solo avanza si todavía estamos en estado WAIT y no está saltando a otra escena
+        if (_isWaiting && !_isJumping)
+        {
+            Next();
+        }
+    }
+
     private void LoadScene(int index)
     {
         string fileName = sceneFiles[index];
@@ -392,6 +405,37 @@ public partial class VNDialogue : MonoBehaviour
             }
         }
 
+        // =====================================================
+        //  SHADOW OVERLAY (SHADOW=ON/OFF/DEEP)
+        // =====================================================
+        if (!string.IsNullOrEmpty(line.cmd))
+        {
+            string cmdShadow = (line.cmd ?? "").Trim().Trim('"');
+            string shadowParam = ParseValue(cmdShadow, "SHADOW");
+            if (!string.IsNullOrEmpty(shadowParam))
+            {
+                if (shadowOverlay == null)
+                    shadowOverlay = FindObjectOfType<ShadowOverlayController>();
+                
+                if (shadowOverlay != null)
+                    shadowOverlay.ApplyCommand(shadowParam);
+                else
+                    Debug.LogWarning("[VNDialogue] SHADOW command encontrado pero no hay ShadowOverlayController en la escena.");
+            }
+        }
+
+        // =====================================================
+        //  ZOOM (ZOOM=RIGHT / ZOOM=1.25:4.0)
+        // =====================================================
+        if (!string.IsNullOrEmpty(line.cmd))
+        {
+            string cmdZoom = (line.cmd ?? "").Trim().Trim('"');
+            string zoomParam = ParseValue(cmdZoom, "ZOOM");
+            if (!string.IsNullOrEmpty(zoomParam))
+            {
+                CanvasZoomController.ApplyCommand(zoomParam);
+            }
+        }
 
         // =====================================================
         //  WAIT (Pausa real con estado explícito)
@@ -414,8 +458,21 @@ public partial class VNDialogue : MonoBehaviour
             // Procesar comandos (poses, etc.) antes de pausar
             string cmd = (line.cmd ?? "").Trim().Trim('"');
             
-            // Parsear tipo de WAIT (CLICK, SILENCE, BEAT, FINAL_BEAT)
+            // Parsear tipo de WAIT (CLICK, SILENCE, BEAT, FINAL_BEAT, AUTO)
             _waitType = ParseValue(cmd, "WAIT");
+            
+            // Parsear duración automática personalizada
+            string durationStr = ParseValue(cmd, "DURATION");
+            float beatDelay = 2.0f;  // Duración por defecto para AUTO
+            if (!string.IsNullOrEmpty(durationStr))
+                float.TryParse(durationStr, System.Globalization.NumberStyles.Float,
+                    System.Globalization.CultureInfo.InvariantCulture, out beatDelay);
+
+            // Auto-avance SOLO para WAIT=AUTO (los BEAT siguen requiriendo click)
+            if (_waitType == "AUTO")
+            {
+                StartCoroutine(AutoAdvanceAfterDelay(beatDelay));
+            }
             
             // Aplicar comandos de personajes (L=LOGAN:pose, R=DAMIAO:pose, etc.)
             if (characterSlots != null && !string.IsNullOrEmpty(cmd))
@@ -463,6 +520,7 @@ public partial class VNDialogue : MonoBehaviour
                 {
                     dialogueText.text = line.text ?? "[Reconstruyendo...]";
                     ApplyWaitStyle();
+                    dialogueText.color = new Color(0f, 1f, 1f); // Cyan
                     _typewriterComplete = true; // No queremos typewriter en la instrucción de acción
                 }
 
@@ -517,6 +575,18 @@ public partial class VNDialogue : MonoBehaviour
             string jumpTargetLine = ParseValue(cmd, "JUMP_LINE");
             string jumpUnityScene = ParseValue(cmd, "JUMP_UNITY_SCENE");  // Opcional: cambiar escena Unity
             
+            // Detectar delay personalizado (opcional)
+            string delayStr = ParseValue(cmd, "DELAY");
+            float jumpDelay = JUMP_WAIT_TIME;
+            if (!string.IsNullOrEmpty(delayStr) && float.TryParse(delayStr, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out float parsedDelay))
+            {
+                jumpDelay = parsedDelay;
+            }
+
+            // Detectar crossfade sin black screen
+            string crossfadeStr = ParseValue(cmd, "CROSSFADE");
+            bool useCrossfade = crossfadeStr == "1" || crossfadeStr.ToUpper() == "TRUE";
+
             // Detectar si se debe mantener la música (sin fade out)
             string skipMusicFade = ParseValue(cmd, "SKIP_MUSIC_FADE");
             if (skipMusicFade == "1" || skipMusicFade.ToUpper() == "TRUE")
@@ -525,7 +595,18 @@ public partial class VNDialogue : MonoBehaviour
                 Debug.Log("[VNDialogue] SKIP_MUSIC_FADE activado. La música continuará sin fade.");
             }
 
-            Debug.Log($"[VNDialogue] JUMP configurado: CSV={jumpTargetScene}, Line={jumpTargetLine}, UnityScene={jumpUnityScene}");
+            // Duración personalizada del fade de música (en segundos, 0 = usar defecto 0.8s)
+            string musicFadeDurStr = ParseValue(cmd, "MUSIC_FADE_DURATION");
+            if (float.TryParse(musicFadeDurStr, System.Globalization.NumberStyles.Float,
+                               System.Globalization.CultureInfo.InvariantCulture,
+                               out float parsedMusicFade) && parsedMusicFade > 0f)
+            {
+                VNTransitionFlags.MusicFadeDuration = parsedMusicFade;
+                Debug.Log($"[VNDialogue] MUSIC_FADE_DURATION={parsedMusicFade}s activado.");
+            }
+
+
+            Debug.Log($"[VNDialogue] JUMP configurado: CSV={jumpTargetScene}, Line={jumpTargetLine}, UnityScene={jumpUnityScene}, Delay={jumpDelay}, Crossfade={useCrossfade}");
 
             // Mostrar texto opcional durante la espera
             if (nameText != null) nameText.text = "";
@@ -538,7 +619,7 @@ public partial class VNDialogue : MonoBehaviour
             _typewriterComplete = true;  // JUMP muestra texto completo
 
             // Iniciar salto automático con delay
-            StartCoroutine(JumpAfterDelay(jumpTargetScene, jumpTargetLine, jumpUnityScene));
+            StartCoroutine(JumpAfterDelay(jumpTargetScene, jumpTargetLine, jumpUnityScene, jumpDelay, useCrossfade));
 
             return;
         }
@@ -588,7 +669,7 @@ public partial class VNDialogue : MonoBehaviour
             while (optionIndex < currentLines.Count && options.Count < maxOptions)
             {
                 string sp = (currentLines[optionIndex].speaker ?? "").Trim().ToUpper();
-                if (sp == "CHOICE") break;
+                if (sp == "CHOICE" || sp == "BRANCH" || sp == "JUMP" || sp == "WAIT" || sp == "ACT" || string.IsNullOrEmpty(sp)) break;
 
                 options.Add(currentLines[optionIndex]);
                 optionIndex++;

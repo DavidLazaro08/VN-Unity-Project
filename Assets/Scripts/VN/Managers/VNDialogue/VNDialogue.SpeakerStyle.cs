@@ -12,10 +12,16 @@ public partial class VNDialogue
     // =========================================================
     
     [Header("Speaker Name Colors")]
-    public Color loganNameColor = new Color(0.4f, 0.7f, 1f, 1f);      // Azul claro
-    public Color damiaoNameColor = new Color(0.85f, 0.55f, 0.95f, 1f);    // Lila rosado / violeta suave
-    public Color lazarusNameColor = new Color(0.7f, 0.5f, 0.9f, 1f);  // Púrpura
-    public Color narratorNameColor = new Color(0.6f, 0.6f, 0.6f, 1f); // Gris
+    public Color loganNameColor = new Color(0.4f, 0.7f, 1f, 1f);          // Azul claro
+    public Color damiaoNameColor = new Color(0.85f, 0.55f, 0.95f, 1f);    // Lila / violeta suave
+    public Color lazarusNameColor = new Color(0.7f, 0.5f, 0.9f, 1f);     // Púrpura
+    public Color narratorNameColor = new Color(0.6f, 0.6f, 0.6f, 1f);    // Gris
+    public Color antirobotsNameColor = new Color(1f, 0.3f, 0.25f, 1f);   // Rojo eléctrico
+    public Color truefellaNameColor = new Color(1f, 0.75f, 0.3f, 1f);    // Ámbar cálido
+    public Color siluetaNameColor = new Color(0.5f, 0.55f, 0.7f, 1f);    // Gris-azul apagado
+    public Color liraNameColor = new Color(0.3f, 0.85f, 0.75f, 1f);      // Teal suave
+    public Color viejoNameColor = new Color(0.85f, 0.7f, 0.35f, 1f);     // Ocre dorado
+    public Color ronnNameColor = new Color(0.35f, 0.7f, 0.65f, 1f);      // Azul-verde acero
     public bool enableNameFade = true;
     public float nameFadeDuration = 0.12f;
 
@@ -47,6 +53,25 @@ public partial class VNDialogue
                 break;
             case "LAZARUS":
                 targetColor = lazarusNameColor;
+                break;
+            case "ANTIROBOTS":
+                targetColor = antirobotsNameColor;
+                break;
+            case "TRUE-FELLA":
+                targetColor = truefellaNameColor;
+                break;
+            case "SILUETA":
+            case "SOMBRA":
+                targetColor = siluetaNameColor;
+                break;
+            case "LIRA":
+                targetColor = liraNameColor;
+                break;
+            case "VIEJO":
+                targetColor = viejoNameColor;
+                break;
+            case "RONN":
+                targetColor = ronnNameColor;
                 break;
             case "NARRADOR":
             case "WAIT":
