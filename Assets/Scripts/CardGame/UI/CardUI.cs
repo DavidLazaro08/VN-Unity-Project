@@ -77,6 +77,12 @@ namespace CardGame.UI
             card.OnHealthChanged += OnHealthChanged;
             card.OnDamageChanged += OnDamageChanged;
             card.OnCardDestroyed += OnCardDestroyed;
+
+            // Si es carta del jugador, suscribirse al cambio de selección de ataque
+            if (!isEnemy && CardBattleManager.Instance != null)
+            {
+                CardBattleManager.Instance.OnAttackSelectionChanged += OnAttackSelectionChangedHandler;
+            }
         }
 
         /// <summary>
@@ -180,6 +186,15 @@ namespace CardGame.UI
                 selectedEffect.SetActive(selected);
         }
 
+        /// <summary>
+        /// Callback del sistema de selección de ataque del manager
+        /// </summary>
+        private void OnAttackSelectionChangedHandler(Card selectedCard)
+        {
+            // Actualizar el estado visual: seleccionada solo si somos la carta elegida
+            SetSelected(selectedCard != null && selectedCard == CardData);
+        }
+
         #region Drag & Drop
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -189,6 +204,11 @@ namespace CardGame.UI
 
             // Solo se puede arrastrar si está en la mano
             if (CardData.Location != CardLocation.Hand) return;
+
+            // Re-evaluar canvas si es nulo (puede ocurrir si la carta fue instanciada dinámicamente)
+            if (canvas == null)
+                canvas = GetComponentInParent<Canvas>();
+            if (canvas == null) return;
 
             originalPosition = rectTransform.position;
             originalParent = transform.parent;
@@ -259,11 +279,25 @@ namespace CardGame.UI
         /// </summary>
         private void OnCardClicked()
         {
+            var manager = CardBattleManager.Instance;
+            if (manager == null) return;
+
+            // Si ya estaba seleccionada, deseleccionar
+            if (isSelected)
+            {
+                manager.ClearAttackSelection();
+                return;
+            }
+
             if (CardData.CanAttackThisTurn && !CardData.HasAttackedThisTurn)
             {
-                // Resaltar objetivos válidos
-                CardBattleManager.Instance?.HighlightValidTargets(CardData);
-                SetSelected(true);
+                // Limpiar selección anterior y seleccionar esta carta
+                manager.SelectAttackingCard(CardData);
+            }
+            else
+            {
+                // Carta no puede atacar, limpiar selección si hubiera
+                manager.ClearAttackSelection();
             }
         }
 
@@ -272,9 +306,19 @@ namespace CardGame.UI
         /// </summary>
         private void OnTargetSelected()
         {
-            // Buscar la carta atacante seleccionada
-            // (esto debería manejarse a través del BattleManager en una implementación completa)
-            Debug.Log($"{CardData.Data.cardName} seleccionada como objetivo");
+            var manager = CardBattleManager.Instance;
+            if (manager == null) return;
+
+            Card attacker = manager.SelectedAttackingCard;
+            if (attacker == null)
+            {
+                Debug.LogWarning("No hay carta atacante seleccionada");
+                return;
+            }
+
+            Debug.Log($"{attacker.Data.cardName} ataca a {CardData.Data.cardName}");
+            manager.PlayerAttackWithCard(attacker, CardData);
+            manager.ClearAttackSelection();
         }
 
         /// <summary>
@@ -312,10 +356,13 @@ namespace CardGame.UI
 
             foreach (RaycastResult result in results)
             {
+                // Comprobar por tag
                 if (result.gameObject.CompareTag("BattleField"))
-                {
                     return true;
-                }
+
+                // Fallback: comprobar si alguno de sus padres tiene un componente BattleField
+                if (result.gameObject.GetComponentInParent<CardGame.Battle.BattleField>() != null)
+                    return true;
             }
 
             return false;
@@ -386,6 +433,12 @@ namespace CardGame.UI
                 CardData.OnHealthChanged -= OnHealthChanged;
                 CardData.OnDamageChanged -= OnDamageChanged;
                 CardData.OnCardDestroyed -= OnCardDestroyed;
+            }
+
+            // Desuscribirse del sistema de selección de ataque
+            if (!isEnemyCard && CardBattleManager.Instance != null)
+            {
+                CardBattleManager.Instance.OnAttackSelectionChanged -= OnAttackSelectionChangedHandler;
             }
         }
     }

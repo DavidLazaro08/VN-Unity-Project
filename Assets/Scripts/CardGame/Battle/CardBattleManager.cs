@@ -31,6 +31,9 @@ namespace CardGame.Battle
         public BattleState State { get; private set; }
         public int TurnNumber { get; private set; }
 
+        // Selección de ataque
+        public Card SelectedAttackingCard { get; private set; }
+
         // Eventos
         public event Action<BattlePlayer> OnTurnStarted;
         public event Action<BattlePlayer> OnTurnEnded;
@@ -38,6 +41,8 @@ namespace CardGame.Battle
         public event Action<BattlePlayer> OnBattleWon;
         public event Action<BattlePlayer> OnBattleLost;
         public event Action OnBattleEnded;
+        /// <summary>Fired when the selected attacking card changes (null = cleared)</summary>
+        public event Action<Card> OnAttackSelectionChanged;
 
         private void Awake()
         {
@@ -316,6 +321,26 @@ namespace CardGame.Battle
 
             List<Card> targets = GetValidAttackTargets(attackingCard);
             battleField.HighlightValidTargets(attackingCard, targets);
+        }
+
+        /// <summary>
+        /// Selecciona la carta atacante y resalta objetivos válidos
+        /// </summary>
+        public void SelectAttackingCard(Card card)
+        {
+            SelectedAttackingCard = card;
+            HighlightValidTargets(card);
+            OnAttackSelectionChanged?.Invoke(card);
+        }
+
+        /// <summary>
+        /// Limpia la selección de ataque y los resaltados
+        /// </summary>
+        public void ClearAttackSelection()
+        {
+            SelectedAttackingCard = null;
+            ClearHighlights();
+            OnAttackSelectionChanged?.Invoke(null);
         }
 
         /// <summary>

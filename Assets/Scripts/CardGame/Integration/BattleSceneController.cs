@@ -100,9 +100,11 @@ namespace CardGame.Integration
                 battleManager.Player.OnCardPlayed += OnPlayerCardPlayed;
 
                 battleManager.Opponent.OnCardDrawn += OnOpponentCardDrawn;
+                battleManager.Opponent.OnCardPlayed += OnOpponentCardPlayed;
 
-                // Mostrar mano inicial
+                // Mostrar manos iniciales
                 UpdatePlayerHand();
+                UpdateOpponentHand();
             }
             else
             {
@@ -144,6 +146,24 @@ namespace CardGame.Integration
         }
 
         /// <summary>
+        /// Callback cuando el oponente (IA) juega una carta
+        /// </summary>
+        private void OnOpponentCardPlayed(Card card)
+        {
+            // Quitar de la mano visual del oponente
+            if (opponentHandUI != null)
+            {
+                opponentHandUI.RemoveCard(card);
+            }
+
+            // Añadir al campo visual del oponente (isPlayerCard = false)
+            if (battleField != null)
+            {
+                battleField.AddCardToField(card, false);
+            }
+        }
+
+        /// <summary>
         /// Actualiza la mano del jugador
         /// </summary>
         private void UpdatePlayerHand()
@@ -151,6 +171,17 @@ namespace CardGame.Integration
             if (playerHandUI != null && battleManager != null && battleManager.Player != null)
             {
                 playerHandUI.RefreshHand(battleManager.Player.Hand);
+            }
+        }
+
+        /// <summary>
+        /// Actualiza la mano inicial del oponente
+        /// </summary>
+        private void UpdateOpponentHand()
+        {
+            if (opponentHandUI != null && battleManager != null && battleManager.Opponent != null)
+            {
+                opponentHandUI.RefreshHand(battleManager.Opponent.Hand);
             }
         }
 
@@ -211,6 +242,7 @@ namespace CardGame.Integration
                 if (battleManager.Opponent != null)
                 {
                     battleManager.Opponent.OnCardDrawn -= OnOpponentCardDrawn;
+                    battleManager.Opponent.OnCardPlayed -= OnOpponentCardPlayed;
                 }
             }
         }
