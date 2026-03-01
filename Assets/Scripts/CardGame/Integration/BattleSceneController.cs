@@ -89,6 +89,7 @@ namespace CardGame.Integration
             if (battleManager.Opponent != null)
             {
                 battleManager.Opponent.OnCardDrawn += OnOpponentCardDrawn;
+                battleManager.Opponent.OnCardPlayed += OnOpponentCardPlayed;
             }
 
             UpdatePlayerHand();
@@ -112,8 +113,11 @@ namespace CardGame.Integration
             if (opponentHandUI != null) opponentHandUI.AddCard(card, true);
         }
 
-
-
+        private void OnOpponentCardPlayed(Card card)
+        {
+            if (opponentHandUI != null) opponentHandUI.RemoveCard(card);
+            if (battleField != null) battleField.AddCardToField(card, false);
+        }
 
         private void UpdatePlayerHand()
         {
@@ -165,6 +169,7 @@ namespace CardGame.Integration
             if (battleManager != null && battleManager.Opponent != null)
             {
                 battleManager.Opponent.OnCardDrawn -= OnOpponentCardDrawn;
+                battleManager.Opponent.OnCardPlayed -= OnOpponentCardPlayed;
             }
         }
         private void UpdateOpponentHand()

@@ -386,12 +386,18 @@ namespace CardGame.UI
 
         private void OnDestroy()
         {
-            // Desuscribirse de eventos
+            // Desuscribirse de eventos de la carta
             if (CardData != null)
             {
                 CardData.OnHealthChanged -= OnHealthChanged;
                 CardData.OnDamageChanged -= OnDamageChanged;
                 CardData.OnCardDestroyed -= OnCardDestroyed;
+            }
+
+            // Desuscribirse del sistema de selección de ataque
+            if (!isEnemyCard && CardBattleManager.Instance != null)
+            {
+                CardBattleManager.Instance.OnAttackSelectionChanged -= OnAttackSelectionChangedHandler;
             }
         }
     }
