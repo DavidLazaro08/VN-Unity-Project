@@ -169,7 +169,7 @@ MonoBehaviour:
     holdTime: 1.5
     fadeOutTime: 1
     enableGlitch: 0
-  - text: "Transmisi\xF3n en curso."
+  - text: Nodo 01 completado.
     fadeInTime: 0.8
     holdTime: 1.8
     fadeOutTime: 0.8
@@ -180,19 +180,19 @@ MonoBehaviour:
     fadeOutTime: 1.2
     enableGlitch: 0
   - text: 
-    fadeInTime: 0
+    fadeInTime: 0.1
     holdTime: 1.5
-    fadeOutTime: 0
+    fadeOutTime: 0.1
     enableGlitch: 0
   - text: "\u2014 AV Games \u2014"
     fadeInTime: 1
     holdTime: 2
     fadeOutTime: 0.8
     enableGlitch: 0
-  - text: "Demo t\xE9cnica \xB7 DAM 2"
+  - text: Vertical Slice - DAM 2
     fadeInTime: 0.8
-    holdTime: 1.8
-    fadeOutTime: 0.8
+    holdTime: 1.5
+    fadeOutTime: 0.6
     enableGlitch: 0
   - text: "MIGUEL BENJUM\xC9A HIDALGO\t"
     fadeInTime: 0.8
