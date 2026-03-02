@@ -5,9 +5,15 @@ using System.Collections;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Controlador para la escena de introducción con video.
-/// Reproduce el video de intro, permite saltarlo con cualquier tecla o click,
-/// y transiciona automáticamente a Scene_Game al terminar con fade out a negro.
+/// IntroVideoController
+/// ------------------------------------------------------------
+/// Lleva la intro en vídeo:
+/// - reproduce el vídeo
+/// - te deja saltarlo (tecla o click)
+/// - al acabar (o al saltar) hace fundido a negro y carga la siguiente escena
+///
+/// Lleva varios “planes B” para detectar el final del vídeo, porque a veces
+/// parece que Unity no se porta igual en todos los PCs/codecs.
 /// </summary>
 public class IntroVideoController : MonoBehaviour
 {
@@ -47,11 +53,19 @@ public class IntroVideoController : MonoBehaviour
 
     void Start()
     {
-        // ... (código anterior de búsqueda de videoPlayer) ...
+        // Limpiamos cualquier canvas de fade que haya quedado de un salto anterior (ej. VNDialogue.Jump)
+        GameObject oldJumpCanvas = GameObject.Find("JumpFadeCanvas");
+        if (oldJumpCanvas != null)
+        {
+            Debug.Log("[IntroVideo] Destruyendo JumpFadeCanvas residual de la escena anterior.");
+            Destroy(oldJumpCanvas);
+        }
+
+        // Buscar VideoPlayer si no está asignado
         if (videoPlayer == null)
         {
             videoPlayer = GetComponent<VideoPlayer>();
-            
+
             if (videoPlayer == null)
             {
                 videoPlayer = FindObjectOfType<VideoPlayer>();
@@ -59,25 +73,25 @@ public class IntroVideoController : MonoBehaviour
 
             if (videoPlayer == null)
             {
-                Debug.LogError("[IntroVideoController] No se encontró VideoPlayer. Asigna uno en el Inspector.");
+                Debug.LogError("[IntroVideo] No encuentro ningún VideoPlayer. Cargo la siguiente escena.");
                 SceneManager.LoadScene(nextSceneName);
                 return;
             }
         }
 
-        // Crear sistema de fade
+        // Crear sistema de fade (negro por encima de todo)
         CreateFadeSystem();
 
-        // Configurar eventos del video
+        // Evento de “se acabó el vídeo”
         videoPlayer.loopPointReached += OnVideoFinished;
 
-        // Iniciar reproducción
+        // Reproducir
         videoPlayer.Play();
         _videoStarted = true;
 
-        // Guardar duración para backup
+        // Duración por si necesitamos el plan B del tiempo
         _videoDuration = videoPlayer.length;
-        Debug.Log($"[IntroVideoController] Video iniciado. Duración: {_videoDuration}s. Presiona cualquier tecla o click para saltar.");
+        Debug.Log($"[IntroVideo] Empezó el vídeo ({_videoDuration:0.0}s). Pulsa una tecla o click para saltar.");
     }
 
     void Update()
@@ -86,66 +100,61 @@ public class IntroVideoController : MonoBehaviour
 
         _elapsedTime += Time.deltaTime;
 
-        // Detectar input para saltar (teclado o mouse) - NEW INPUT SYSTEM
+        // Input para saltar intro (NEW INPUT SYSTEM)
         if (allowSkip && _elapsedTime >= minTimeBeforeSkip)
         {
             bool skipInput = false;
 
-            // Check Keyboard
+            // Teclado
             if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame)
             {
                 skipInput = true;
             }
 
-            // Check Mouse
+            // Ratón
             if (!skipInput && Mouse.current != null)
             {
-                if (Mouse.current.leftButton.wasPressedThisFrame || 
-                    Mouse.current.rightButton.wasPressedThisFrame || 
+                if (Mouse.current.leftButton.wasPressedThisFrame ||
+                    Mouse.current.rightButton.wasPressedThisFrame ||
                     Mouse.current.middleButton.wasPressedThisFrame)
                 {
                     skipInput = true;
                 }
             }
 
-            // Optional: Check Gamepad
+            // Gamepad (lo básico)
             if (!skipInput && Gamepad.current != null && Gamepad.current.allControls.Count > 0)
             {
-                 // Checking all gamepad buttons is complex, usually just check specific ones
-                 if (Gamepad.current.buttonSouth.wasPressedThisFrame || Gamepad.current.startButton.wasPressedThisFrame)
-                 {
-                     skipInput = true;
-                 }
+                if (Gamepad.current.buttonSouth.wasPressedThisFrame || Gamepad.current.startButton.wasPressedThisFrame)
+                {
+                    skipInput = true;
+                }
             }
 
             if (skipInput)
             {
-                Debug.Log("[IntroVideoController] Video saltado por el usuario.");
+                Debug.Log("[IntroVideo] Saltado por el usuario.");
                 SkipIntro();
                 return;
             }
         }
 
-        // Verificar si el video terminó (múltiples métodos de detección + TEMPORIZADOR DE SEGURIDAD)
+        // Detectar fin de vídeo (varios métodos por seguridad)
         if (_videoStarted && videoPlayer != null)
         {
-            // Método 1: Video no está reproduciendo y ya pasó tiempo suficiente
             bool videoStopped = !videoPlayer.isPlaying && _elapsedTime > 1f;
-            
-            // Método 2: Frame actual está cerca del final
-            bool nearEnd = videoPlayer.frameCount > 0 && 
-                          videoPlayer.frame >= (long)(videoPlayer.frameCount - 5);
-            
-            // Método 3: Tiempo actual está cerca de la duración total
-            bool timeNearEnd = videoPlayer.length > 0 && 
-                              videoPlayer.time >= (videoPlayer.length - 0.1); // Margen más pequeño
 
-            // Método 4: Temporizador de seguridad (videoDuration + 0.5s margen)
+            bool nearEnd = videoPlayer.frameCount > 0 &&
+                           videoPlayer.frame >= (long)(videoPlayer.frameCount - 5);
+
+            bool timeNearEnd = videoPlayer.length > 0 &&
+                               videoPlayer.time >= (videoPlayer.length - 0.1);
+
             bool hardTimeLimit = _videoDuration > 0 && _elapsedTime > (_videoDuration + 0.5f);
 
             if (videoStopped || nearEnd || timeNearEnd || hardTimeLimit)
             {
-                Debug.Log($"[IntroVideoController] Video terminado. Trigger: Stopped={videoStopped}, NearEnd={nearEnd}, Time={timeNearEnd}, HardLimit={hardTimeLimit}");
+                Debug.Log("[IntroVideo] Terminó el vídeo. Paso a la siguiente escena.");
                 StartTransition();
             }
         }
@@ -156,12 +165,11 @@ public class IntroVideoController : MonoBehaviour
     /// </summary>
     private void CreateFadeSystem()
     {
-        // Canvas global en Overlay con prioridad máxima
         _fadeCanvasGO = new GameObject("IntroFadeCanvas");
-        
+
         Canvas canvas = _fadeCanvasGO.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvas.sortingOrder = 32767; // Máxima prioridad posible (Short.MaxValue)
+        canvas.sortingOrder = 32767;
 
         _fadeCanvasGO.AddComponent<UnityEngine.UI.CanvasScaler>();
         _fadeCanvasGO.AddComponent<UnityEngine.UI.GraphicRaycaster>();
@@ -172,7 +180,7 @@ public class IntroVideoController : MonoBehaviour
 
         UnityEngine.UI.Image img = panelGO.AddComponent<UnityEngine.UI.Image>();
         img.color = Color.black;
-        img.raycastTarget = false; // No bloquear clicks durante el video
+        img.raycastTarget = false;
 
         RectTransform rt = panelGO.GetComponent<RectTransform>();
         rt.anchorMin = Vector2.zero;
@@ -181,7 +189,7 @@ public class IntroVideoController : MonoBehaviour
         rt.anchoredPosition = Vector2.zero;
 
         _fadeGroup = panelGO.AddComponent<CanvasGroup>();
-        _fadeGroup.alpha = 0f; // Transparente al inicio
+        _fadeGroup.alpha = 0f;
         _fadeGroup.blocksRaycasts = false;
     }
 
@@ -190,7 +198,7 @@ public class IntroVideoController : MonoBehaviour
     /// </summary>
     private void OnVideoFinished(VideoPlayer vp)
     {
-        Debug.Log("[IntroVideoController] Video terminado (evento loopPointReached).");
+        Debug.Log("[IntroVideo] Terminó (evento).");
         StartTransition();
     }
 
@@ -215,21 +223,19 @@ public class IntroVideoController : MonoBehaviour
     private void StartTransition()
     {
         if (_isTransitioning) return;
-        // La lluvia se apaga DENTRO de FadeOutAndLoad, una vez el canvas ya cubre todo
         StartCoroutine(FadeOutAndLoad());
     }
 
     /// <summary>
-    /// Busca y desactiva la cámara de FX (lluvia) para asegurar que no se vea sobre el negro.
+    /// Apaga la cámara de FX (lluvia), para que no se vea por encima del negro.
     /// </summary>
     private void DisableFXCamera()
     {
-        // Nombre correcto: "FX_Camera" (con guion bajo), creado por RainEffectSetup
         GameObject fxCam = GameObject.Find("FX_Camera");
         if (fxCam != null)
         {
             fxCam.SetActive(false);
-            Debug.Log("[IntroVideoController] FX_Camera desactivada.");
+            Debug.Log("[IntroVideo] FX_Camera OFF.");
         }
     }
 
@@ -240,33 +246,28 @@ public class IntroVideoController : MonoBehaviour
     {
         _isTransitioning = true;
 
-        // Bloquear interacción durante el fade
         if (_fadeGroup != null)
         {
             _fadeGroup.blocksRaycasts = true;
         }
 
-        // Obtener volumen inicial del video
         float startVolume = 0f;
         if (fadeOutAudio && videoPlayer != null)
         {
             startVolume = videoPlayer.GetDirectAudioVolume(0);
         }
 
-        // FADE OUT a negro
         float t = 0f;
         while (t < fadeOutDuration)
         {
             t += Time.deltaTime;
             float k = Mathf.Clamp01(t / fadeOutDuration);
 
-            // Fade visual
             if (_fadeGroup != null)
             {
                 _fadeGroup.alpha = k;
             }
 
-            // Fade audio del video
             if (fadeOutAudio && videoPlayer != null && videoPlayer.isPlaying)
             {
                 videoPlayer.SetDirectAudioVolume(0, Mathf.Lerp(startVolume, 0f, k));
@@ -275,38 +276,31 @@ public class IntroVideoController : MonoBehaviour
             yield return null;
         }
 
-        // Asegurar fade completo
         if (_fadeGroup != null)
         {
             _fadeGroup.alpha = 1f;
         }
 
-        // Ahora que el canvas cubre todo, apagar lluvia sin corte visible
         DisableFXCamera();
 
-        // Detener video
         if (videoPlayer != null && videoPlayer.isPlaying)
         {
             videoPlayer.Stop();
         }
 
-        // Pequeña pausa para suavizar la transición
         yield return new WaitForSeconds(0.2f);
 
-        // Cargar siguiente escena
-        Debug.Log($"[IntroVideoController] Cargando escena: {nextSceneName}");
+        Debug.Log($"[IntroVideo] Cargando: {nextSceneName}");
         SceneManager.LoadScene(nextSceneName);
     }
 
     void OnDestroy()
     {
-        // Limpiar eventos
         if (videoPlayer != null)
         {
             videoPlayer.loopPointReached -= OnVideoFinished;
         }
 
-        // Limpiar fade canvas
         if (_fadeCanvasGO != null)
         {
             Destroy(_fadeCanvasGO);

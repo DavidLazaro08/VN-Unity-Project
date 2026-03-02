@@ -1,21 +1,28 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public partial class VNDialogue
 {
+    /*
+     * VNDialogue.Typewriter
+     * ---------------------
+     * Gestiona la presentación del texto: efecto typewriter y estilos básicos.
+     * La lógica de avance (Next/ShowLine) decide cuándo iniciar o completar el efecto.
+     */
+
     // =========================================================
     //  TYPEWRITER & TEXT STYLING FIELDS
     // =========================================================
-    
+
     [Header("Text Presentation")]
     public bool enableTypewriter = true;
+
     [Range(10f, 100f)]
     public float typewriterCharsPerSecond = 40f;
-    public Color waitStyleColor = new Color(0.85f, 0.85f, 0.85f, 1f);  // Gris claro OPACO
+
+    public Color waitStyleColor = new Color(0.85f, 0.85f, 0.85f, 1f);
+
     [Range(0.8f, 1.0f)]
     public float waitStyleSizeMultiplier = 0.9f;
 
@@ -36,19 +43,18 @@ public partial class VNDialogue
     // =========================================================
 
     /// <summary>
-    /// Detiene el typewriter si está corriendo actualmente.
+    /// Detiene el typewriter si está en ejecución.
     /// </summary>
     private void StopTypewriterIfRunning()
     {
-        if (_typewriterCoroutine != null)
-        {
-            StopCoroutine(_typewriterCoroutine);
-            _typewriterCoroutine = null;
-        }
+        if (_typewriterCoroutine == null) return;
+
+        StopCoroutine(_typewriterCoroutine);
+        _typewriterCoroutine = null;
     }
 
     /// <summary>
-    /// Completa instantáneamente el typewriter actual.
+    /// Completa instantáneamente el texto de la línea actual.
     /// </summary>
     private void CompleteTypewriter()
     {
@@ -73,7 +79,7 @@ public partial class VNDialogue
     {
         if (dialogueText == null) yield break;
 
-        // Reiniciar contador de blips al empezar línea
+        // Reiniciar contador de blips al empezar la línea
         if (blipController != null) blipController.ResetCounter();
 
         float delay = 1f / typewriterCharsPerSecond;
@@ -84,7 +90,7 @@ public partial class VNDialogue
             char currentChar = fullText[i];
             dialogueText.text += currentChar;
 
-            // Disparar sonido (fail-safe)
+            // Sonido por carácter (si existe controller)
             if (blipController != null)
             {
                 blipController.OnCharTyped(currentChar, false);
@@ -98,7 +104,7 @@ public partial class VNDialogue
     }
 
     /// <summary>
-    /// Restaura el estilo normal del texto (color, font style, tamaño).
+    /// Restaura el estilo normal del texto (color, estilo y tamaño).
     /// </summary>
     private void ApplyNormalStyle()
     {
@@ -110,7 +116,7 @@ public partial class VNDialogue
     }
 
     /// <summary>
-    /// Aplica el estilo WAIT/NARRADOR (cursiva, color atenuado, tamaño opcional).
+    /// Aplica el estilo de WAIT/NARRADOR (cursiva y color atenuado).
     /// </summary>
     private void ApplyWaitStyle()
     {
@@ -118,8 +124,8 @@ public partial class VNDialogue
 
         dialogueText.fontStyle = FontStyles.Italic;
         dialogueText.color = waitStyleColor;
-        
-        // Opcional: reducir tamaño (solo si tenemos un tamaño base válido)
+
+        // Reducir tamaño si existe un tamaño base válido
         if (waitStyleSizeMultiplier < 1.0f && _baseFontSize > 0f)
         {
             dialogueText.fontSize = _baseFontSize * waitStyleSizeMultiplier;

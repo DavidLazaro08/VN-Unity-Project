@@ -4,8 +4,15 @@ using UnityEngine;
 [Serializable]
 public class CharacterPoseEntry
 {
-    public string id;        // "LOGAN", "DAMIAO"
-    public string pose;      // "serio", "sonrisa", "normal"
-    public Sprite sprite;    // sprite correspondiente
-    public float scale = 1f; // escala personalizada (def: 1)
+    // Identificador del personaje (ej: "LOGAN", "DAMIAO")
+    public string id;
+
+    // Nombre de la pose tal como se usará en el CSV (ej: "serio", "sonrisa", "normal")
+    public string pose;
+
+    // Sprite que corresponde a ese personaje + pose
+    public Sprite sprite;
+
+    // Escala opcional por pose (por si algún sprite necesita ajustarse un poco)
+    public float scale = 1f;
 }

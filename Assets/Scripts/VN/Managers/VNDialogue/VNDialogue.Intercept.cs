@@ -1,12 +1,16 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public partial class VNDialogue
 {
+    /*
+     * VNDialogue.Intercept
+     * --------------------
+     * Conecta el flujo del CSV con el minijuego de interceptación.
+     * Permite lanzar el panel, bloquear el avance mientras se juega
+     * y guardar el resultado como estado para ramificar la historia.
+     */
+
     // =========================================================
     //  INTERCEPT SYSTEM
     // =========================================================
@@ -20,7 +24,7 @@ public partial class VNDialogue
 
     /// <summary>
     /// Inicializa la conexión con el DataInterceptController.
-    /// Llamar desde Start() o manualmente al configurar la escena.
+    /// Se llama desde Start() y también sirve como fail-safe si falta la referencia.
     /// </summary>
     public void InitInterceptSystem()
     {
@@ -33,24 +37,27 @@ public partial class VNDialogue
         {
             interceptController.OnInterceptComplete -= OnInterceptDone;
             interceptController.OnInterceptComplete += OnInterceptDone;
+
+#if UNITY_EDITOR
             Debug.Log("[VNDialogue] InterceptController conectado.");
+#endif
         }
     }
 
     /// <summary>
-    /// Maneja la acción ACT=INTERCEPT_START.
+    /// Maneja ACT=INTERCEPT_START.
     /// Activa el panel de fragmentos del DataInterceptController.
     /// </summary>
     private void HandleInterceptStart()
     {
         if (interceptController == null)
         {
-            Debug.LogWarning("[VNDialogue] No hay InterceptController asignado. Saltando interceptación.");
+            Debug.LogWarning("[VNDialogue] Interceptación: no hay DataInterceptController en la escena. Se continúa sin minijuego.");
             AdvanceLineAndShow();
             return;
         }
 
-        // Asegurar que estamos suscritos
+        // Asegurar suscripción (por si el controlador se activó/recreó)
         interceptController.OnInterceptComplete -= OnInterceptDone;
         interceptController.OnInterceptComplete += OnInterceptDone;
 
@@ -60,18 +67,21 @@ public partial class VNDialogue
 
     /// <summary>
     /// Callback cuando el jugador completa la selección de fragmentos.
+    /// Guarda el resultado para permitir ramificación posterior.
     /// </summary>
     private void OnInterceptDone(bool optimal)
     {
         _lastInterceptOptimal = optimal;
         _interceptWaitingResult = false;
 
-        // Guardar resultado como una "elección virtual" para permitir ramas en el CSV
+        // Guardar resultado como "elección virtual" para poder usar BRANCH en el CSV
         VNGameState.SetLastChoice("INTERCEPT", optimal ? "SUCCESS" : "FAIL");
 
-        Debug.Log($"[VNDialogue] Interceptación terminada. Óptimo: {optimal}. Avanzando diálogo.");
+#if UNITY_EDITOR
+        Debug.Log($"[VNDialogue] Interceptación finalizada. Resultado: {(optimal ? "SUCCESS" : "FAIL")}");
+#endif
 
-        // Avanzar diálogo
+        // Volver al flujo del diálogo
         _actActive = false;
         _pendingActId = "";
         AdvanceLineAndShow();
@@ -79,14 +89,13 @@ public partial class VNDialogue
 
     /// <summary>
     /// Maneja ACT=INTERCEPT_RESULT.
-    /// Muestra el texto de resultado dinámico según la evaluación.
+    /// Muestra el texto de resultado según el estado guardado.
     /// </summary>
     private void HandleInterceptResult()
     {
         bool optimal = VNGameState.GetInterceptSuccess();
         string[] resultLines = DataInterceptController.GetResultLines(optimal);
 
-        // Mostrar resultado como secuencia de texto
         StartCoroutine(ShowInterceptResultSequence(resultLines));
     }
 
@@ -96,12 +105,11 @@ public partial class VNDialogue
 
         if (dialogueText != null)
         {
-            // Unir todas las líneas con saltos de línea para mostrar el bloque completo
             dialogueText.text = string.Join("\n", lines);
             ApplyWaitStyle();
         }
 
-        // Esperar click único para todo el bloque
+        // Se muestra como bloque único y se espera un click para continuar
         _isWaiting = true;
         _typewriterComplete = true;
 
@@ -110,19 +118,19 @@ public partial class VNDialogue
             yield return null;
         }
 
-        // NO llamar a AdvanceLineAndShow() aquí. 
-        // VNDialogue.Next() ya lo hace cuando _isWaiting pasa a false por click del usuario.
+        // No avanzamos aquí: VNDialogue.Next() ya avanza cuando el usuario rompe el WAIT.
     }
 
     /// <summary>
-    /// Maneja la decisión moral TRUTH (le cuentas todo / parcial).
-    /// Guarda toldFullTruth en VNGameState.
+    /// Guarda la decisión moral TRUTH (si se cuenta todo o no) en VNGameState.
     /// </summary>
     private void HandleTruthChoice(string choiceOpt)
     {
         bool tellAll = (choiceOpt == "TODO");
         VNGameState.SetToldFullTruth(tellAll);
 
-        Debug.Log($"[VNDialogue] Decisión moral: toldFullTruth = {tellAll}");
+#if UNITY_EDITOR
+        Debug.Log($"[VNDialogue] Decisión moral (TRUTH): toldFullTruth = {tellAll}");
+#endif
     }
 }

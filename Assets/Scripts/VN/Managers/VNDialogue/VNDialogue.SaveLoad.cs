@@ -1,20 +1,25 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public partial class VNDialogue
 {
+    /*
+     * VNDialogue.SaveLoad
+     * -------------------
+     * Guardado sencillo por índice: recuerda en qué CSV (sceneIndex) y en qué línea (lineIndex)
+     * se encuentra el jugador para permitir “Continuar” desde el menú.
+     *
+     * El estado narrativo adicional (afinidad, flags, etc.) se gestiona en VNGameState.
+     */
+
     // =========================================================
     //  SAVE / LOAD CONSTANTS
     // =========================================================
     private const string SAVE_SCENE = "VN_SAVE_SCENE";
-    private const string SAVE_LINE = "VN_SAVE_LINE";
+    private const string SAVE_LINE  = "VN_SAVE_LINE";
 
     private const string KEY_HAS_SAVE = "VN_HAS_SAVE";
-    private const string KEY_CONTINUE = "VN_CONTINUE";
+    private const string KEY_CONTINUE = "VN_CONTINUE"; // Se usa desde Start() en otro partial
 
     // =========================================================
     //  SAVE / LOAD METHODS
@@ -22,54 +27,63 @@ public partial class VNDialogue
 
     public void SaveGame()
     {
-        Debug.Log($"[VNDialogue] SaveGame() llamado - Guardando sceneIndex={sceneIndex}, lineIndex={lineIndex}");
-        PlayerPrefs.SetInt(SAVE_SCENE, sceneIndex);
-        PlayerPrefs.SetInt(SAVE_LINE, lineIndex);
+        // Fail-safe: evitar guardar índices inválidos si se llama en un momento extraño.
+        int safeScene = Mathf.Clamp(sceneIndex, 0, Mathf.Max(0, sceneFiles.Count - 1));
+        int safeLine  = Mathf.Max(0, lineIndex);
+
+#if UNITY_EDITOR
+        Debug.Log($"[VNDialogue] SaveGame -> sceneIndex={safeScene}, lineIndex={safeLine}");
+#endif
+
+        PlayerPrefs.SetInt(SAVE_SCENE, safeScene);
+        PlayerPrefs.SetInt(SAVE_LINE, safeLine);
         PlayerPrefs.SetInt(KEY_HAS_SAVE, 1);
         PlayerPrefs.Save();
-        Debug.Log("[VNDialogue] Partida guardada correctamente");
     }
 
     public void LoadGame()
     {
         if (PlayerPrefs.GetInt(KEY_HAS_SAVE, 0) != 1)
         {
-            Debug.Log("[VNDialogue] LoadGame() - No hay partida guardada");
+#if UNITY_EDITOR
+            Debug.Log("[VNDialogue] LoadGame -> no hay partida guardada.");
+#endif
             return;
         }
 
         sceneIndex = PlayerPrefs.GetInt(SAVE_SCENE, 0);
-        lineIndex = PlayerPrefs.GetInt(SAVE_LINE, 0);
-        
-        Debug.Log($"[VNDialogue] LoadGame() - Cargando sceneIndex={sceneIndex}, lineIndex={lineIndex}");
+        lineIndex  = PlayerPrefs.GetInt(SAVE_LINE, 0);
+
+#if UNITY_EDITOR
+        Debug.Log($"[VNDialogue] LoadGame -> sceneIndex={sceneIndex}, lineIndex={lineIndex}");
+#endif
 
         if (sceneIndex < 0 || sceneIndex >= sceneFiles.Count)
             sceneIndex = 0;
 
-        // Cargar la escena SIN resetear lineIndex
+        // Cargar CSV sin resetear lineIndex (se valida después)
         string fileName = sceneFiles[sceneIndex];
-        currentLines = VNSceneLoader.LoadFromResources(fileName);
-
-        if (currentLines == null)
-            currentLines = new List<DialogueLine>();
+        currentLines = VNSceneLoader.LoadFromResources(fileName) ?? new List<DialogueLine>();
 
         waitingForChoice = false;
         choiceNextLineIndex = -1;
 
-        // Detener typewriter si está corriendo
         StopTypewriterIfRunning();
 
-        // Validar lineIndex después de cargar las líneas
+        // Validar lineIndex tras cargar el CSV
         if (lineIndex < 0) lineIndex = 0;
         if (lineIndex >= currentLines.Count)
             lineIndex = Mathf.Max(0, currentLines.Count - 1);
 
-        // Por si venimos de un ACT anterior, aseguramos estado visual
+        // Asegurar estilo base si venimos de estados especiales
         if (dialogueText != null)
             dialogueText.color = _baseColor;
 
         ShowLine();
-        Debug.Log($"[VNDialogue] Partida cargada correctamente en línea {lineIndex}");
+
+#if UNITY_EDITOR
+        Debug.Log($"[VNDialogue] LoadGame -> reanudado en línea {lineIndex}.");
+#endif
     }
 
     public bool HasSave()

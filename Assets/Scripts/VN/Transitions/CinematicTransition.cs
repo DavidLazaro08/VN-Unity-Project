@@ -5,17 +5,17 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Escena de transición cinematográfica reutilizable.
-/// Muestra líneas de texto secuenciales con fade in/out sobre fondo negro,
-/// opcionalmente con micro-glitch, y salta a la siguiente escena.
+/// Controla una transición “cinemática” sencilla: muestra una secuencia de textos sobre fondo negro
+/// con fundidos (y un glitch opcional) y, al terminar, carga otra escena.
 /// 
-/// Persiste los AudioSources activos para que la música no se interrumpa
-/// entre escenas encadenadas.
+/// Opcionalmente puede mantener vivos los AudioSources que estén sonando para que la música
+/// no se corte entre escenas encadenadas.
 /// </summary>
+/// 
 public class CinematicTransition : MonoBehaviour
 {
     // =========================================================
-    //  DATOS CONFIGURABLES
+    //  CONFIGURACIÓN
     // =========================================================
 
     [Serializable]
@@ -25,9 +25,9 @@ public class CinematicTransition : MonoBehaviour
         public string text = "";
 
         [Header("Tiempos (segundos)")]
-        [Range(0.1f, 3f)] public float fadeInTime  = 0.8f;
-        [Range(0.1f, 5f)] public float holdTime    = 1.5f;
-        [Range(0.1f, 3f)] public float fadeOutTime  = 0.8f;
+        [Range(0.1f, 3f)] public float fadeInTime = 0.8f;
+        [Range(0.1f, 5f)] public float holdTime = 1.5f;
+        [Range(0.1f, 3f)] public float fadeOutTime = 0.8f;
 
         [Header("Efectos")]
         public bool enableGlitch = false;
@@ -37,8 +37,8 @@ public class CinematicTransition : MonoBehaviour
     [Tooltip("Cada entrada es una línea que aparece y desaparece secuencialmente.")]
     public TransitionLine[] lines = new TransitionLine[]
     {
-        new TransitionLine { text = "Horas después.",                                  fadeInTime = 0.8f, holdTime = 1.8f, fadeOutTime = 0.8f, enableGlitch = false },
-        new TransitionLine { text = "La ciudad no duerme. Solo cambia de máscara.",    fadeInTime = 0.8f, holdTime = 2.0f, fadeOutTime = 0.8f, enableGlitch = true  },
+        new TransitionLine { text = "Horas después.",                               fadeInTime = 0.8f, holdTime = 1.8f, fadeOutTime = 0.8f, enableGlitch = false },
+        new TransitionLine { text = "La ciudad no duerme. Solo cambia de máscara.", fadeInTime = 0.8f, holdTime = 2.0f, fadeOutTime = 0.8f, enableGlitch = true  },
     };
 
     [Header("Pausa entre líneas (s)")]
@@ -69,6 +69,7 @@ public class CinematicTransition : MonoBehaviour
     private TextMeshProUGUI _displayText;
     private CanvasGroup _textGroup;
     private RectTransform _textRect;
+
     private bool _running = false;
 
     // =========================================================
@@ -77,6 +78,14 @@ public class CinematicTransition : MonoBehaviour
 
     private void Start()
     {
+        // Limpiamos cualquier canvas de fade que haya quedado de un salto anterior (ej. VNDialogue.Jump)
+        GameObject oldJumpCanvas = GameObject.Find("JumpFadeCanvas");
+        if (oldJumpCanvas != null)
+        {
+            Debug.Log("[CinematicTransition] Destruyendo JumpFadeCanvas residual de la escena anterior.");
+            Destroy(oldJumpCanvas);
+        }
+
         CreateUI();
         StartCoroutine(RunSequence());
     }
@@ -87,7 +96,7 @@ public class CinematicTransition : MonoBehaviour
 
     private void CreateUI()
     {
-        // Canvas Overlay (máxima prioridad)
+        // Canvas Overlay (prioridad alta para que esté por encima del resto)
         GameObject canvasGO = new GameObject("CinematicCanvas");
         Canvas canvas = canvasGO.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -102,6 +111,7 @@ public class CinematicTransition : MonoBehaviour
         // Fondo negro full-screen (por si la cámara no está en negro)
         GameObject bgGO = new GameObject("BlackBG");
         bgGO.transform.SetParent(canvasGO.transform, false);
+
         UnityEngine.UI.Image bgImg = bgGO.AddComponent<UnityEngine.UI.Image>();
         bgImg.color = Color.black;
         bgImg.raycastTarget = false;
@@ -129,7 +139,7 @@ public class CinematicTransition : MonoBehaviour
         _displayText.alignment = TextAlignmentOptions.Center;
         _displayText.enableWordWrapping = true;
 
-        // CanvasGroup para controlar alpha
+        // CanvasGroup para controlar alpha del texto
         _textGroup = textGO.AddComponent<CanvasGroup>();
         _textGroup.alpha = 0f;
     }
@@ -150,41 +160,31 @@ public class CinematicTransition : MonoBehaviour
             TransitionLine line = lines[i];
             _displayText.text = line.text;
 
-            // --- FADE IN ---
+            // Fade In
             yield return StartCoroutine(FadeText(0f, 1f, line.fadeInTime));
 
-            // --- HOLD (con glitch opcional) ---
+            // Hold (con glitch opcional)
             if (line.enableGlitch)
-            {
                 yield return StartCoroutine(HoldWithGlitch(line.holdTime));
-            }
             else
-            {
                 yield return new WaitForSeconds(line.holdTime);
-            }
 
-            // --- FADE OUT ---
+            // Fade Out
             yield return StartCoroutine(FadeText(1f, 0f, line.fadeOutTime));
 
             // Pausa entre líneas (excepto la última)
             if (i < lines.Length - 1)
-            {
                 yield return new WaitForSeconds(pauseBetweenLines);
-            }
         }
 
         // Pausa final antes de saltar
         yield return new WaitForSeconds(0.5f);
 
-        // Persistir música si está configurado
         if (persistMusic)
-        {
             PersistAudioSources();
-        }
 
         _running = false;
 
-        // Cargar siguiente escena
         Debug.Log($"[CinematicTransition] Secuencia completa. Cargando: {nextSceneName}");
         SceneManager.LoadScene(nextSceneName);
     }
@@ -196,21 +196,24 @@ public class CinematicTransition : MonoBehaviour
     private IEnumerator FadeText(float from, float to, float duration)
     {
         float t = 0f;
+
         while (t < duration)
         {
             t += Time.deltaTime;
             float k = Mathf.Clamp01(t / duration);
+
             // Curva suave (ease in-out)
             float smooth = k * k * (3f - 2f * k);
             _textGroup.alpha = Mathf.Lerp(from, to, smooth);
+
             yield return null;
         }
+
         _textGroup.alpha = to;
     }
 
     /// <summary>
-    /// Mantiene el texto visible aplicando un micro-shake sutil.
-    /// El shake es aleatorio y de baja intensidad para dar efecto "glitch".
+    /// Mantiene el texto visible aplicando un micro-shake sutil (glitch).
     /// </summary>
     private IEnumerator HoldWithGlitch(float duration)
     {
@@ -221,23 +224,22 @@ public class CinematicTransition : MonoBehaviour
         {
             elapsed += Time.deltaTime;
 
-            // Intensidad varía: más fuerte al principio, se calma
+            // Intensidad más fuerte al principio, más suave al final
             float intensityFactor = Mathf.Lerp(1f, 0.3f, elapsed / duration);
             float currentIntensity = glitchIntensity * intensityFactor;
 
-            // Offset aleatorio con frecuencia controlada
+            // Offset pseudo-aleatorio con frecuencia controlada
             float ox = Mathf.PerlinNoise(Time.time * glitchSpeed, 0f) * 2f - 1f;
             float oy = Mathf.PerlinNoise(0f, Time.time * glitchSpeed) * 2f - 1f;
 
             _textRect.anchoredPosition = originalPos + new Vector2(
                 ox * currentIntensity,
-                oy * currentIntensity * 0.5f  // Menos vertical
+                oy * currentIntensity * 0.5f // Menos vertical
             );
 
             yield return null;
         }
 
-        // Restaurar posición exacta
         _textRect.anchoredPosition = originalPos;
     }
 
@@ -245,24 +247,19 @@ public class CinematicTransition : MonoBehaviour
     //  MÚSICA — PERSISTENCIA
     // =========================================================
 
-    /// <summary>
-    /// Marca todos los AudioSources activos como DontDestroyOnLoad
-    /// para que la música continúe en la siguiente escena.
-    /// </summary>
     private void PersistAudioSources()
     {
         AudioSource[] sources = FindObjectsOfType<AudioSource>();
+
         foreach (AudioSource src in sources)
         {
-            if (src.isPlaying)
-            {
-                // Evitar duplicados si ya está en DontDestroyOnLoad
-                if (src.gameObject.scene.name != "DontDestroyOnLoad")
-                {
-                    DontDestroyOnLoad(src.gameObject);
-                    Debug.Log($"[CinematicTransition] AudioSource '{src.gameObject.name}' persistido.");
-                }
-            }
+            if (!src.isPlaying) continue;
+
+            // Si ya está persistido, no repetir.
+            if (src.gameObject.scene.name == "DontDestroyOnLoad") continue;
+
+            DontDestroyOnLoad(src.gameObject);
+            Debug.Log($"[CinematicTransition] AudioSource '{src.gameObject.name}' persistido.");
         }
     }
 }

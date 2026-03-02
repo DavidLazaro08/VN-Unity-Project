@@ -4,6 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Controla los dos slots de personajes (izquierda y derecha).
+/// Aquí se gestiona qué sprite aparece, cómo entra/sale,
+/// cambios de pose, foco del que habla, pequeño idle motion
+/// y algunos efectos especiales como el glitch.
+/// 
+/// Recibe comandos tipo L=LOGAN:serio o R=HIDE desde VNDialogue
+/// y se encarga de toda la parte visual.
+/// </summary>
+
 public class VNCharacterSlots : MonoBehaviour
 {
     // =========================================================

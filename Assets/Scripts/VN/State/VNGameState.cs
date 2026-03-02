@@ -1,23 +1,27 @@
 using UnityEngine;
 
-/// <summary>
-/// Gestor de estado persistente pa la Visual Novel.
-/// Guarda afinidad y elecciones usando PlayerPrefs.
-/// </summary>
 public static class VNGameState
 {
-    // Claves de PlayerPrefs
-    private const string KEY_AFFINITY_DAMIAO = "VN_AFF_DAMIAO";
-    private const string KEY_LAST_CHOICE_ID  = "VN_LAST_CHOICE_ID";
-    private const string KEY_LAST_CHOICE_OPT = "VN_LAST_CHOICE_OPT";
+    /*
+     * VNGameState
+     * -----------
+     * Estado persistente de la Visual Novel.
+     * Centraliza variables de historia (afinidad, última elección, flags) usando PlayerPrefs.
+     * Está pensado para que el sistema de diálogo pueda ramificar escenas sin depender de la UI.
+     */
 
-    // Interceptación
+    // PlayerPrefs keys
+    private const string KEY_AFFINITY_DAMIAO  = "VN_AFF_DAMIAO";
+    private const string KEY_LAST_CHOICE_ID   = "VN_LAST_CHOICE_ID";
+    private const string KEY_LAST_CHOICE_OPT  = "VN_LAST_CHOICE_OPT";
+
+    // Interceptación / flags narrativos
     private const string KEY_INTERCEPT_SUCCESS = "VN_INTERCEPT_SUCCESS";
     private const string KEY_TOLD_FULL_TRUTH   = "VN_TOLD_FULL_TRUTH";
 
-    // --------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // AFINIDAD (DAMIAO)
-    // --------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     public static int GetAffinityDamiao()
     {
@@ -29,15 +33,19 @@ public static class VNGameState
         if (delta == 0) return;
 
         int current = GetAffinityDamiao();
-        PlayerPrefs.SetInt(KEY_AFFINITY_DAMIAO, current + delta);
+        int next = current + delta;
+
+        PlayerPrefs.SetInt(KEY_AFFINITY_DAMIAO, next);
         PlayerPrefs.Save();
-        
-        Debug.Log($"[VNGameState] Afinidad Damiao: {current} -> {current + delta}");
+
+#if UNITY_EDITOR
+        Debug.Log($"[VNGameState] Afinidad Damiao: {current} -> {next}");
+#endif
     }
 
-    // --------------------------------------------------------------------------------
-    // ÚLTIMA ELECCIÓN (Para Branching)
-    // --------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // ÚLTIMA ELECCIÓN (para branching)
+    // -------------------------------------------------------------------------
 
     public static void SetLastChoice(string choiceId, string choiceOpt)
     {
@@ -45,7 +53,9 @@ public static class VNGameState
         PlayerPrefs.SetString(KEY_LAST_CHOICE_OPT, choiceOpt ?? "");
         PlayerPrefs.Save();
 
-        Debug.Log($"[VNGameState] Choice guardada: ID={choiceId}, OPT={choiceOpt}");
+#if UNITY_EDITOR
+        Debug.Log($"[VNGameState] Última elección: ID={choiceId}, OPT={choiceOpt}");
+#endif
     }
 
     public static string GetLastChoiceId()
@@ -58,9 +68,9 @@ public static class VNGameState
         return PlayerPrefs.GetString(KEY_LAST_CHOICE_OPT, "");
     }
 
-    // --------------------------------------------------------------------------------
-    // INTERCEPTACIÓN (Mini-juego)
-    // --------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // INTERCEPTACIÓN (minijuego) / FLAGS
+    // -------------------------------------------------------------------------
 
     public static bool GetInterceptSuccess()
     {
@@ -71,7 +81,10 @@ public static class VNGameState
     {
         PlayerPrefs.SetInt(KEY_INTERCEPT_SUCCESS, success ? 1 : 0);
         PlayerPrefs.Save();
+
+#if UNITY_EDITOR
         Debug.Log($"[VNGameState] InterceptSuccess = {success}");
+#endif
     }
 
     public static bool GetToldFullTruth()
@@ -83,12 +96,15 @@ public static class VNGameState
     {
         PlayerPrefs.SetInt(KEY_TOLD_FULL_TRUTH, full ? 1 : 0);
         PlayerPrefs.Save();
+
+#if UNITY_EDITOR
         Debug.Log($"[VNGameState] ToldFullTruth = {full}");
+#endif
     }
 
-    // --------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // UTILIDADES
-    // --------------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     public static void ResetAll()
     {
@@ -98,6 +114,9 @@ public static class VNGameState
         PlayerPrefs.DeleteKey(KEY_INTERCEPT_SUCCESS);
         PlayerPrefs.DeleteKey(KEY_TOLD_FULL_TRUTH);
         PlayerPrefs.Save();
+
+#if UNITY_EDITOR
         Debug.Log("[VNGameState] Estado reiniciado.");
+#endif
     }
 }

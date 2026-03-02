@@ -3,7 +3,9 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// Muestra un pequeño popup visual cuando cambia la afinidad.
+/// Popup visual simple para mostrar cambios de afinidad (+1, -1, =).
+/// Hace fade in/out y un pequeño movimiento vertical.
+/// Pensado para feedback rápido sin interrumpir la escena.
 /// </summary>
 public class AffinityPopupUI : MonoBehaviour
 {

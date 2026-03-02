@@ -2,6 +2,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/// <summary>
+/// Botón "Continuar" del menú.
+/// Si existe un guardado, habilita el botón y, al pulsarlo, marca un flag
+/// para que la escena del juego cargue desde el punto guardado.
+/// </summary>
 public class VNMenuContinue : MonoBehaviour
 {
     [Header("Opcional: desactivar si no hay guardado")]
@@ -10,23 +15,25 @@ public class VNMenuContinue : MonoBehaviour
     [Header("Escena del juego")]
     public string gameSceneName = "Scene_Game";
 
-    // Claves (tienen que coincidir con las de VNDialogue)
+    // Claves (deben coincidir con VNDialogue)
     private const string KEY_HAS_SAVE = "VN_HAS_SAVE";
     private const string KEY_CONTINUE = "VN_CONTINUE";
 
     private void Start()
     {
-        // Si no hay guardado, desactivamos el botón (si lo asignas)
+        bool hasSave = PlayerPrefs.GetInt(KEY_HAS_SAVE, 0) == 1;
+
         if (continueButton != null)
-        {
-            bool hasSave = PlayerPrefs.GetInt(KEY_HAS_SAVE, 0) == 1;
             continueButton.interactable = hasSave;
-        }
+
+#if UNITY_EDITOR
+        Debug.Log($"[VNMenuContinue] Guardado detectado: {hasSave}");
+#endif
     }
 
     public void ContinueGame()
     {
-        // Marcamos que al entrar a Scene_Game queremos cargar
+        // Señal para que VNDialogue, al arrancar, haga LoadGame()
         PlayerPrefs.SetInt(KEY_CONTINUE, 1);
         PlayerPrefs.Save();
 

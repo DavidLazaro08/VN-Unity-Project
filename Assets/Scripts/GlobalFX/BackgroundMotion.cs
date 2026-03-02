@@ -1,6 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Añade un ligero movimiento al fondo (pan + zoom suave)
+/// para evitar que la imagen quede totalmente estática.
+/// Pensado para RawImage en escenas tipo VN.
+/// </summary>
 public class BackgroundMotion : MonoBehaviour
 {
     [Header("Pan (UV)")]

@@ -5,6 +5,12 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+/*
+ * VNDialogue
+ * ----------
+ * Control principal de la VN: lee el CSV y orquesta texto, comandos (WAIT/ACT/JUMP/BG...) y flujo de entrada.
+ * Está dividido en varios archivos `partial` para mantenerlo manejable.
+ */
 public partial class VNDialogue : MonoBehaviour
 {
     // =========================================================
@@ -27,14 +33,9 @@ public partial class VNDialogue : MonoBehaviour
     [Header("Shadow Overlay")]
     public ShadowOverlayController shadowOverlay;
 
-
-
-    // =========================================================
-    //  TEXT PRESENTATION
-    // =========================================================
-
-
-
+    // Text presentation (typewriter + estilos) está repartido en:
+    // - VNDialogue.Typewriter.cs
+    // - VNDialogue.SpeakerStyle.cs
 
     // =========================================================
     //  VISUAL DE PERSONAJES
@@ -81,10 +82,7 @@ public partial class VNDialogue : MonoBehaviour
     // =========================================================
     //  JUMP - Salto automático entre escenas
     // =========================================================
-    private bool _isJumping = false;           // JUMP activo
-
-
-
+    private bool _isJumping = false;      // JUMP activo
 
     // =========================================================
     //  ARRANQUE
@@ -112,27 +110,28 @@ public partial class VNDialogue : MonoBehaviour
             _baseStyle = dialogueText.fontStyle;
             _baseFontSize = dialogueText.fontSize;
         }
-        
-        // Detectar si venimos de un JUMP de otra escena Unity
+
+        // Si venimos de un JUMP entre escenas, recuperamos destino desde PlayerPrefs
+        // (sirve de “puente” cuando cambiamos de escena Unity y perdemos el estado en memoria).
         if (PlayerPrefs.GetInt("JUMP_ACTIVE", 0) == 1)
         {
             PlayerPrefs.SetInt("JUMP_ACTIVE", 0);
-            
+
             sceneIndex = PlayerPrefs.GetInt("JUMP_SCENE_INDEX", 0);
             string jumpTargetLine = PlayerPrefs.GetString("JUMP_TARGET_LINE", "0");
             bool needsFadeIn = PlayerPrefs.GetInt("JUMP_FADE_IN", 0) == 1;
-            
+
             if (needsFadeIn)
             {
                 PlayerPrefs.SetInt("JUMP_FADE_IN", 0);
             }
-            
+
             PlayerPrefs.Save();
-            
+
             Debug.Log($"[VNDialogue] Start: JUMP detectado. Cargando CSV índice {sceneIndex}, línea '{jumpTargetLine}', FadeIn={needsFadeIn}");
-            
+
             LoadScene(sceneIndex);
-            
+
             // Posicionar en la línea destino
             if (jumpTargetLine == "END")
             {
@@ -146,9 +145,9 @@ public partial class VNDialogue : MonoBehaviour
             {
                 lineIndex = 0;
             }
-            
+
             Debug.Log($"[VNDialogue] JUMP aplicado. Posicionado en línea {lineIndex}");
-            
+
             // Si necesita fade in, buscamos el canvas de fade y hacemos fade in
             if (needsFadeIn)
             {
@@ -158,10 +157,10 @@ public partial class VNDialogue : MonoBehaviour
             {
                 ShowLine();
             }
-            
+
             return;
         }
-        
+
         if (PlayerPrefs.GetInt(KEY_CONTINUE, 0) == 1)
         {
             PlayerPrefs.SetInt(KEY_CONTINUE, 0);
@@ -184,11 +183,12 @@ public partial class VNDialogue : MonoBehaviour
     {
         if (waitingForChoice) return;
         if (_autoAdvancingChoice) return;
-        if (_isJumping) return;  // Bloquear input durante salto automático
+        if (_isJumping) return;               // Bloquear input durante salto automático
         if (_interceptWaitingResult) return;  // Bloquear input durante panel de fragmentos
         if (currentLines.Count == 0) return;
 
-        // Si typewriter está corriendo, completarlo en lugar de avanzar
+        // Prioridad: si el typewriter está a medias, el primer click completa la frase.
+        // Solo el siguiente click avanza a la siguiente línea.
         if (_typewriterCoroutine != null && !_typewriterComplete)
         {
             CompleteTypewriter();
@@ -296,7 +296,8 @@ public partial class VNDialogue : MonoBehaviour
         // =====================================================
         //  COMANDOS DE FONDO (BG, RAIN, FADE)
         // =====================================================
-        // Procesar ANTES de mostrar el texto para que el cambio sea inmediato
+        // Primero ejecuto comandos de escena (BG/RAIN/FADE) para que el cambio sea inmediato,
+        // y después ya muestro el texto. Así evitamos “un frame tarde”.
         if (!string.IsNullOrEmpty(line.cmd))
         {
             // Sanitizar cmd: quitar espacios y comillas
@@ -335,8 +336,8 @@ public partial class VNDialogue : MonoBehaviour
                 string fadeOutParam = ParseValue(cmd, "FADE_OUT");
 
                 // Si hay parámetros explícitos de fade, usarlos
-                bool hasFadeParams = !string.IsNullOrEmpty(fadeParam) || 
-                                     !string.IsNullOrEmpty(fadeInParam) || 
+                bool hasFadeParams = !string.IsNullOrEmpty(fadeParam) ||
+                                     !string.IsNullOrEmpty(fadeInParam) ||
                                      !string.IsNullOrEmpty(fadeOutParam);
 
                 if (backgroundController != null)
@@ -416,11 +417,13 @@ public partial class VNDialogue : MonoBehaviour
             {
                 if (shadowOverlay == null)
                     shadowOverlay = FindObjectOfType<ShadowOverlayController>();
-                
+
                 if (shadowOverlay != null)
                     shadowOverlay.ApplyCommand(shadowParam);
+#if UNITY_EDITOR
                 else
                     Debug.LogWarning("[VNDialogue] SHADOW command encontrado pero no hay ShadowOverlayController en la escena.");
+#endif
             }
         }
 
@@ -443,7 +446,7 @@ public partial class VNDialogue : MonoBehaviour
         if (speakerUpper == "WAIT")
         {
             StopTypewriterIfRunning();
-            
+
             _isWaiting = true;
 
             if (nameText != null) nameText.text = "";
@@ -452,15 +455,15 @@ public partial class VNDialogue : MonoBehaviour
                 dialogueText.text = line.text ?? "...";
                 ApplyWaitStyle();
             }
-            
+
             _typewriterComplete = true;  // WAIT siempre muestra texto completo
 
             // Procesar comandos (poses, etc.) antes de pausar
             string cmd = (line.cmd ?? "").Trim().Trim('"');
-            
+
             // Parsear tipo de WAIT (CLICK, SILENCE, BEAT, FINAL_BEAT, AUTO)
             _waitType = ParseValue(cmd, "WAIT");
-            
+
             // Parsear duración automática personalizada
             string durationStr = ParseValue(cmd, "DURATION");
             float beatDelay = 2.0f;  // Duración por defecto para AUTO
@@ -473,12 +476,12 @@ public partial class VNDialogue : MonoBehaviour
             {
                 StartCoroutine(AutoAdvanceAfterDelay(beatDelay));
             }
-            
+
             // Aplicar comandos de personajes (L=LOGAN:pose, R=DAMIAO:pose, etc.)
             if (characterSlots != null && !string.IsNullOrEmpty(cmd))
             {
                 ApplyCmdToSlots(cmd);
-                
+
                 // Aplicar foco si hay comando de personaje
                 string cmdUpper = cmd.ToUpper();
                 if (cmdUpper.Contains("L=LOGAN") || cmdUpper.Contains("C=LOGAN"))
@@ -488,13 +491,12 @@ public partial class VNDialogue : MonoBehaviour
                 else if (cmdUpper.Contains("L=LAZARUS") || cmdUpper.Contains("R=LAZARUS") || cmdUpper.Contains("C=LAZARUS"))
                     ApplyFocusToSlots("LAZARUS");
             }
-            
+
             // Opcionalmente ocultar personajes si se especifica WAIT_HIDE=1
             if (characterSlots != null && ParseValue(cmd, "WAIT_HIDE") == "1")
             {
                 NarratorMomentToSlots();
             }
-            // De lo contrario, los personajes permanecen visibles para dramatismo
 
             return;
         }
@@ -505,7 +507,7 @@ public partial class VNDialogue : MonoBehaviour
         if (speakerUpper == "ACT")
         {
             StopTypewriterIfRunning();
-            
+
             string cmd = (line.cmd ?? "").Trim().Trim('"');
             string actId = ParseValue(cmd, "ACT").ToUpper();
 
@@ -537,7 +539,7 @@ public partial class VNDialogue : MonoBehaviour
                 return;
             }
 
-            // ACT normal (existente)
+            // ACT normal
             _actActive = true;
             _pendingActId = actId;
 
@@ -547,9 +549,9 @@ public partial class VNDialogue : MonoBehaviour
                 dialogueText.text = line.text ?? "[Acción]";
                 dialogueText.color = new Color(1f, 0.9f, 0.5f);
             }
-            
+
             _typewriterComplete = true;  // ACT muestra texto completo
-            
+
             // Aplicar comandos de personajes (L=LOGAN:pose, R=DAMIAO:pose, C=LOGAN:pose, etc.)
             if (characterSlots != null && !string.IsNullOrEmpty(cmd))
             {
@@ -565,16 +567,16 @@ public partial class VNDialogue : MonoBehaviour
         if (speakerUpper == "JUMP")
         {
             StopTypewriterIfRunning();
-            
+
             Debug.Log($"[VNDialogue] JUMP detectado! Target: {ParseValue((line.cmd ?? "").Trim().Trim('\"'), "JUMP_SCENE")}");
-            
+
             _isJumping = true;
 
             string cmd = (line.cmd ?? "").Trim().Trim('"');
             string jumpTargetScene = ParseValue(cmd, "JUMP_SCENE");
             string jumpTargetLine = ParseValue(cmd, "JUMP_LINE");
             string jumpUnityScene = ParseValue(cmd, "JUMP_UNITY_SCENE");  // Opcional: cambiar escena Unity
-            
+
             // Detectar delay personalizado (opcional)
             string delayStr = ParseValue(cmd, "DELAY");
             float jumpDelay = JUMP_WAIT_TIME;
@@ -605,7 +607,6 @@ public partial class VNDialogue : MonoBehaviour
                 Debug.Log($"[VNDialogue] MUSIC_FADE_DURATION={parsedMusicFade}s activado.");
             }
 
-
             Debug.Log($"[VNDialogue] JUMP configurado: CSV={jumpTargetScene}, Line={jumpTargetLine}, UnityScene={jumpUnityScene}, Delay={jumpDelay}, Crossfade={useCrossfade}");
 
             // Mostrar texto opcional durante la espera
@@ -615,7 +616,7 @@ public partial class VNDialogue : MonoBehaviour
                 dialogueText.text = line.text ?? "...";
                 dialogueText.color = Color.white;
             }
-            
+
             _typewriterComplete = true;  // JUMP muestra texto completo
 
             // Iniciar salto automático con delay
@@ -636,7 +637,7 @@ public partial class VNDialogue : MonoBehaviour
             string lastId = VNGameState.GetLastChoiceId();
             string lastOpt = VNGameState.GetLastChoiceOpt();
 
-            bool match = string.Equals(reqId, lastId, StringComparison.OrdinalIgnoreCase) && 
+            bool match = string.Equals(reqId, lastId, StringComparison.OrdinalIgnoreCase) &&
                          string.Equals(reqOpt, lastOpt, StringComparison.OrdinalIgnoreCase);
 
             if (match)
@@ -656,7 +657,7 @@ public partial class VNDialogue : MonoBehaviour
         if (speakerUpper == "CHOICE")
         {
             StopTypewriterIfRunning();
-            
+
             waitingForChoice = true;
 
             List<DialogueLine> options = new List<DialogueLine>();
@@ -679,7 +680,7 @@ public partial class VNDialogue : MonoBehaviour
 
             if (choiceManager != null)
                 choiceManager.ShowChoices(line.text, options, this);
-            
+
             _typewriterComplete = true;  // CHOICE muestra texto completo
 
             return;
@@ -693,20 +694,20 @@ public partial class VNDialogue : MonoBehaviour
             nameText.text = speakerRaw;
             ApplySpeakerNameStyle(speakerUpper, speakerRaw);
         }
-        
+
         if (dialogueText != null)
         {
             _currentFullText = line.text ?? "";
-            
+
             // Evitar reiniciar typewriter si es la misma línea
             bool isSameLine = (lineIndex == _lastRenderedLineIndex && _currentFullText == _lastRenderedFullText);
-            
+
             if (!isSameLine)
             {
                 // Restaurar estilo normal
                 ApplyNormalStyle();
-                
-                // Configurar pitch del blip según personaje (NEW)
+
+                // Configurar pitch del blip según personaje
                 if (blipController != null)
                 {
                     blipController.ApplySpeaker(speakerUpper);
@@ -722,7 +723,7 @@ public partial class VNDialogue : MonoBehaviour
                     dialogueText.text = _currentFullText;
                     _typewriterComplete = true;
                 }
-                
+
                 _lastRenderedLineIndex = lineIndex;
                 _lastRenderedFullText = _currentFullText;
             }
@@ -737,7 +738,7 @@ public partial class VNDialogue : MonoBehaviour
             if (nameText != null) nameText.text = "";
             if (dialogueText != null)
                 ApplyWaitStyle();  // NARRADOR usa el mismo estilo que WAIT
-            
+
             if (characterSlots != null)
                 NarratorMomentToSlots();
             return;

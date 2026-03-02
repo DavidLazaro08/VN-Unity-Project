@@ -4,6 +4,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Controla el slot de personaje central (escenas con un solo personaje).
+/// Se encarga de mostrar/ocultar, cambiar sprites (id + pose), hacer el slide-in/out
+/// y aplicar un idle motion suave.
+/// 
+/// Recibe comandos tipo C=LOGAN:serio o C=HIDE desde VNDialogue.
+/// </summary>
+
 public class VNSingleCharacterSlot : MonoBehaviour
 {
     // =========================================================

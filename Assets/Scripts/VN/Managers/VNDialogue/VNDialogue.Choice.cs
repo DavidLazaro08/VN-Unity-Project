@@ -1,12 +1,16 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public partial class VNDialogue
 {
+    /*
+     * VNDialogue.Choice
+     * -----------------
+     * Gestiona el cierre de una elección (CHOICE): aplica el resultado,
+     * guarda el estado (última opción), ajusta afinidad y decide si avanza automáticamente.
+     */
+
     // =========================================================
     //  CHOICE AUTO-ADVANCE
     // =========================================================
@@ -38,14 +42,14 @@ public partial class VNDialogue
         {
             VNGameState.SetLastChoice(cId, cOpt);
 
-            // Decisión moral de interceptación (Insensible a mayúsculas)
+            // Decisión moral de interceptación (insensible a mayúsculas)
             if (cId.ToUpper() == "TRUTH")
             {
                 HandleTruthChoice(cOpt.ToUpper());
             }
         }
 
-        // Afinidad (ya existente)
+        // Afinidad
         string affStr = ParseValue(cleanCmd, "AFF_DAMIAO");
         if (!string.IsNullOrEmpty(affStr))
         {
@@ -58,13 +62,12 @@ public partial class VNDialogue
             }
         }
 
-        // Mostrar frase elegida
+        // Mostrar frase elegida (sin enseñar "OPTION" como speaker)
         string realSpeaker = GetSpeakerFromCmd(cleanCmd);
-        // Si no hay un personaje real asociado, no mostrar nada en el nombre
-        // (evita que aparezca "OPTION" como speaker visiblemente)
         string speakerToShow = string.IsNullOrEmpty(realSpeaker) ? "" : realSpeaker;
 
         if (nameText != null) nameText.text = speakerToShow;
+
         if (dialogueText != null)
         {
             dialogueText.text = chosenLine.text ?? "";
@@ -77,6 +80,7 @@ public partial class VNDialogue
         if (characterSlots != null && !string.IsNullOrEmpty(speakerToShow))
             ApplyFocusToSlots(speakerToShow.Trim().ToUpper());
 
+        // Recolocar el índice para continuar justo después del bloque de opciones
         if (choiceNextLineIndex >= 0)
             lineIndex = choiceNextLineIndex - 1;
 
@@ -84,6 +88,7 @@ public partial class VNDialogue
         if (autoAdvanceAfterChoice)
         {
             if (_choiceAutoCo != null) StopCoroutine(_choiceAutoCo);
+
             _autoAdvancingChoice = true;
             _choiceAutoCo = StartCoroutine(AutoAdvanceChoice());
         }

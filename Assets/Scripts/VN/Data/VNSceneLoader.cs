@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Una línea del diálogo ya “parseada” del CSV.
+// Representa una línea de diálogo ya procesada desde el CSV.
+// Contiene quién habla, el texto y el posible comando asociado (cmd).
 public class DialogueLine
 {
     public string speaker;
@@ -16,10 +17,11 @@ public class DialogueLine
     }
 }
 
+// Se encarga de cargar un CSV desde Resources/Dialogue
+// y convertir cada fila en una lista de DialogueLine.
+// Espera cabecera: speaker,text,cmd
 public static class VNSceneLoader
 {
-    // Carga un CSV desde Resources/Dialogue/<fileName>.csv
-    // Espera cabecera: speaker,text,cmd
     public static List<DialogueLine> LoadFromResources(string fileName)
     {
         var result = new List<DialogueLine>();

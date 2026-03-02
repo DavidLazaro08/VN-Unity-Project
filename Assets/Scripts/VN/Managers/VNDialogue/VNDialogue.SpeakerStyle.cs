@@ -1,27 +1,34 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public partial class VNDialogue
 {
+    /*
+     * VNDialogue.SpeakerStyle
+     * -----------------------
+     * Aplica estilos visuales al nombre del hablante (color y micro fade-in opcional).
+     * Esto se usa desde ShowLine() para que cada personaje tenga una identidad clara.
+     */
+
     // =========================================================
     //  SPEAKER NAME STYLING FIELDS
     // =========================================================
-    
+
     [Header("Speaker Name Colors")]
     public Color loganNameColor = new Color(0.4f, 0.7f, 1f, 1f);          // Azul claro
     public Color damiaoNameColor = new Color(0.85f, 0.55f, 0.95f, 1f);    // Lila / violeta suave
-    public Color lazarusNameColor = new Color(0.7f, 0.5f, 0.9f, 1f);     // Púrpura
-    public Color narratorNameColor = new Color(0.6f, 0.6f, 0.6f, 1f);    // Gris
-    public Color antirobotsNameColor = new Color(1f, 0.3f, 0.25f, 1f);   // Rojo eléctrico
-    public Color truefellaNameColor = new Color(1f, 0.75f, 0.3f, 1f);    // Ámbar cálido
-    public Color siluetaNameColor = new Color(0.5f, 0.55f, 0.7f, 1f);    // Gris-azul apagado
-    public Color liraNameColor = new Color(0.3f, 0.85f, 0.75f, 1f);      // Teal suave
-    public Color viejoNameColor = new Color(0.85f, 0.7f, 0.35f, 1f);     // Ocre dorado
-    public Color ronnNameColor = new Color(0.35f, 0.7f, 0.65f, 1f);      // Azul-verde acero
+    public Color lazarusNameColor = new Color(0.7f, 0.5f, 0.9f, 1f);      // Púrpura
+    public Color narratorNameColor = new Color(0.6f, 0.6f, 0.6f, 1f);     // Gris
+
+    public Color antirobotsNameColor = new Color(1f, 0.3f, 0.25f, 1f);    // Rojo eléctrico
+    public Color truefellaNameColor = new Color(1f, 0.75f, 0.3f, 1f);     // Ámbar cálido
+    public Color siluetaNameColor = new Color(0.5f, 0.55f, 0.7f, 1f);     // Gris-azul apagado
+
+    public Color liraNameColor = new Color(0.3f, 0.85f, 0.75f, 1f);       // Teal suave
+    public Color viejoNameColor = new Color(0.85f, 0.7f, 0.35f, 1f);      // Ocre dorado
+    public Color ronnNameColor = new Color(0.35f, 0.7f, 0.65f, 1f);       // Azul-verde acero
+
     public bool enableNameFade = true;
     public float nameFadeDuration = 0.12f;
 
@@ -33,15 +40,14 @@ public partial class VNDialogue
     // =========================================================
 
     /// <summary>
-    /// Aplica el color correspondiente al nombre del hablante según el personaje.
-    /// Opcionalmente añade un micro fade-in si el hablante cambió.
+    /// Aplica el color del nombre según el personaje.
+    /// Si el hablante cambia y el fade está activo, hace un micro fade-in.
     /// </summary>
     private void ApplySpeakerNameStyle(string speakerUpper, string speakerRaw)
     {
         if (nameText == null) return;
 
-        // Determinar color según personaje
-        Color targetColor = Color.white; // Color por defecto
+        Color targetColor;
 
         switch (speakerUpper)
         {
@@ -79,27 +85,24 @@ public partial class VNDialogue
                 targetColor = narratorNameColor;
                 break;
             default:
-                // Personajes no definidos usan color blanco
                 targetColor = Color.white;
                 break;
         }
 
-        // Si el hablante cambió y el fade está habilitado, hacer micro fade-in
         bool speakerChanged = (_lastSpeaker != speakerRaw);
-        
+
         if (enableNameFade && speakerChanged && !string.IsNullOrEmpty(speakerRaw))
         {
-            // Detener fade anterior si existe
             if (_nameFadeCoroutine != null)
             {
                 StopCoroutine(_nameFadeCoroutine);
+                _nameFadeCoroutine = null;
             }
 
             _nameFadeCoroutine = StartCoroutine(NameFadeRoutine(targetColor));
         }
         else
         {
-            // Aplicar color directamente sin fade
             nameText.color = targetColor;
         }
 
@@ -107,23 +110,23 @@ public partial class VNDialogue
     }
 
     /// <summary>
-    /// Corrutina que hace un micro fade-in del nombre del hablante.
+    /// Micro fade-in del nombre del hablante.
     /// </summary>
     private IEnumerator NameFadeRoutine(Color targetColor)
     {
         if (nameText == null) yield break;
 
-        // Empezar con alpha 0
         Color startColor = targetColor;
         startColor.a = 0f;
         nameText.color = startColor;
 
         float elapsed = 0f;
+
         while (elapsed < nameFadeDuration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / nameFadeDuration);
-            
+
             Color currentColor = targetColor;
             currentColor.a = Mathf.Lerp(0f, targetColor.a, t);
             nameText.color = currentColor;
@@ -131,7 +134,6 @@ public partial class VNDialogue
             yield return null;
         }
 
-        // Asegurar color final
         nameText.color = targetColor;
         _nameFadeCoroutine = null;
     }

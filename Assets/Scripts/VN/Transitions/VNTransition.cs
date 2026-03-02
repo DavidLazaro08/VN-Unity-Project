@@ -4,6 +4,11 @@ using UnityEngine.SceneManagement;
 
 public class VNTransition : MonoBehaviour
 {
+    /// <summary>
+    /// Transición de escena con “telón negro”.
+    /// La idea es simple: cubrir el arranque (vídeo/FX) y hacer un fade out limpio al cambiar de escena.
+    /// </summary>
+
     // ---------------------------------------------------------
     // REFERENCIAS
     // ---------------------------------------------------------
@@ -38,7 +43,7 @@ public class VNTransition : MonoBehaviour
     [Tooltip("Retardo inicial para permitir que vídeo/FX arranquen detrás del negro")]
     public float startFadeDelay = 0.5f;
 
-    // Canvas Overlay creado en runtime para cubrir cualquier cámara/FX/UI
+    // Canvas overlay creado en runtime para cubrir cualquier cámara/FX/UI
     private GameObject _globalCanvasGO;
 
     // ---------------------------------------------------------
@@ -57,7 +62,7 @@ public class VNTransition : MonoBehaviour
         _globalCanvasGO.AddComponent<UnityEngine.UI.CanvasScaler>();
         _globalCanvasGO.AddComponent<UnityEngine.UI.GraphicRaycaster>();
 
-        // Si hay un CanvasGroup asignado (panel ya existente), se reubica en el canvas global
+        // Si hay un CanvasGroup asignado, lo reubicamos en el canvas global
         if (fadeGroup != null)
         {
             fadeGroup.transform.SetParent(_globalCanvasGO.transform, false);
@@ -73,7 +78,7 @@ public class VNTransition : MonoBehaviour
         }
         else
         {
-            // Generación automática de un panel negro full-screen (Image + CanvasGroup)
+            // Fallback: generar panel negro full-screen (Image + CanvasGroup)
             GameObject panelImg = new GameObject("AutoFadePanel");
             panelImg.transform.SetParent(_globalCanvasGO.transform, false);
 
@@ -113,17 +118,18 @@ public class VNTransition : MonoBehaviour
     }
 
     /// <summary>
-    /// Cancela el fade inicial si otro sistema (ej: VideoBackgroundController) 
-    /// va a tomar el control del fundido a negro.
+    /// Cancela el fade inicial. Útil si otro sistema va a controlar el fundido
+    /// (por ejemplo, un crossfade de vídeo).
     /// </summary>
     public void CancelInitialFade()
     {
-        if (_initialFadeRoutine != null)
-        {
-            StopCoroutine(_initialFadeRoutine);
-            _initialFadeRoutine = null;
-            _running = false;
-        }
+        if (_initialFadeRoutine == null) return;
+
+        StopCoroutine(_initialFadeRoutine);
+        _initialFadeRoutine = null;
+
+        // No tocamos _running aquí a ciegas: si alguien llama tarde y ya hay otra transición,
+        // no queremos “abrir la puerta” sin querer.
     }
 
     // ---------------------------------------------------------
@@ -132,7 +138,7 @@ public class VNTransition : MonoBehaviour
 
     /// <summary>
     /// Fade inicial: Negro -> Transparente.
-    /// Útil para ocultar frames de carga, vídeo iniciando, FX, etc.
+    /// Oculta frames feos del arranque (carga, vídeo iniciando, FX, etc.).
     /// </summary>
     private IEnumerator FadeInRoutine()
     {
@@ -175,9 +181,9 @@ public class VNTransition : MonoBehaviour
 
         fadeGroup.blocksRaycasts = true;
 
-        float startVol = musicSource ? musicSource.volume : 0f;
+        float startVol = (musicSource != null) ? musicSource.volume : 0f;
 
-        // FADE OUT a negro
+        // Fade out a negro
         float t = 0f;
         while (t < fadeTime)
         {
@@ -185,6 +191,7 @@ public class VNTransition : MonoBehaviour
             float k = Mathf.Clamp01(t / fadeTime);
 
             fadeGroup.alpha = k;
+
             if (musicSource != null)
                 musicSource.volume = Mathf.Lerp(startVol, 0f, k);
 
@@ -202,7 +209,7 @@ public class VNTransition : MonoBehaviour
         op.allowSceneActivation = true;
         while (!op.isDone) yield return null;
 
-        // “Solape” de negro para evitar huecos visuales
+        // Solape de negro para evitar huecos visuales
         yield return new WaitForSeconds(0.5f);
 
         // Limpieza del sistema anterior

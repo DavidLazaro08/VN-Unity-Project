@@ -1,15 +1,10 @@
 using UnityEngine;
 
 /// <summary>
-/// Script de configuración automática del efecto de lluvia para Scene_Game2.
-/// Configura la cámara FX y el prefab lluviaFx sin afectar Scene_Menu.
+/// Script que utilizamos para configurar la lluvia en esta escena.
 /// 
-/// INSTRUCCIONES:
-/// 1. Adjuntar este script a cualquier GameObject en Scene_Game2
-/// 2. Asignar la cámara principal en el Inspector
-/// 3. Play → El script configurará todo automáticamente
-/// 4. Guardar la escena cuando estés satisfecho
-/// 5. ELIMINAR este script del GameObject (ya no es necesario)
+/// Crea la cámara FX, ajusta capas y coloca el prefab de lluvia.
+/// Es solo para dejar todo montado; después se puede eliminar.
 /// </summary>
 public class RainEffectSetup : MonoBehaviour
 {
@@ -20,7 +15,7 @@ public class RainEffectSetup : MonoBehaviour
     [Header("Parámetros del Efecto")]
     [Tooltip("Posición del efecto de lluvia")]
     public Vector3 rainPosition = new Vector3(0f, 12f, 5f);
-    
+
     [Tooltip("Rotación del efecto de lluvia")]
     public Vector3 rainRotation = Vector3.zero;
 
@@ -32,7 +27,7 @@ public class RainEffectSetup : MonoBehaviour
 
         Debug.Log("[RainEffectSetup] Iniciando configuración automática...");
 
-        // Validar cámara principal
+        // Si no me asignan cámara, intento usar la principal del tag MainCamera.
         if (mainCamera == null)
         {
             mainCamera = Camera.main;
@@ -43,16 +38,16 @@ public class RainEffectSetup : MonoBehaviour
             }
         }
 
-        // 1. Crear capa FX si no existe
+        // 1) Capa FX (si no existe, Unity no deja crearla por script, así que avisamos)
         SetupFXLayer();
 
-        // 2. Configurar cámara principal
+        // 2) Ajustes en cámara principal (que NO dibuje la capa FX)
         SetupMainCamera();
 
-        // 3. Crear cámara FX
+        // 3) Cámara secundaria para FX (solo dibuja FX y va por encima)
         SetupFXCamera();
 
-        // 4. Instanciar prefab de lluvia
+        // 4) Instanciar el prefab de lluvia si aún no está en escena
         SetupRainPrefab();
 
         _setupComplete = true;
@@ -61,9 +56,9 @@ public class RainEffectSetup : MonoBehaviour
 
     void SetupFXLayer()
     {
-        // Unity no permite crear capas por script, pero podemos verificar
+        // Unity no permite crear capas por script, pero sí podemos comprobar si existe.
         int fxLayer = LayerMask.NameToLayer("FX");
-        
+
         if (fxLayer == -1)
         {
             Debug.LogWarning("[RainEffectSetup] ⚠️ La capa 'FX' no existe. Créala manualmente:");
@@ -80,41 +75,40 @@ public class RainEffectSetup : MonoBehaviour
 
     void SetupMainCamera()
     {
-        // Asegurar que la cámara principal NO renderice la capa FX
+        // La cámara principal NO debería renderizar la capa FX (para que no duplique).
         int fxLayer = LayerMask.NameToLayer("FX");
-        
+
         if (fxLayer != -1)
         {
             mainCamera.cullingMask &= ~(1 << fxLayer); // Quitar capa FX
             Debug.Log("[RainEffectSetup] ✅ Cámara principal configurada (sin capa FX).");
         }
 
-        // Asegurar depth = 0
+        // Depth base: 0
         mainCamera.depth = 0;
     }
 
     void SetupFXCamera()
     {
-        // Buscar si ya existe FX_Camera
+        // Si ya existe, no creamos otra (para no duplicar cámaras).
         Camera fxCamera = GameObject.Find("FX_Camera")?.GetComponent<Camera>();
 
         if (fxCamera == null)
         {
-            // Crear nueva cámara FX
             GameObject fxCamObj = new GameObject("FX_Camera");
             fxCamera = fxCamObj.AddComponent<Camera>();
 
-            // Configurar
+            // Solo pinta “por encima” (sin limpiar color)
             fxCamera.clearFlags = CameraClearFlags.Depth;
-            fxCamera.depth = 1; // Renderiza después de la cámara principal
-            
+            fxCamera.depth = 1;
+
             int fxLayer = LayerMask.NameToLayer("FX");
             if (fxLayer != -1)
             {
-                fxCamera.cullingMask = 1 << fxLayer; // Solo renderiza capa FX
+                fxCamera.cullingMask = 1 << fxLayer; // Solo la capa FX
             }
 
-            // Copiar posición de la cámara principal
+            // Copiamos posición/rotación de la principal para que todo encaje.
             fxCamObj.transform.position = mainCamera.transform.position;
             fxCamObj.transform.rotation = mainCamera.transform.rotation;
 
@@ -128,12 +122,12 @@ public class RainEffectSetup : MonoBehaviour
 
     void SetupRainPrefab()
     {
-        // Buscar si ya existe lluviaFx en la escena
+        // Si ya existe en escena, no lo instanciamos otra vez.
         GameObject existingRain = GameObject.Find("lluviaFx");
 
         if (existingRain == null)
         {
-            // Cargar prefab desde Resources
+            // Ojo: tiene que estar en Resources/Efectoscine/lluviaFx
             GameObject rainPrefab = Resources.Load<GameObject>("Efectoscine/lluviaFx");
 
             if (rainPrefab == null)
@@ -142,15 +136,13 @@ public class RainEffectSetup : MonoBehaviour
                 return;
             }
 
-            // Instanciar
             GameObject rainInstance = Instantiate(rainPrefab);
-            rainInstance.name = "lluviaFx"; // Quitar "(Clone)"
+            rainInstance.name = "lluviaFx"; // Quitamos el (Clone)
 
-            // Configurar posición y rotación
             rainInstance.transform.position = rainPosition;
             rainInstance.transform.rotation = Quaternion.Euler(rainRotation);
 
-            // Asignar a capa FX
+            // La lluvia debe ir en la capa FX para que solo la pinte la FX_Camera.
             int fxLayer = LayerMask.NameToLayer("FX");
             if (fxLayer != -1)
             {
@@ -180,7 +172,7 @@ public class RainEffectSetup : MonoBehaviour
 #if UNITY_EDITOR
     void OnDrawGizmosSelected()
     {
-        // Visualizar posición del efecto de lluvia en el editor
+        // Solo para editor: ver el punto donde cae la lluvia.
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(rainPosition, 0.5f);
         Gizmos.DrawLine(rainPosition, rainPosition + Vector3.down * 2f);
