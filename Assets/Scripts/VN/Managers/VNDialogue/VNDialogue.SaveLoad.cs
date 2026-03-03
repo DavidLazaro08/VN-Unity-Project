@@ -15,8 +15,9 @@ public partial class VNDialogue
     // =========================================================
     //  SAVE / LOAD CONSTANTS
     // =========================================================
-    private const string SAVE_SCENE = "VN_SAVE_SCENE";
-    private const string SAVE_LINE  = "VN_SAVE_LINE";
+    private const string SAVE_SCENE       = "VN_SAVE_SCENE";
+    private const string SAVE_LINE         = "VN_SAVE_LINE";
+    private const string SAVE_UNITY_SCENE  = "VN_SAVE_UNITY_SCENE"; // Escena Unity donde se guardó
 
     private const string KEY_HAS_SAVE = "VN_HAS_SAVE";
     private const string KEY_CONTINUE = "VN_CONTINUE"; // Se usa desde Start() en otro partial
@@ -30,13 +31,15 @@ public partial class VNDialogue
         // Fail-safe: evitar guardar índices inválidos si se llama en un momento extraño.
         int safeScene = Mathf.Clamp(sceneIndex, 0, Mathf.Max(0, sceneFiles.Count - 1));
         int safeLine  = Mathf.Max(0, lineIndex);
+        string unityScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
 
 #if UNITY_EDITOR
-        Debug.Log($"[VNDialogue] SaveGame -> sceneIndex={safeScene}, lineIndex={safeLine}");
+        Debug.Log($"[VNDialogue] SaveGame -> sceneIndex={safeScene}, lineIndex={safeLine}, unityScene={unityScene}");
 #endif
 
         PlayerPrefs.SetInt(SAVE_SCENE, safeScene);
         PlayerPrefs.SetInt(SAVE_LINE, safeLine);
+        PlayerPrefs.SetString(SAVE_UNITY_SCENE, unityScene);
         PlayerPrefs.SetInt(KEY_HAS_SAVE, 1);
         PlayerPrefs.Save();
     }

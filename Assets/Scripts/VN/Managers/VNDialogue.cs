@@ -539,6 +539,20 @@ public partial class VNDialogue : MonoBehaviour
                 return;
             }
 
+            // Minijuego de cartas: dejar de gestionar el dialogo y ceder control a la batalla
+            if (actId == "CARDGAME_START")
+            {
+#if UNITY_EDITOR
+                Debug.Log("[VNDialogue] ACT=CARDGAME_START → Iniciando batalla de cartas");
+#endif
+                // Extraer nombre del oponente del cmd si se especifica (OPPONENT=Nombre)
+                string opponent = ParseValue(cmd, "OPPONENT");
+                if (string.IsNullOrEmpty(opponent)) opponent = "True-Fella";
+
+                CardGame.Integration.CardBattleStarter.StartBattle(opponent);
+                return;
+            }
+
             // ACT normal
             _actActive = true;
             _pendingActId = actId;

@@ -37,6 +37,14 @@ public class VNMenuContinue : MonoBehaviour
         PlayerPrefs.SetInt(KEY_CONTINUE, 1);
         PlayerPrefs.Save();
 
-        SceneManager.LoadScene(gameSceneName);
+        // Cargar la escena Unity donde se hizo el guardado (no siempre Scene_Game)
+        string savedScene = PlayerPrefs.GetString("VN_SAVE_UNITY_SCENE", "");
+        string targetScene = !string.IsNullOrEmpty(savedScene) ? savedScene : gameSceneName;
+
+#if UNITY_EDITOR
+        Debug.Log($"[VNMenuContinue] Cargando escena guardada: {targetScene}");
+#endif
+
+        SceneManager.LoadScene(targetScene);
     }
 }
