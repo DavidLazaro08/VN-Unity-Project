@@ -119,6 +119,135 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &73445416
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 73445418}
+  - component: {fileID: 73445417}
+  m_Layer: 0
+  m_Name: MusicScene
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &73445417
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73445416}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: c7a79d3c5a0c43c449edc6e5aa9be82a, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.662
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &73445418
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 73445416}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 61.77665, y: -54.54226, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &508094254
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,74 +279,76 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CinematicTransition
   lines:
   - text: "La se\xF1al no termina aqu\xED.\t"
-    fadeInTime: 0.8
+    fadeInTime: 2.09
     holdTime: 1.8
     fadeOutTime: 0.8
-    enableGlitch: 0
+    enableGlitch: 1
   - text: Solo cambia de frecuencia.
     fadeInTime: 0.8
-    holdTime: 1.8
-    fadeOutTime: 0.8
-    enableGlitch: 0
+    holdTime: 2.27
+    fadeOutTime: 0.86
+    enableGlitch: 1
   - text: "Lo que has visto... es apenas el umbral.\t"
     fadeInTime: 1
     holdTime: 2.5
     fadeOutTime: 1
-    enableGlitch: 0
-  - text: 
-    fadeInTime: 1
-    holdTime: 1.5
-    fadeOutTime: 1
-    enableGlitch: 0
+    enableGlitch: 1
   - text: Nodo 01 completado.
     fadeInTime: 0.8
+    holdTime: 2.59
+    fadeOutTime: 0.86
+    enableGlitch: 1
+  - text: 
+    fadeInTime: 1
     holdTime: 1.8
-    fadeOutTime: 0.8
-    enableGlitch: 0
+    fadeOutTime: 1
+    enableGlitch: 1
   - text: "Continuar\xE1.\t"
     fadeInTime: 0.8
-    holdTime: 3
-    fadeOutTime: 1.2
-    enableGlitch: 0
+    holdTime: 3.54
+    fadeOutTime: 1.39
+    enableGlitch: 1
   - text: 
     fadeInTime: 0.1
-    holdTime: 1.5
+    holdTime: 2.27
     fadeOutTime: 0.1
-    enableGlitch: 0
+    enableGlitch: 1
   - text: "\u2014 AV Games \u2014"
-    fadeInTime: 1
-    holdTime: 2
+    fadeInTime: 0.89
+    holdTime: 3.78
     fadeOutTime: 0.8
-    enableGlitch: 0
-  - text: Vertical Slice - DAM 2
-    fadeInTime: 0.8
-    holdTime: 1.5
-    fadeOutTime: 0.6
-    enableGlitch: 0
+    enableGlitch: 1
+  - text: LACK OF SOUL | Vertical Slice
+    fadeInTime: 0.86
+    holdTime: 4.12
+    fadeOutTime: 0.87
+    enableGlitch: 1
   - text: "MIGUEL BENJUM\xC9A HIDALGO\t"
     fadeInTime: 0.8
     holdTime: 1.5
     fadeOutTime: 0.6
-    enableGlitch: 0
+    enableGlitch: 1
   - text: "JUAN JIM\xC9NEZ NIETO"
     fadeInTime: 0.8
     holdTime: 1.5
     fadeOutTime: 0.6
-    enableGlitch: 0
+    enableGlitch: 1
   - text: "RONNALD BEN\xCDTEZ RECALDE\t"
     fadeInTime: 0.8
     holdTime: 1.5
     fadeOutTime: 0.6
-    enableGlitch: 0
+    enableGlitch: 1
   - text: "DAVID GUTI\xC9RREZ ORTIZ"
     fadeInTime: 0.8
-    holdTime: 1.5
+    holdTime: 1.9
     fadeOutTime: 0.6
-    enableGlitch: 0
+    enableGlitch: 1
   pauseBetweenLines: 0.6
   nextSceneName: Scene_Menu
   persistMusic: 1
-  glitchIntensity: 2
+  musicFadeOutDuration: 8
+  initialFadeInDuration: 2
+  glitchIntensity: 3.6
   glitchSpeed: 30
 --- !u!4 &508094256
 Transform:
@@ -332,3 +463,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 1875287098}
   - {fileID: 508094256}
+  - {fileID: 73445418}

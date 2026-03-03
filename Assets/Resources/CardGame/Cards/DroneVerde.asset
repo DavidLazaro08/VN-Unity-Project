@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: def369e69b302a84282ea4ac407d4d89, type: 3}
+  m_Name: DroneVerde
+  m_EditorClassIdentifier: Assembly-CSharp::CardGame.Core.CardData
+  cardName: Drone Verde
+  description: Carta Green con 2 de ataque y 2 de vida.
+  manaCost: 1
+  baseHealth: 2
+  baseDamage: 2
+  cardColor: 1
+  cardArt: {fileID: -4120874250270053196, guid: 440924c50997c36baa966ca116ef6a5f, type: 3}
+  playSound: {fileID: 0}
+  attackSound: {fileID: 0}

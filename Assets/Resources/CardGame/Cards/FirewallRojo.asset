@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: def369e69b302a84282ea4ac407d4d89, type: 3}
+  m_Name: FirewallRojo
+  m_EditorClassIdentifier: Assembly-CSharp::CardGame.Core.CardData
+  cardName: Firewall Rojo
+  description: Carta Red con 3 de ataque y 3 de vida.
+  manaCost: 2
+  baseHealth: 3
+  baseDamage: 3
+  cardColor: 0
+  cardArt: {fileID: -4526457650708515667, guid: 041bf8b731ec509e293f35a286daf2cd, type: 3}
+  playSound: {fileID: 0}
+  attackSound: {fileID: 0}

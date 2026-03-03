@@ -53,6 +53,15 @@ public class CinematicTransition : MonoBehaviour
     [Tooltip("Si es true, los AudioSources activos se mantienen vivos al cambiar de escena.")]
     public bool persistMusic = true;
 
+    [Tooltip("Duración del fade-out de música antes de cargar la siguiente escena (0 = sin fade).")]
+    [Range(0f, 15f)]
+    public float musicFadeOutDuration = 8f;
+
+    [Header("Transición de entrada")]
+    [Tooltip("Tiempo de fundido desde negro al inicio de la escena (hace el paso de la escena anterior más suave).")]
+    [Range(0f, 4f)]
+    public float initialFadeInDuration = 2f;
+
     [Header("Glitch")]
     [Tooltip("Intensidad máxima del micro-shake en píxeles.")]
     [Range(0.5f, 10f)]
@@ -152,8 +161,17 @@ public class CinematicTransition : MonoBehaviour
     {
         _running = true;
 
-        // Pequeña pausa inicial (dejar que la escena se asiente)
-        yield return new WaitForSeconds(0.3f);
+        // Fundido de entrada desde negro (suaviza el paso de la escena anterior)
+        if (initialFadeInDuration > 0f)
+        {
+            // Usamos un panel negro transparente que se desvanece
+            yield return StartCoroutine(FadeInFromBlack(initialFadeInDuration));
+        }
+        else
+        {
+            // Pequeña pausa inicial (dejar que la escena se asiente)
+            yield return new WaitForSeconds(0.3f);
+        }
 
         for (int i = 0; i < lines.Length; i++)
         {
@@ -180,13 +198,18 @@ public class CinematicTransition : MonoBehaviour
         // Pausa final antes de saltar
         yield return new WaitForSeconds(0.5f);
 
-        if (persistMusic)
-            PersistAudioSources();
+        // Fade-out de música y carga de la siguiente escena
+        if (musicFadeOutDuration > 0f)
+            yield return StartCoroutine(FadeOutMusicAndLoad());
+        else
+        {
+            if (persistMusic)
+                PersistAudioSources();
 
-        _running = false;
-
-        Debug.Log($"[CinematicTransition] Secuencia completa. Cargando: {nextSceneName}");
-        SceneManager.LoadScene(nextSceneName);
+            _running = false;
+            Debug.Log($"[CinematicTransition] Secuencia completa. Cargando: {nextSceneName}");
+            SceneManager.LoadScene(nextSceneName);
+        }
     }
 
     // =========================================================
@@ -244,8 +267,46 @@ public class CinematicTransition : MonoBehaviour
     }
 
     // =========================================================
-    //  MÚSICA — PERSISTENCIA
+    //  MÚSICA — FADE OUT Y PERSISTENCIA
     // =========================================================
+
+    /// <summary>
+    /// Hace fade-out de todos los AudioSources durante musicFadeOutDuration segundos
+    /// y luego carga la siguiente escena.
+    /// </summary>
+    private IEnumerator FadeOutMusicAndLoad()
+    {
+        AudioSource[] sources = FindObjectsOfType<AudioSource>();
+        float[] startVolumes = new float[sources.Length];
+
+        for (int i = 0; i < sources.Length; i++)
+            startVolumes[i] = sources[i].volume;
+
+        float elapsed = 0f;
+        while (elapsed < musicFadeOutDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = 1f - Mathf.Clamp01(elapsed / musicFadeOutDuration);
+            // Curva ease-in: el volumen cae más rápido al final
+            float smooth = t * t;
+
+            for (int i = 0; i < sources.Length; i++)
+            {
+                if (sources[i] != null)
+                    sources[i].volume = startVolumes[i] * smooth;
+            }
+
+            yield return null;
+        }
+
+        // Silenciar completamente
+        foreach (AudioSource src in sources)
+            if (src != null) src.Stop();
+
+        _running = false;
+        Debug.Log($"[CinematicTransition] Fade-out de música completo. Cargando: {nextSceneName}");
+        SceneManager.LoadScene(nextSceneName);
+    }
 
     private void PersistAudioSources()
     {
@@ -255,11 +316,53 @@ public class CinematicTransition : MonoBehaviour
         {
             if (!src.isPlaying) continue;
 
-            // Si ya está persistido, no repetir.
             if (src.gameObject.scene.name == "DontDestroyOnLoad") continue;
 
             DontDestroyOnLoad(src.gameObject);
             Debug.Log($"[CinematicTransition] AudioSource '{src.gameObject.name}' persistido.");
         }
+    }
+
+    // =========================================================
+    //  FUNDIDO DE ENTRADA DESDE NEGRO
+    // =========================================================
+
+    /// <summary>
+    /// Crea un panel negro encima de todo y lo desvanece suavemente,
+    /// fusionando la llegada a esta escena con el negro de la escena anterior.
+    /// </summary>
+    private IEnumerator FadeInFromBlack(float duration)
+    {
+        GameObject fadeGO = new GameObject("_FadeInOverlay");
+        Canvas fadeCanvas = fadeGO.AddComponent<Canvas>();
+        fadeCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        fadeCanvas.sortingOrder = 200;
+        fadeGO.AddComponent<UnityEngine.UI.CanvasScaler>();
+
+        GameObject panelGO = new GameObject("FadePanel");
+        panelGO.transform.SetParent(fadeGO.transform, false);
+        var img = panelGO.AddComponent<UnityEngine.UI.Image>();
+        img.color = Color.black;
+        var rt = panelGO.GetComponent<RectTransform>();
+        rt.anchorMin = Vector2.zero;
+        rt.anchorMax = Vector2.one;
+        rt.sizeDelta = Vector2.zero;
+
+        var cg = panelGO.AddComponent<CanvasGroup>();
+        cg.alpha = 1f;
+
+        // Disolver el negro suavemente
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float smooth = t * t * (3f - 2f * t); // smoothstep
+            cg.alpha = 1f - smooth;
+            yield return null;
+        }
+
+        cg.alpha = 0f;
+        Destroy(fadeGO);
     }
 }
