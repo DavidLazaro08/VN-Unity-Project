@@ -32,4 +32,4 @@ WAIT,"...Y desaparece.","WAIT=BEAT;L=FADE;ZOOM=RIGHT"
 CHOICE,"¿Qué me mandó...?",""
 "Analizar la frecuencia recibida","(Logan activa la tablet. La señal cifrada empieza a descomponerse.)","OPT=1"
 
-jump,"","JUMP_SCENE=scene_intercept;JUMP_LINE=0;JUMP_UNITY_SCENE=Scene_Game_Intercept;CROSSFADE=1;DELAY=0;SKIP_MUSIC_FADE=1"
+jump,"","JUMP_SCENE=scene_intercept;JUMP_LINE=0;JUMP_UNITY_SCENE=Scene_Game_Intercept;CROSSFADE=1;DELAY=0;KEEP_MUSIC_ALIVE=1"

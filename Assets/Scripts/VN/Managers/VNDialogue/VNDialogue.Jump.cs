@@ -73,13 +73,14 @@ public partial class VNDialogue
 #endif
 
             // Guardar el estado del flag localmente para usarlo en toda la rutina
-            bool persistentMusic = VNTransitionFlags.SkipMusicFadeOnce;
+            bool keepMusicAlive = VNTransitionFlags.KeepMusicAliveOnce;
+            bool persistentMusic = VNTransitionFlags.SkipMusicFadeOnce || keepMusicAlive;
 
             // Si el flag de música está activo, persistir AudioSources
             if (persistentMusic)
             {
 #if UNITY_EDITOR
-                Debug.Log("[VNDialogue] JUMP: persistencia de música activada (SkipMusicFadeOnce).");
+                Debug.Log($"[VNDialogue] JUMP: persistencia de música activada (KeepAlive={keepMusicAlive}).");
 #endif
 
                 AudioSource[] audioSources = FindObjectsOfType<AudioSource>();
@@ -91,8 +92,11 @@ public partial class VNDialogue
                         GameObject rootGO = audioSource.transform.root.gameObject;
                         DontDestroyOnLoad(rootGO);
 
-                        // Registrar en el fader para aplicar desvanecimientos después si procede.
-                        MusicTailFader.PendingFades.Add(audioSource);
+                        if (!keepMusicAlive)
+                        {
+                            // Registrar en el fader para aplicar desvanecimientos después si procede.
+                            MusicTailFader.PendingFades.Add(audioSource);
+                        }
 
 #if UNITY_EDITOR
                         Debug.Log($"[VNDialogue] JUMP: música persistida -> '{audioSource.gameObject.name}' (root '{rootGO.name}')");
@@ -100,8 +104,9 @@ public partial class VNDialogue
                     }
                 }
 
-                // Consumir el flag
+                // Resetear flags
                 VNTransitionFlags.SkipMusicFadeOnce = false;
+                VNTransitionFlags.KeepMusicAliveOnce = false;
             }
 
             // Crear canvas de fade temporal (solo para modo “fundido a negro”)

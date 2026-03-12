@@ -55,7 +55,7 @@ public class CinematicTransition : MonoBehaviour
 
     [Tooltip("Duración del fade-out de música antes de cargar la siguiente escena (0 = sin fade).")]
     [Range(0f, 15f)]
-    public float musicFadeOutDuration = 8f;
+    public float musicFadeOutDuration = 0f;
 
     [Header("Transición de entrada")]
     [Tooltip("Tiempo de fundido desde negro al inicio de la escena (hace el paso de la escena anterior más suave).")]

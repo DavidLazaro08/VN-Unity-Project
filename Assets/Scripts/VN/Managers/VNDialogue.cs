@@ -603,12 +603,20 @@ public partial class VNDialogue : MonoBehaviour
             string crossfadeStr = ParseValue(cmd, "CROSSFADE");
             bool useCrossfade = crossfadeStr == "1" || crossfadeStr.ToUpper() == "TRUE";
 
-            // Detectar si se debe mantener la música (sin fade out)
+            // Detectar si se debe mantener la música viva permanentemente (sin enviarla al fader)
+            string keepMusicAlive = ParseValue(cmd, "KEEP_MUSIC_ALIVE");
+            if (keepMusicAlive == "1" || keepMusicAlive.ToUpper() == "TRUE")
+            {
+                VNTransitionFlags.KeepMusicAliveOnce = true;
+                Debug.Log("[VNDialogue] KEEP_MUSIC_ALIVE activado. La música continuará y NO se destruirá.");
+            }
+
+            // Detectar si se debe mantener la música (y hacerle fade out después)
             string skipMusicFade = ParseValue(cmd, "SKIP_MUSIC_FADE");
             if (skipMusicFade == "1" || skipMusicFade.ToUpper() == "TRUE")
             {
                 VNTransitionFlags.SkipMusicFadeOnce = true;
-                Debug.Log("[VNDialogue] SKIP_MUSIC_FADE activado. La música continuará sin fade.");
+                Debug.Log("[VNDialogue] SKIP_MUSIC_FADE activado. La música pasará al fader en la siguiente escena.");
             }
 
             // Duración personalizada del fade de música (en segundos, 0 = usar defecto 0.8s)
